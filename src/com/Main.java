@@ -13,8 +13,7 @@ import models.User;
  */
 public class Main {
     public static void main(String args[]) {
-        User user = new User();
-        user.setEmail("hello");
+       
         com.formdev.flatlaf.themes.FlatMacDarkLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
