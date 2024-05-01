@@ -25,6 +25,8 @@ public class User {
     int isActive;
     
     
+    
+    
     public void setEmail(String email){
         if(Validators.isValidEmail(email)){
             this.email = email;

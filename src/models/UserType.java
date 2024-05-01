@@ -11,4 +11,5 @@ package models;
 public enum UserType {
     CASHIER,
     ADMIN,
+    SUPERVISOR
 }
