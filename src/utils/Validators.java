@@ -49,6 +49,12 @@ public class Validators {
         return !(name.length() > 8 || name.length() < 2);
     }
     
+    //conditions : password char length be 10
+     //returns : valid return TRUE,  invalid resutn False
+    public static boolean isValidMobile(String mobile){
+        return mobile.length() == 10;
+    }
+    
     
     
     
