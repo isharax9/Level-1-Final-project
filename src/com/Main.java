@@ -5,7 +5,7 @@
 package com;
 
 import gui.Login;
-import models.User;
+import models.Employee;
 
 /**
  *
