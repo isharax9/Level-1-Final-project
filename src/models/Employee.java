@@ -16,7 +16,7 @@ import utils.Validators;
 @NoArgsConstructor //generating a No args constructure , LOMBOC ANNOTATION LIB
 @Data // setters and getters
 
-public class User {
+public class Employee {
     int id;
     String email;
     String name;
