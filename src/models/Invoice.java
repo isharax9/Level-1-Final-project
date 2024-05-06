@@ -16,19 +16,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor //generating a No args constructure , LOMBOC ANNOTATION LIB
 @Data // setters and getters
-public class Stock {
+public class Invoice {
     private int id;
-    private int productID;
-    private Product product;
-    private int grnID;
-    private double wholeSalePrice;
-    private double retailPrice;
-    private double defaultDiscount;
-    private double availebleQty;
-    private LocalDateTime expDate;
-    private LocalDateTime mnfDate;
-    private String barcode;
-    
-    
+    private int employeeID;
+    private Employee employee;
+    private Customer customer;
+    private double total;
+    private double totalDiscount;
+    private double grandTotal;
+    private double paidAmount;
+    private double balance;
+    private LocalDateTime invoiceDate;
     
 }
