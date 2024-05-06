@@ -5,6 +5,7 @@
 package models;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import utils.Validators;
@@ -13,6 +14,7 @@ import utils.Validators;
  *
  * @author vidur
  */
+@AllArgsConstructor
 @NoArgsConstructor //generating a No args constructure , LOMBOC ANNOTATION LIB
 @Data // setters and getters
 
