@@ -87,5 +87,8 @@ public class Validators {
         }
         return POSITIVE_INT_PATTERN.matcher(text).matches();
     }
-
+    
+    public static boolean isValidProductName(String productName){
+        return productName.length() <= 45;
+    }
 }

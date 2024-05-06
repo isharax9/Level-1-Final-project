@@ -24,6 +24,7 @@ public class Supplier {
     private String address;
     private String details;
     private String bankDetailsID;
+    private BankDetails bankDetails;
     
      public void setName(String name){
         if(Validators.isValidUserName(name)){
