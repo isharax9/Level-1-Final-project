@@ -8,6 +8,7 @@ package models;
  *
  * @author vidur
  */
-public class PoStatus {
-    
+public enum PoStatus {
+    PROCESSING,
+    RECIEVED,
 }
