@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package gui;
 
@@ -8,12 +8,12 @@ package gui;
  *
  * @author vidur
  */
-public class Login extends javax.swing.JFrame {
+public class PurchaseOrderPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form Login
+     * Creates new form PurchaseOrderPanel
      */
-    public Login() {
+    public PurchaseOrderPanel() {
         initComponents();
     }
 
@@ -26,34 +26,30 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jLabel1 = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        jLabel1.setText("TODO : Purchase Order Panel");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(307, 307, 307)
+                .addComponent(jLabel1)
+                .addContainerGap(328, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(199, 199, 199)
+                .addComponent(jLabel1)
+                .addContainerGap(271, Short.MAX_VALUE))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
