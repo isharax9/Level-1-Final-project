@@ -27,4 +27,4 @@ replay_pid*
 build/
 
 #private xml file
-nbproject\private\private.xml
+nbproject/private/private.xml
