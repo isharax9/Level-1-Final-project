@@ -23,6 +23,8 @@
 hs_err_pid*
 replay_pid*
 
+#need to untract build folder
+build/
 
 #private xml file
 nbproject\private\private.xml
