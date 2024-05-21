@@ -4,6 +4,8 @@
  */
 package utils;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -90,5 +92,111 @@ public class Validators {
     
     public static boolean isValidProductName(String productName){
         return productName.length() <= 45;
+    }
+    
+    
+      public static boolean isValidSubCategoryName(String subCategoryName) {
+        return subCategoryName.length() <= 45;
+    }
+
+    public static boolean isValidCategoryName(String categoryName) {
+        return categoryName.length() <= 45;
+    }
+
+    public static boolean isValidUnitName(String unitName) {
+        return unitName.length() <= 45;
+    }
+    
+    // Validates a category name -- must not be null or empty and must be less than 45 characters
+    public static boolean isValidCategory(String category) {
+        return category != null && category.length() <= 45;
+    }
+
+    // Validates a sub category name -- must not be null or empty and must be less than 45 characters
+    public static boolean isValidSubCategory(String subCategory) {
+        return subCategory != null && subCategory.length() <= 45;
+    }
+
+    // Validates a unit name -- must not be null or empty and must be less than 45 characters
+    public static boolean isValidUnit(String unit) {
+        return unit != null && unit.length() <= 45;
+    }
+
+    
+
+    // Validates a product printing name -- must not be null or empty and must be less than 45 characters
+    public static boolean isValidProductPrintingName(String productPrintingName) {
+        return productPrintingName != null && productPrintingName.length() <= 45;
+    }
+
+   
+
+    // Validates a contact number -- must not be null or empty and must be exactly 10 digits
+    public static boolean isValidContact(String contact) {
+        return contact != null && Pattern.matches("\\d{10}", contact);
+    }
+
+    // Validates an address -- must not be null or empty and must be less than 100 characters
+    public static boolean isValidAddress(String address) {
+        return address != null && address.length() <= 100;
+    }
+
+    // Validates a date
+    public static boolean isValidDate(java.sql.Date date) {
+        return date != null;
+    }
+
+    // Validates a quantity -- must be a positive number
+    public static boolean isValidQuantity(double quantity) {
+        return quantity >= 0;
+    }
+
+    // Validates a price -- must be a positive number
+    public static boolean isValidPrice(double price) {
+        return price >= 0;
+    }
+    // Validates a Timestamp
+    public static boolean isValidTimestamp(Timestamp timestamp) {
+        return timestamp != null;
+    }
+    
+    // Validates a discount (should be between 0 and 100)
+    public static boolean isValidDiscount(double discount) {
+        return discount >= 0 && discount <= 100;
+    }
+    
+    // Validates a name (should not be empty and should only contain letters and spaces)
+    public static boolean isValidName(String name) {
+        return name != null && !name.trim().isEmpty() && name.matches("[a-zA-Z\\s]+");
+    }
+    
+    // Validates a point value (should be non-negative)
+    public static boolean isValidPoint(int point) {
+        return point >= 0;
+    }
+    
+    // Validates a username (should not be empty and should only contain letters, numbers, and underscores)
+    public static boolean isValidUsername(String username) {
+        return username != null && !username.trim().isEmpty() && username.matches("\\w+");
+    }
+    
+    // Validates a datetime (should not be null)
+    public static boolean isValidDatetime(Date datetime) {
+        return datetime != null;
+    }
+
+    // Validates an amount (should be non-negative)
+    public static boolean isValidAmount(double amount) {
+        return amount >= 0;
+    }
+
+    // Validates a payment method (should not be empty)
+    public static boolean isValidPaymentMethod(String paymentMethod) {
+        return paymentMethod != null && !paymentMethod.trim().isEmpty();
+    }
+    
+    // Validates a description (should not be null and should not be too long)
+    public static boolean isValidDescription(String description) {
+        return description != null && description.length() <= 45;
     }
 }

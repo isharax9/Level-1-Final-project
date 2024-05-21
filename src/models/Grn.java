@@ -1,35 +1,34 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
-import java.time.LocalDateTime;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import utils.Validators;
 
-/**
- *
- * @author vidur
- */
-
-
+@Data
 @AllArgsConstructor
-@NoArgsConstructor //generating a No args constructure , LOMBOC ANNOTATION LIB
-@Data // setters and getters
-
-public class Grn {
-    
+@NoArgsConstructor
+public class GRN {
     private int id;
-    private int productID;
-    private Product product;
-    private int poID;
-    private double grnQty;
-    private double wholesalePrice;
-    private double paidAmount;
-    private double grnValue;
-    private double duoAmount;
-    private LocalDateTime grnDate;
-        
+    private Timestamp grnDate;
+    private PurchaseOrder purchaseOrder;
+
+    public void setGrnDate(Timestamp grnDate) {
+        if (Validators.isValidTimestamp(grnDate)) {
+            this.grnDate = grnDate;
+        } else {
+            throw new IllegalArgumentException("Invalid GRN date");
+        }
+    }
+
+    public static GRN fromResultSet(ResultSet result) throws SQLException {
+        GRN grn = new GRN();
+        grn.setId(result.getInt("grn_id"));
+        grn.setGrnDate(result.getTimestamp("grn_date"));
+        grn.setPurchaseOrder(PurchaseOrder.fromResultSet(result));
+        return grn;
+    }
 }

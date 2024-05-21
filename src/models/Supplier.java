@@ -1,54 +1,63 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import utils.Validators;
 
-/**
- *
- * @author vidur
- */
+@Data
 @AllArgsConstructor
-@NoArgsConstructor //generating a No args constructure , LOMBOC ANNOTATION LIB
-@Data // setters and getters
+@NoArgsConstructor
 public class Supplier {
     private int id;
-    private String name;
-    private String mobile;
-    private String email;
+    private String firstName;
+    private String lastName;
+    private String contact;
     private String address;
-    private String details;
-    private String bankDetailsID;
     private BankDetails bankDetails;
-    
-     public void setName(String name){
-        if(Validators.isValidUserName(name)){
-            this.name = name;
-        }else{
-            throw new IllegalArgumentException("customer  Name length must between 2 and 40");
+
+    public void setFirstName(String firstName) {
+        if (Validators.isValidUserName(firstName)) {
+            this.firstName = firstName;
+        } else {
+            throw new IllegalArgumentException("Invalid first name");
         }
     }
-    
-     
-     public void setMobile(String mobile){
-        if(Validators.isValidMobile(mobile)){
-            this.mobile = mobile;
-        }else{
-            throw new IllegalArgumentException("mobile length must be 10 ");
+
+    public void setLastName(String lastName) {
+        if (Validators.isValidUserName(lastName)) {
+            this.lastName = lastName;
+        } else {
+            throw new IllegalArgumentException("Invalid last name");
         }
     }
-     
-      public void setEmail(String email){
-        if(Validators.isValidEmail(email)){
-            this.email = email;
-        }else{
-            throw new IllegalArgumentException("Invalid email format: " + email); 
+
+    public void setContact(String contact) {
+        if (Validators.isValidContact(contact)) {
+            this.contact = contact;
+        } else {
+            throw new IllegalArgumentException("Invalid contact");
         }
     }
-    
+
+    public void setAddress(String address) {
+        if (Validators.isValidAddress(address)) {
+            this.address = address;
+        } else {
+            throw new IllegalArgumentException("Invalid address");
+        }
+    }
+
+    public static Supplier fromResultSet(ResultSet result) throws SQLException {
+        Supplier supplier = new Supplier();
+        supplier.setId(result.getInt("supplier_id"));
+        supplier.setFirstName(result.getString("supplier_first_name"));
+        supplier.setLastName(result.getString("supplier_last_name"));
+        supplier.setContact(result.getString("supplier_contact"));
+        supplier.setAddress(result.getString("supplier_address"));
+        supplier.setBankDetails(BankDetails.fromResultSet(result));
+        return supplier;
+    }
 }

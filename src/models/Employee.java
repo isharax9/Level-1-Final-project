@@ -1,59 +1,61 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import utils.Validators;
 
-/**
- *
- * @author vidur
- */
+@Data
 @AllArgsConstructor
-@NoArgsConstructor //generating a No args constructure , LOMBOC ANNOTATION LIB
-@Data // setters and getters
-
+@NoArgsConstructor
 public class Employee {
-    int id;
-    String email;
-    String name;
-    String password;
-    UserType userType;
-    int isActive;
-    
-    
-    
-    
-    public void setEmail(String email){
-        if(Validators.isValidEmail(email)){
-            this.email = email;
-        }else{
-            throw new IllegalArgumentException("Invalid email format: " + email); 
+    private int userId;
+    private String username;
+    private String userEmail;
+    private String userPassword;
+    private UserType userType;
+
+    public void setUsername(String username) {
+        if (Validators.isValidUsername(username)) {
+            this.username = username;
+        } else {
+            throw new IllegalArgumentException("Invalid username");
         }
     }
-    
-    public void setName(String name){
-        if(Validators.isValidUserName(name)){
-            this.name = name;
-        }else{
-            throw new IllegalArgumentException("User Name length must between 2 and 40");
+
+    public void setUserEmail(String userEmail) {
+        if (Validators.isValidEmail(userEmail)) {
+            this.userEmail = userEmail;
+        } else {
+            throw new IllegalArgumentException("Invalid email");
         }
     }
-    
-    public void setPassword(String password){
-        if(Validators.isValidPassword(password)){
-            this.password = password;
-        }else{
-              throw new IllegalArgumentException("Password length must between 2 and 8");
+
+    public void setUserPassword(String userPassword) {
+        if (Validators.isValidPassword(userPassword)) {
+            this.userPassword = userPassword;
+        } else {
+            throw new IllegalArgumentException("Invalid password");
         }
     }
-    
-    
-    
-    
+
+//    public void setUserType(String userType) {
+//        if (Validators.isValidUserType(userType)) {
+//            this.userType = userType;
+//        } else {
+//            throw new IllegalArgumentException("Invalid user type");
+//        }
+//    }
+
+    public static Employee fromResultSet(ResultSet result) throws SQLException {
+        Employee user = new Employee();
+        user.setUserId(result.getInt("user_id"));
+        user.setUsername(result.getString("username"));
+        user.setUserEmail(result.getString("user_email"));
+        user.setUserPassword(result.getString("user_password"));
+        user.setUserType(UserType.valueOf(result.getString("user_type")));
+        return user;
+    }
 }

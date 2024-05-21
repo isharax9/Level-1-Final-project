@@ -1,42 +1,47 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import utils.Validators;
 
-/**
- *
- * @author vidur
- */
+@Data
 @AllArgsConstructor
-@NoArgsConstructor //generating a No args constructure , LOMBOC ANNOTATION LIB
-@Data // setters and getters
+@NoArgsConstructor
 public class Product {
     private int id;
-    private int unitID;
-    private Unit unit;
     private String productName;
     private String productPrintingName;
-    
-    
-    public void setProductName(String name){
-        if(Validators.isValidProductName(name)){
-            this.productName = name;
-        }else{
-            throw new IllegalArgumentException(" invalid Product name "); 
+    private SubCategory subCategory;
+    private Unit unit;
+    private double stockRefillingQty;
+
+    public void setProductName(String productName) {
+        if (Validators.isValidProductName(productName)) {
+            this.productName = productName;
+        } else {
+            throw new IllegalArgumentException("Invalid product name");
         }
     }
-    
-    public void setProductPrintingName(String name){
-        if(Validators.isValidProductName(name)){
-            this.productName = name;
-        }else{
-            throw new IllegalArgumentException(" invalid Product Printing  name "); 
+
+    public void setProductPrintingName(String productPrintingName) {
+        if (Validators.isValidProductPrintingName(productPrintingName)) {
+            this.productPrintingName = productPrintingName;
+        } else {
+            throw new IllegalArgumentException("Invalid product printing name");
         }
+    }
+
+    public static Product fromResultSet(ResultSet result) throws SQLException {
+        Product product = new Product();
+        product.setId(result.getInt("product_id"));
+        product.setProductName(result.getString("product_name"));
+        product.setProductPrintingName(result.getString("product_printing_name"));
+        product.setSubCategory(SubCategory.fromResultSet(result));
+        product.setUnit(Unit.fromResultSet(result));
+        product.setStockRefillingQty(result.getDouble("stock_refilling_qty"));
+        return product;
     }
 }
