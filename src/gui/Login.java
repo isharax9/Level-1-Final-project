@@ -63,7 +63,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setText("Email");
+        jLabel3.setText("User Name");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("Password");
@@ -83,8 +83,9 @@ public class Login extends javax.swing.JFrame {
         jRadioButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jRadioButton2.setText("Admin");
 
+        userTypeButtonGroup.add(jRadioButton3);
         jRadioButton3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jRadioButton3.setText("Manager");
+        jRadioButton3.setText("Supervisor");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -107,8 +108,8 @@ public class Login extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jRadioButton2)
                                 .addGap(18, 18, 18)
-                                .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(132, Short.MAX_VALUE))
+                                .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
