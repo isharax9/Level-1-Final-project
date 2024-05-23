@@ -12,19 +12,24 @@ import utils.Validators;
 @NoArgsConstructor
 public class Employee {
     private int userId;
-    private String username;
     private String userEmail;
-    private String userPassword;
     private UserType userType;
+    private String firstName;
+    private String lastName;
+    private String address;
+    private BankDetails bankaccountDetails;
 
-    public void setUsername(String username) {
-        if (Validators.isValidUsername(username)) {
-            this.username = username;
-        } else {
-            throw new IllegalArgumentException("Invalid username");
+    
+    public void setFirstName(String name){
+        if(Validators.isValidName(name)){
+            this.firstName = name;
         }
     }
-
+    public void setLastName(String name){
+        if(Validators.isValidName(name)){
+            this.lastName = name;
+        }
+    }
     public void setUserEmail(String userEmail) {
         if (Validators.isValidEmail(userEmail)) {
             this.userEmail = userEmail;
@@ -32,14 +37,7 @@ public class Employee {
             throw new IllegalArgumentException("Invalid email");
         }
     }
-
-    public void setUserPassword(String userPassword) {
-        if (Validators.isValidPassword(userPassword)) {
-            this.userPassword = userPassword;
-        } else {
-            throw new IllegalArgumentException("Invalid password");
-        }
-    }
+    
 
 //    public void setUserType(String userType) {
 //        if (Validators.isValidUserType(userType)) {
@@ -52,10 +50,12 @@ public class Employee {
     public static Employee fromResultSet(ResultSet result) throws SQLException {
         Employee user = new Employee();
         user.setUserId(result.getInt("user_id"));
-        user.setUsername(result.getString("username"));
         user.setUserEmail(result.getString("user_email"));
-        user.setUserPassword(result.getString("user_password"));
         user.setUserType(UserType.valueOf(result.getString("user_type")));
+        user.setFirstName(result.getString("first_name"));
+        user.setLastName(result.getString("last_name"));
+        user.setAddress(result.getString("address"));
+        user.setBankaccountDetails(BankDetails.fromResultSet(result));
         return user;
     }
 }

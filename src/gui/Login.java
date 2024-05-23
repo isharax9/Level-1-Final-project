@@ -1,11 +1,16 @@
-
 package gui;
+
+import javax.swing.JOptionPane;
+import models.Auth;
+import models.UserType;
 
 public class Login extends javax.swing.JFrame {
 
     /**
      * Creates new form Login
      */
+    static Auth auth;
+
     public Login() {
         initComponents();
     }
@@ -28,9 +33,9 @@ public class Login extends javax.swing.JFrame {
         emailFeild = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         passwordFeild = new javax.swing.JPasswordField();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        rb_user_type_cashier = new javax.swing.JRadioButton();
+        rb_user_type_admin = new javax.swing.JRadioButton();
+        rb_user_type_supervisor = new javax.swing.JRadioButton();
         LoginBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -63,7 +68,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setText("User Name");
+        jLabel3.setText("Username");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("Password");
@@ -74,18 +79,18 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        userTypeButtonGroup.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("Cashier");
+        userTypeButtonGroup.add(rb_user_type_cashier);
+        rb_user_type_cashier.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        rb_user_type_cashier.setSelected(true);
+        rb_user_type_cashier.setText("Cashier");
 
-        userTypeButtonGroup.add(jRadioButton2);
-        jRadioButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jRadioButton2.setText("Admin");
+        userTypeButtonGroup.add(rb_user_type_admin);
+        rb_user_type_admin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        rb_user_type_admin.setText("Admin");
 
-        userTypeButtonGroup.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jRadioButton3.setText("Supervisor");
+        userTypeButtonGroup.add(rb_user_type_supervisor);
+        rb_user_type_supervisor.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        rb_user_type_supervisor.setText("Supervisor");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -104,11 +109,11 @@ public class Login extends javax.swing.JFrame {
                                 .addComponent(emailFeild))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(jRadioButton1)
+                                .addComponent(rb_user_type_cashier)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jRadioButton2)
+                                .addComponent(rb_user_type_admin)
                                 .addGap(18, 18, 18)
-                                .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(rb_user_type_supervisor, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(123, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -117,16 +122,16 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(emailFeild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(emailFeild, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(passwordFeild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(passwordFeild, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jRadioButton3))
+                    .addComponent(rb_user_type_cashier)
+                    .addComponent(rb_user_type_admin)
+                    .addComponent(rb_user_type_supervisor))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -161,7 +166,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(LoginBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         pack();
@@ -170,19 +175,63 @@ public class Login extends javax.swing.JFrame {
 
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
         // TODO add your handling code here:
-        
+        String username = emailFeild.getText();
+        String password = passwordFeild.getText();
+        UserType userType;
+        if (rb_user_type_admin.isSelected()) {
+            userType = UserType.ADMIN;
+        } else if (rb_user_type_cashier.isSelected()) {
+            userType = UserType.CASHIER;
+        } else {
+            userType = UserType.SUPERVISOR;
+        }
+
+        auth = new Auth(username, password, userType);
+
+        try {
+            if (auth.isAuthenticated()) {
+                System.out.println("Successfully login");
+                if (null != auth.getAuthType())//                <TODO>Dashboard viewing logic here </TODO>
+                {
+                    switch (auth.getAuthType()) {
+                        case ADMIN -> {
+                            System.out.println("admin");
+                        }
+                        case CASHIER -> {
+                            System.out.println("CASHIER");
+
+                        }
+                        case SUPERVISOR -> {
+                            System.out.println("SUPERVISOR");
+                        }
+                        default -> {
+                            
+                        }
+                    }
+                }
+//     <TODO>ADMIN </TODO>
+                //     <TODO>CASHIER </TODO>
+                //     <TODO>SUPERVISOR </TODO>
+
+            } else {
+                JOptionPane.showMessageDialog(this, "invalid Usename or password", "Ooops!", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Ooops!", JOptionPane.ERROR_MESSAGE);
+        }
+
+        System.out.println(username + ":" + password + ":" + userType.name());
+
+
     }//GEN-LAST:event_LoginBtnActionPerformed
 
     private void passwordFeildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFeildActionPerformed
         // TODO add your handling code here:
-        String email = emailFeild.getText();
-        String password = passwordFeild.getText();
-        
-        
+
     }//GEN-LAST:event_passwordFeildActionPerformed
 
-    
- 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton LoginBtn;
     private javax.swing.JTextField emailFeild;
@@ -192,10 +241,10 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JPasswordField passwordFeild;
+    private javax.swing.JRadioButton rb_user_type_admin;
+    private javax.swing.JRadioButton rb_user_type_cashier;
+    private javax.swing.JRadioButton rb_user_type_supervisor;
     private javax.swing.ButtonGroup userTypeButtonGroup;
     // End of variables declaration//GEN-END:variables
 }
