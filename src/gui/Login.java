@@ -1,6 +1,7 @@
 
 package gui;
 
+import models.Auth;
 import models.UserType;
 
 public class Login extends javax.swing.JFrame {
@@ -8,6 +9,7 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    static Auth auth ;
     public Login() {
         initComponents();
     }
@@ -182,6 +184,9 @@ public class Login extends javax.swing.JFrame {
         }else{
             userType = UserType.SUPERVISOR;
         }
+       
+        auth =new Auth(username,password,userType);
+        
         
         System.out.println(username+":"+password+":"+userType.name());
         

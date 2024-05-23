@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
  *
  * @author vidur
  */
-@AllArgsConstructor
 public class Auth {
     private int userID;
     private String username;
@@ -18,13 +17,18 @@ public class Auth {
     private Employee employee;
     private UserType authType;
     
+    public Auth(String username,String password, UserType authType){
+        this.username = username;
+        this.password = password;
+        this.authType = authType;
+    }
     
     private String getUsername(){
         return this.username;
     }
-    private String getPassword(){
-        return this.password;
-    }
+//    private String getPassword(){
+//        return this.password;
+//    }
     private Employee getEmployee(){
         return this.employee;
     }
