@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 public class Database {
 
     // JDBC URL, username, and password of MySQL server
-    private static final String URL = "jdbc:mysql://localhost:3306/vertex_pos";
+    private static final String URL = "jdbc:mysql://localhost:3306/helapos-2";
 //    private static final String URL = "jdbc:mysql://0.tcp.in.ngrok.io:11833/vertex_pos";
 
     private static final String USER = "root";

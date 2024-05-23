@@ -1,6 +1,6 @@
-
 package gui;
 
+import javax.swing.JOptionPane;
 import models.Auth;
 import models.UserType;
 
@@ -9,7 +9,8 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    static Auth auth ;
+    static Auth auth;
+
     public Login() {
         initComponents();
     }
@@ -174,33 +175,63 @@ public class Login extends javax.swing.JFrame {
 
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
         // TODO add your handling code here:
-         String username = emailFeild.getText();
+        String username = emailFeild.getText();
         String password = passwordFeild.getText();
         UserType userType;
-        if(rb_user_type_admin.isSelected()){
+        if (rb_user_type_admin.isSelected()) {
             userType = UserType.ADMIN;
-        }else if(rb_user_type_cashier.isSelected()){
+        } else if (rb_user_type_cashier.isSelected()) {
             userType = UserType.CASHIER;
-        }else{
+        } else {
             userType = UserType.SUPERVISOR;
         }
-       
-        auth =new Auth(username,password,userType);
-        
-        
-        System.out.println(username+":"+password+":"+userType.name());
-        
-        
-        
+
+        auth = new Auth(username, password, userType);
+
+        try {
+            if (auth.isAuthenticated()) {
+                System.out.println("Successfully login");
+                if (null != auth.getAuthType())//                <TODO>Dashboard viewing logic here </TODO>
+                {
+                    switch (auth.getAuthType()) {
+                        case ADMIN -> {
+                            System.out.println("admin");
+                        }
+                        case CASHIER -> {
+                            System.out.println("CASHIER");
+
+                        }
+                        case SUPERVISOR -> {
+                            System.out.println("SUPERVISOR");
+                        }
+                        default -> {
+                            
+                        }
+                    }
+                }
+//     <TODO>ADMIN </TODO>
+                //     <TODO>CASHIER </TODO>
+                //     <TODO>SUPERVISOR </TODO>
+
+            } else {
+                JOptionPane.showMessageDialog(this, "invalid Usename or password", "Ooops!", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Ooops!", JOptionPane.ERROR_MESSAGE);
+        }
+
+        System.out.println(username + ":" + password + ":" + userType.name());
+
+
     }//GEN-LAST:event_LoginBtnActionPerformed
 
     private void passwordFeildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFeildActionPerformed
         // TODO add your handling code here:
-       
+
     }//GEN-LAST:event_passwordFeildActionPerformed
 
-    
- 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton LoginBtn;
     private javax.swing.JTextField emailFeild;
