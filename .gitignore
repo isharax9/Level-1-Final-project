@@ -30,3 +30,5 @@ build/
 nbproject/private/private.xml
 
 nbproject/
+
+src/utils/Database.java
