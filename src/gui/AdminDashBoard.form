@@ -170,7 +170,7 @@
               <JTabbedPaneConstraints tabName="">
                 <Property name="tabTitle" type="java.lang.String" value=""/>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/assets/icons8-product-48.png"/>
+                  <Image iconType="3" name="/assets/icons8-product-64 (1).png"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>

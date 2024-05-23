@@ -117,7 +117,7 @@ public class AdminDashBoard extends javax.swing.JFrame {
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/icons8-product-48.png")), jPanel3); // NOI18N
+        jTabbedPane1.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/icons8-product-64 (1).png")), jPanel3); // NOI18N
 
         jScrollPane2.setViewportView(o1);
 
