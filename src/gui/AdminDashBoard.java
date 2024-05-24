@@ -192,15 +192,7 @@ public class AdminDashBoard extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        com.formdev.flatlaf.themes.FlatMacDarkLaf.setup();
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AdminDashBoard().setVisible(true);
-            }
-        });
-    }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private gui.Dashboard d1;
     private javax.swing.JLabel jLabel1;
