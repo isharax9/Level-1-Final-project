@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
+    private final String mainSelectQuery = "SELECT * FROM products  INNER JOIN sub_categories ON sub_categories.sub_cat_id = products.sub_categories_id INNER JOIN categories ON categories.cat_id = sub_categories.categories_id INNER JOIN units ON units.unit_id = products.units_unit_id ";
 
     public void createProduct(Product product) throws SQLException {
         String query = "INSERT INTO products (product_name, product_printing_name, sub_categories_id, units_unit_id, stock_refilling_qty) VALUES (?, ?, ?, ?, ?)";
@@ -26,7 +27,7 @@ public class ProductDAO {
 
     public List<Product> readProducts() throws SQLException {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products";
+        String query = mainSelectQuery;
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         ResultSet results = statement.executeQuery();
@@ -50,7 +51,7 @@ public class ProductDAO {
     }
 
     public Product getProductByID(int id) throws SQLException {
-        String query = "SELECT * FROM products WHERE product_id = ?";
+        String query = mainSelectQuery+" WHERE product_id = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
@@ -64,7 +65,7 @@ public class ProductDAO {
     }
     
     public Product getProductByName(String name) throws SQLException {
-        String query = "SELECT * FROM products WHERE product_name = ?";
+        String query = mainSelectQuery+" WHERE product_name = ?";
             Connection conn = Database.getInstance().getConnection();
              PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name.toLowerCase());
@@ -79,7 +80,7 @@ public class ProductDAO {
     
     public List<Product> searchProductsByName(String name) throws SQLException {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products WHERE product_name LIKE ?";
+        String query = mainSelectQuery+" WHERE product_name LIKE ?";
             Connection conn = Database.getInstance().getConnection();
              PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, name.toLowerCase() + "%");
@@ -93,7 +94,7 @@ public class ProductDAO {
     
     public List<Product> searchProductsBySubCategory(int subCategoryId) throws SQLException {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products WHERE sub_categories_id = ?";
+        String query = mainSelectQuery+" WHERE sub_categories_id = ?";
             Connection conn = Database.getInstance().getConnection();
              PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, subCategoryId);
@@ -108,7 +109,7 @@ public class ProductDAO {
     
     public List<Product> searchProductsByCategory(int categoryId) throws SQLException {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products p JOIN sub_categories sc ON p.sub_categories_id = sc.sub_cat_id WHERE sc.categories_id = ?";
+        String query = mainSelectQuery+" WHERE categories_id = ?";
             Connection conn = Database.getInstance().getConnection();
              PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, categoryId);
@@ -122,7 +123,7 @@ public class ProductDAO {
     
     public List<Product> searchProductsByUnit(int unitId) throws SQLException {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products WHERE units_unit_id = ?";
+        String query = mainSelectQuery+" WHERE units_unit_id = ?";
             Connection conn = Database.getInstance().getConnection();
              PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, unitId);

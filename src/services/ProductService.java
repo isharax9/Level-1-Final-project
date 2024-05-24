@@ -3,6 +3,7 @@ package services;
 import dao.CategoryDAO;
 import dao.ProductDAO;
 import dao.SubCategoryDAO;
+import dao.UnitDAO;
 import models.Product;
 
 import java.sql.SQLException;
@@ -16,10 +17,13 @@ public class ProductService {
     private final ProductDAO productDAO;
     private final CategoryDAO categoryDAO;
     private final SubCategoryDAO subcategoryDAO;
+    private final UnitDAO unitDAO;
+
     public ProductService() {
         productDAO = new ProductDAO();
         categoryDAO = new CategoryDAO();
         subcategoryDAO = new SubCategoryDAO();
+        unitDAO = new UnitDAO();
     }
 
     public void createProduct(Product product) throws SQLException, IllegalArgumentException {
@@ -32,9 +36,14 @@ public class ProductService {
                         isProductAlreadyExist = true;
                     }
                 } catch (Exception ex) {
+//                   ex.printStackTrace();
                     // Log the exception if needed
                 }
-                
+
+                categoryDAO.getByID(product.getSubCategory().getCategory().getId());
+                subcategoryDAO.getByID(product.getSubCategory().getId());
+                unitDAO.getUnitByID(product.getUnit().getId());
+
                 if (!isProductAlreadyExist) {
                     productDAO.createProduct(product);
                 } else {
@@ -100,22 +109,63 @@ public class ProductService {
         }
         return productDAO.searchProductsByUnit(unitId);
     }
-    
+
     public static void main(String[] args) {
-         ProductService productService = new ProductService();
-         
-         // Example for adding a new Product
-        Product productToAdd = new Product();
-        productToAdd.setProductName("New Product");
-        productToAdd.setProductPrintingName("New Product Printing Name");
-        productToAdd.setSubCategory(new SubCategory(1, "Sample SubCategory", new Category(1, "Sample Category")));
-        productToAdd.setUnit(new Unit(1, "Sample Unit"));
-        productToAdd.setStockRefillingQty(20.0);
-        try {
-            productService.createProduct(productToAdd);
-            System.out.println("Product added successfully!");
-        } catch (SQLException | IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+        ProductService productService = new ProductService();
+
+        // Example for adding a new Product
+//        Product productToAdd = new Product();
+//        productToAdd.setProductName("New Product 122");
+//        productToAdd.setProductPrintingName("New Product Printing Name");
+//        productToAdd.setSubCategory(new SubCategory(7, "Sample SubCategory", new Category(1, "Sample Category")));
+//        productToAdd.setUnit(new Unit(1, "Sample Unit"));
+//        productToAdd.setStockRefillingQty(20.0);
+//        try {
+//            productService.createProduct(productToAdd);
+//            System.out.println("Product added successfully!");
+//        } catch (SQLException | IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+        // Example for getting a Product by its id
+//        try {
+//            Product foundProduct = productService.getProductByID(6); // Assuming this is the id of the Product you want to find
+//            System.out.println("Found Product: " + foundProduct);
+//        } catch (SQLException | IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+        // Example for searching Products by name
+//        String productName = "new";
+//        try {
+//            List<Product> searchResults = productService.searchProductsByName(productName);
+//            System.out.println("Search results for '" + productName + "': " + searchResults);
+//        } catch (SQLException | IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+// Example for searching Products by SubCategory
+//        int subCategoryId = 7; // Assuming this is the id of the SubCategory you want to search by
+//        try {
+//            List<Product> searchResults = productService.searchProductsBySubCategory(subCategoryId);
+//            System.out.println("Search results for SubCategory ID '" + subCategoryId + "': " + searchResults);
+//        } catch (SQLException | IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+// Example for searching Products by Category
+//        int categoryId = 1; // Assuming this is the id of the Category you want to search by
+//        try {
+//            List<Product> searchResults = productService.searchProductsByCategory(categoryId);
+//            System.out.println("Search results for Category ID '" + categoryId + "': " + searchResults);
+//        } catch (SQLException | IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+
+// Example for searching Products by Unit
+//        int unitId = 55; // Assuming this is the id of the Unit you want to search by
+//        try {
+//            List<Product> searchResults = productService.searchProductsByUnit(unitId);
+//            System.out.println("Search results for Unit ID '" + unitId + "': " + searchResults);
+//        } catch (SQLException | IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+
     }
 }
