@@ -8,9 +8,6 @@ import models.Product;
 
 import java.sql.SQLException;
 import java.util.List;
-import models.Category;
-import models.SubCategory;
-import models.Unit;
 
 public class ProductService {
 
@@ -110,8 +107,8 @@ public class ProductService {
         return productDAO.searchProductsByUnit(unitId);
     }
 
-    public static void main(String[] args) {
-        ProductService productService = new ProductService();
+//    public static void main(String[] args) {
+//        ProductService productService = new ProductService();
 
         // Example for adding a new Product
 //        Product productToAdd = new Product();
@@ -166,6 +163,6 @@ public class ProductService {
 //        } catch (SQLException | IllegalArgumentException e) {
 //            e.printStackTrace();
 //        }
-
-    }
+//
+//    }
 }

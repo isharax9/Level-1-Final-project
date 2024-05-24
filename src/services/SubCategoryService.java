@@ -3,12 +3,10 @@ package services;
 import dao.CategoryDAO;
 import dao.SubCategoryDAO;
 import models.SubCategory;
-import utils.Database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import models.Category;
 
 public class SubCategoryService {
@@ -98,8 +96,8 @@ public class SubCategoryService {
         return subCategoryDAO.searchSubCategoriesByMainCatID(mainCatID);
     }
 
-    public static void main(String[] args) {
-        SubCategoryService subCategoryService = new SubCategoryService();
+//    public static void main(String[] args) {
+//        SubCategoryService subCategoryService = new SubCategoryService();
 
         // Example for adding a new SubCategory
 //        SubCategory subCategoryToAdd = new SubCategory();
@@ -157,5 +155,5 @@ public class SubCategoryService {
 //        } catch (SQLException | IllegalArgumentException e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
 }

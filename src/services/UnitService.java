@@ -77,8 +77,8 @@ public class UnitService {
         return unitDAO.searchUnitsByName(name);
     }
 
-    public static void main(String[] args) {
-        UnitService unitService = new UnitService();
+//    public static void main(String[] args) {
+//        UnitService unitService = new UnitService();
 
         // Example for adding a new Unit
 //        Unit unitToAdd = new Unit();
@@ -126,5 +126,5 @@ public class UnitService {
 //        } catch (SQLException | IllegalArgumentException e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
 }

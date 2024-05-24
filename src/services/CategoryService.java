@@ -2,12 +2,10 @@ package services;
 
 import dao.CategoryDAO;
 import models.Category;
-import utils.Database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class CategoryService {
 
@@ -70,7 +68,7 @@ public class CategoryService {
         return categoryDAO.searchCategoriesByName(catName);
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //       EXAMPLE FOR ADD CATEGORY
 //        Category cat = new Category(0, "CatAAADe");
 //        CategoryService categoryService = new CategoryService();
@@ -130,5 +128,5 @@ public class CategoryService {
 //            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
 //        }
 
-    }
+//    }
 }
