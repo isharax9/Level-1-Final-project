@@ -1,49 +1,68 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package services;
 
 import dao.SubCategoryDAO;
 import models.SubCategory;
+import utils.Database;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author vidur
- */
 public class SubCategoryService {
-    private SubCategoryDAO subCategoryDAO;
+
+    private final SubCategoryDAO subCategoryDAO;
 
     public SubCategoryService() {
-        this.subCategoryDAO = new SubCategoryDAO();
+        subCategoryDAO = new SubCategoryDAO();
     }
+
     public void createSubCategory(SubCategory subCategory) throws SQLException, IllegalArgumentException {
-        if (subCategory.getCategory() == null || subCategory.getCategory().getId() == 0) {
-            throw new IllegalArgumentException("Invalid category id");
+        try {
+            if (subCategory.isValidate()) {
+                boolean isSubCategoryAlreadyExist = false;
+                try {
+                    SubCategory exitSubCat = subCategoryDAO.getSubCategoryByName(subCategory.getSubCategory());
+                    if (exitSubCat != null) {
+                        isSubCategoryAlreadyExist = true;
+                    }
+                } catch (Exception ex) {
+                    // Log the exception if needed
+                }
+                if (!isSubCategoryAlreadyExist) {
+                    subCategoryDAO.createSubCategory(subCategory);
+                } else {
+                    throw new IllegalArgumentException("SubCategory Name already exists!");
+                }
+            }
+        } catch (IllegalArgumentException ex) {
+            throw ex;
         }
-        if (subCategory.getSubCategory() == null || subCategory.getSubCategory().isEmpty()) {
-            throw new IllegalArgumentException("SubCategory name cannot be empty");
-        }
-        subCategoryDAO.createSubCategory(subCategory);
     }
+
     public List<SubCategory> getAllSubCategories() throws SQLException {
         return subCategoryDAO.readSubCategories();
     }
+
     public void updateSubCategory(SubCategory subCategory) throws SQLException, IllegalArgumentException {
         if (subCategory.getId() == 0) {
             throw new IllegalArgumentException("Invalid subcategory id");
         }
-        if (subCategory.getCategory() == null || subCategory.getCategory().getId() == 0) {
-            throw new IllegalArgumentException("Invalid category id");
+        if (subCategory.isValidate()) {
+            subCategoryDAO.updateSubCategory(subCategory);
         }
-        if (subCategory.getSubCategory() == null || subCategory.getSubCategory().isEmpty()) {
-            throw new IllegalArgumentException("SubCategory name cannot be empty");
-        }
-        subCategoryDAO.updateSubCategory(subCategory);
     }
 
-   
+    public SubCategory getByID(int id) throws SQLException, IllegalArgumentException {
+        if (id == 0) {
+            throw new IllegalArgumentException("Subcategory id cannot be 0");
+        }
+        return subCategoryDAO.getByID(id);
+    }
+
+    public List<SubCategory> searchSubCategoriesByName(String subCatName) throws SQLException, IllegalArgumentException {
+        if (subCatName == null || subCatName.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return subCategoryDAO.searchSubCategoriesByName(subCatName);
+    }
 }
