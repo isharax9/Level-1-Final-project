@@ -69,5 +69,26 @@ public class CategoryService {
 //            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
 //        }
 
+//EXAMPLE FOR GET ALL CATEGORIES
+//        try {
+//            CategoryService categoryService = new CategoryService();
+//            List<Category> categorys = categoryService.getAllCategories();
+//            System.out.println(categorys);
+//        } catch (SQLException ex) {
+////            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
+//        }
+//EXAMPLE FOR UPDATE CATEGORY
+//        try {
+//            Category cat = new Category(1, "updated");
+//            CategoryService categoryService = new CategoryService();
+//            categoryService.updateCategory(cat);
+//        } catch (IllegalArgumentException ex) {
+//            JOptionPane.showMessageDialog(null, ex, "User Input Error", JOptionPane.ERROR_MESSAGE);
+//        } catch (SQLException ex) {
+////            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
+//        }
+
     }
 }
