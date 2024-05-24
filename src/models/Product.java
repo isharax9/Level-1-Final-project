@@ -56,7 +56,6 @@ public class Product {
         }
         if (!unit.isValidate()) {
             throw new IllegalArgumentException("Invalid unit ");
-
         }
 
         return true;
