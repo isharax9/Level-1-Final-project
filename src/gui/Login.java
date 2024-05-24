@@ -195,7 +195,8 @@ public class Login extends javax.swing.JFrame {
                 {
                     switch (auth.getAuthType()) {
                         case ADMIN -> {
-                            System.out.println("admin");
+                            this.dispose();
+                            new AdminDashBoard().setVisible(true);
                         }
                         case CASHIER -> {
                             System.out.println("CASHIER");
