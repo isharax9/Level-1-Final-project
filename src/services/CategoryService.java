@@ -5,6 +5,7 @@ import models.Category;
 import utils.Database;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -61,6 +62,13 @@ public class CategoryService {
         }
         return  categoryDAO.getByID(id);
     }
+    
+    public List<Category> searchCategoriesByName(String catName)throws SQLException, IllegalArgumentException{
+        if(catName == null || catName.isEmpty()){
+            return new ArrayList<>();
+        }
+        return categoryDAO.searchCategoriesByName(catName);
+    }
 
     public static void main(String[] args) {
 //       EXAMPLE FOR ADD CATEGORY
@@ -109,6 +117,16 @@ public class CategoryService {
 //            JOptionPane.showMessageDialog(null, ex, "User Input Error", JOptionPane.ERROR_MESSAGE);
 //        } catch (SQLException ex) {
 ////            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
+//        }
+
+//EXAMPLE FOR Search CATEGORIES
+//        try {
+//            CategoryService categoryService = new CategoryService();
+//            List<Category> categorys = categoryService.searchCategoriesByName("C");
+//            System.out.println(categorys);
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
 //            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
 //        }
 

@@ -13,7 +13,7 @@ public class CategoryDAO {
         String query = "INSERT INTO categories (category) VALUES (?)";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, category.getCategory());
+        statement.setString(1, category.getCategory().toLowerCase());
         statement.executeUpdate();
 
     }
@@ -35,7 +35,7 @@ public class CategoryDAO {
         String query = "UPDATE categories SET category = ? WHERE cat_id = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, category.getCategory());
+        statement.setString(1, category.getCategory().toLowerCase());
         statement.setInt(2, category.getId());
         statement.executeUpdate();
 
@@ -49,7 +49,7 @@ public class CategoryDAO {
         String query = "SELECT * FROM categories WHERE category = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, name);
+        statement.setString(1, name.toLowerCase());
         ResultSet result = statement.executeQuery();
         if (result.next()) {
 
@@ -76,5 +76,19 @@ public class CategoryDAO {
         } else {
             throw new IllegalArgumentException("Category not found");
         }
+    }
+    
+    public List<Category> searchCategoriesByName(String name)throws SQLException, IllegalArgumentException{
+        List<Category> categories = new ArrayList<>();
+        String query = "SELECT * FROM categories WHERE categories.category LIKE ?";
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, name.toLowerCase()+"%");
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            categories.add(Category.fromResultSet(results));
+        }
+
+        return categories;
     }
 }
