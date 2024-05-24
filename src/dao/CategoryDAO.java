@@ -59,4 +59,22 @@ public class CategoryDAO {
         }
 
     }
+    
+    public Category getByID(int id)throws SQLException, IllegalArgumentException{
+         if (id == 0 ) {
+            throw new IllegalArgumentException("Category id cannog be 0");
+        }
+
+        String query = "SELECT * FROM categories WHERE cat_id = ?";
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+        if (result.next()) {
+
+            return Category.fromResultSet(result);
+        } else {
+            throw new IllegalArgumentException("Category not found");
+        }
+    }
 }

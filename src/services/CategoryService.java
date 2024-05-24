@@ -54,6 +54,13 @@ public class CategoryService {
             categoryDAO.updateCategory(category);
         }
     }
+    
+    public Category getByID(int id)throws SQLException, IllegalArgumentException {
+        if (id == 0 ) {
+            throw new IllegalArgumentException("Category id cannog be 0");
+        }
+        return  categoryDAO.getByID(id);
+    }
 
     public static void main(String[] args) {
 //       EXAMPLE FOR ADD CATEGORY
@@ -78,11 +85,26 @@ public class CategoryService {
 ////            ex.printStackTrace();
 //            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
 //        }
+
 //EXAMPLE FOR UPDATE CATEGORY
 //        try {
 //            Category cat = new Category(1, "updated");
 //            CategoryService categoryService = new CategoryService();
 //            categoryService.updateCategory(cat);
+//        } catch (IllegalArgumentException ex) {
+//            JOptionPane.showMessageDialog(null, ex, "User Input Error", JOptionPane.ERROR_MESSAGE);
+//        } catch (SQLException ex) {
+////            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(null, ex, "DB Error", JOptionPane.ERROR_MESSAGE);
+//        }
+
+
+//EXAMPLE FOR GET BY ID CATEGORY
+//        try {
+//            
+//            CategoryService categoryService = new CategoryService();
+//            Category cat = categoryService.getByID(12);
+//            System.out.println(cat);
 //        } catch (IllegalArgumentException ex) {
 //            JOptionPane.showMessageDialog(null, ex, "User Input Error", JOptionPane.ERROR_MESSAGE);
 //        } catch (SQLException ex) {
