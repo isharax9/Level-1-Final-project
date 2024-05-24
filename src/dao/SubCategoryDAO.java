@@ -10,7 +10,7 @@ import java.util.List;
 public class SubCategoryDAO {
 
     public void createSubCategory(SubCategory subCategory) throws SQLException {
-        String query = "INSERT INTO subcategories (sub_category, cat_id) VALUES (?, ?)";
+        String query = "INSERT INTO `sub_categories` (`sub_category`, `categories_id`)  VALUES (?, ?)";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, subCategory.getSubCategory().toLowerCase());
@@ -20,7 +20,7 @@ public class SubCategoryDAO {
 
     public List<SubCategory> readSubCategories() throws SQLException {
         List<SubCategory> subCategories = new ArrayList<>();
-        String query = "SELECT * FROM subcategories";
+        String query = "SELECT *  FROM sub_categories INNER JOIN categories ON categories.cat_id = sub_categories.categories_id";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         ResultSet results = statement.executeQuery();
@@ -31,7 +31,7 @@ public class SubCategoryDAO {
     }
 
     public void updateSubCategory(SubCategory subCategory) throws SQLException {
-        String query = "UPDATE subcategories SET sub_category = ?, cat_id = ? WHERE sub_cat_id = ?";
+        String query = "UPDATE sub_categories SET sub_category = ?, categories_id = ? WHERE sub_cat_id = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, subCategory.getSubCategory().toLowerCase());
@@ -45,7 +45,7 @@ public class SubCategoryDAO {
             throw new IllegalArgumentException("SubCategory name cannot be empty");
         }
 
-        String query = "SELECT * FROM subcategories WHERE sub_category = ?";
+        String query = "SELECT * FROM sub_categories INNER JOIN categories ON categories.cat_id = sub_categories.categories_id WHERE sub_categories.sub_category  = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, name.toLowerCase());
@@ -62,7 +62,7 @@ public class SubCategoryDAO {
             throw new IllegalArgumentException("Subcategory id cannot be 0");
         }
 
-        String query = "SELECT * FROM subcategories WHERE sub_cat_id = ?";
+        String query = "SELECT * FROM sub_categories INNER JOIN categories ON categories.cat_id = sub_categories.categories_id  WHERE sub_cat_id = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
@@ -76,7 +76,7 @@ public class SubCategoryDAO {
 
     public List<SubCategory> searchSubCategoriesByName(String name) throws SQLException, IllegalArgumentException {
         List<SubCategory> subCategories = new ArrayList<>();
-        String query = "SELECT * FROM subcategories WHERE sub_category LIKE ?";
+        String query = "SELECT * FROM sub_categories INNER JOIN categories ON categories.cat_id = sub_categories.categories_id WHERE sub_category LIKE ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, name.toLowerCase() + "%");
@@ -86,4 +86,19 @@ public class SubCategoryDAO {
         }
         return subCategories;
     }
+    
+    public List<SubCategory> searchSubCategoriesByMainCatID(int mainCatID) throws SQLException, IllegalArgumentException {
+        List<SubCategory> subCategories = new ArrayList<>();
+        String query = "SELECT * FROM sub_categories INNER JOIN categories ON categories.cat_id = sub_categories.categories_id WHERE sub_categories.categories_id =  ?";
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setInt(1, mainCatID);
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            subCategories.add(SubCategory.fromResultSet(results));
+        }
+        return subCategories;
+    }
+    
+//    
 }

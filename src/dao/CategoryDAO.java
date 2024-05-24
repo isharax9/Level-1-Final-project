@@ -74,7 +74,7 @@ public class CategoryDAO {
 
             return Category.fromResultSet(result);
         } else {
-            throw new IllegalArgumentException("Category not found");
+            throw new IllegalArgumentException("Main Category not found");
         }
     }
     
