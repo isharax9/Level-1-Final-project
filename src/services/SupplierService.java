@@ -25,7 +25,13 @@ public class SupplierService {
         this.supplierDAO = new SupplierDAO();
         this.bankDetailsService = new BankDetailsService();
     }
-
+    
+    public List<Supplier> getAll()throws SQLException, IllegalArgumentException{
+        
+        return supplierDAO.getAll();
+        
+    }
+     
     public void create(Supplier supplier) throws SQLException, IllegalArgumentException {
         if (supplier.isValidated()) {
             boolean isNotExistSupplier = true;
@@ -117,6 +123,13 @@ public class SupplierService {
 
 //try{
 //    var sup = service.getByID(0);
+//    System.out.println(sup);
+//}catch(Exception ex){
+//    ex.printStackTrace();
+//}
+
+//try{
+//    var sup = service.getAll();
 //    System.out.println(sup);
 //}catch(Exception ex){
 //    ex.printStackTrace();

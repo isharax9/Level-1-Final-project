@@ -108,5 +108,18 @@ public class SupplierDAO {
 
         return suppliers;
     }
+    
+    public List<Supplier> getAll() throws SQLException {
+        List<Supplier> suppliers = new ArrayList<>();
+        String query = baseQuery ;
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        var result = statement.executeQuery();
+        while (result.next()) {
+            suppliers.add(Supplier.fromResultSet(result));
+        }
+
+        return suppliers;
+    }
 
 }
