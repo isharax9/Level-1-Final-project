@@ -6,8 +6,11 @@ package services;
 
 import dao.SupplierDAO;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import models.BankDetails;
 import models.Supplier;
+import utils.Validators;
 
 /**
  *
@@ -43,21 +46,39 @@ public class SupplierService {
             }
         }
     }
+    
+    public Supplier getByContact(String contact)throws SQLException, IllegalArgumentException{
+        if (!Validators.isValidContact(contact)) {
+            throw new IllegalArgumentException("Invalid contact");
+        }
+        
+        return supplierDAO.getByContact(contact);
+    }
+    
+    public List<Supplier> searchByName(String name)throws SQLException, IllegalArgumentException{
+        if(name.length() == 0){
+            return new ArrayList<>();
+        }
+        return supplierDAO.searchByName(name);
+        
+    }
 
     public static void main(String[] args) {
         SupplierService service = new SupplierService();
 
-        try {
-            var supplier = new Supplier();
-            supplier.setFirstName("vidura");
-            supplier.setLastName("Vijerathne");
-            supplier.setContact("0759569899");
-            supplier.setAddress("Moroththa,Madahapola");
-            supplier.setBankDetails(new BankDetails(1, "bn", "bb", "000000", "vidura"));
-            service.create(supplier);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            var supplier = new Supplier();
+//            supplier.setFirstName("vidura");
+//            supplier.setLastName("Vijerathne");
+//            supplier.setContact("0759569899");
+//            supplier.setAddress("Moroththa,Madahapola");
+//            supplier.setBankDetails(new BankDetails(1, "bn", "bb", "000000", "vidura"));
+//            service.create(supplier);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+
+
     }
 
 }
