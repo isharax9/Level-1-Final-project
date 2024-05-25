@@ -11,12 +11,12 @@ import com.formdev.flatlaf.FlatLaf;
  *
  * @author ADMIN
  */
-public class supervisorDashboard extends javax.swing.JFrame {
+public class SupervisorDashboard extends javax.swing.JFrame {
 
     /**
      * Creates new form supervisorDashboard
      */
-    public supervisorDashboard() {
+    public SupervisorDashboard() {
         initComponents();
     }
 
