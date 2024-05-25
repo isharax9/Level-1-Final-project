@@ -15,7 +15,7 @@ import models.Employee;
 public class Main {
     public static void main(String args[]) {
        
-        com.formdev.flatlaf.themes.FlatMacDarkLaf.setup();
+        com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
