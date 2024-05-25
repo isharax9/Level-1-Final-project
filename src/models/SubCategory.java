@@ -11,16 +11,14 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubCategory {
+
     private int id;
     private String subCategory;
     private Category category;
 
     public void setSubCategory(String subCategory) {
-        if (Validators.isValidSubCategory(subCategory)) {
-            this.subCategory = subCategory;
-        } else {
-            throw new IllegalArgumentException("Invalid sub category");
-        }
+        this.subCategory = subCategory;
+
     }
 
     public static SubCategory fromResultSet(ResultSet result) throws SQLException {
@@ -30,4 +28,14 @@ public class SubCategory {
         subCategory.setCategory(Category.fromResultSet(result));
         return subCategory;
     }
+
+    public boolean isValidate() {
+        if (Validators.isValidCategory(subCategory)) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Invalid category");
+        }
+
+    }
+
 }

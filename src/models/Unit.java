@@ -11,15 +11,13 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Unit {
+
     private int id;
     private String unit;
 
     public void setUnit(String unit) {
-        if (Validators.isValidUnit(unit)) {
             this.unit = unit;
-        } else {
-            throw new IllegalArgumentException("Invalid unit");
-        }
+        
     }
 
     public static Unit fromResultSet(ResultSet result) throws SQLException {
@@ -27,5 +25,12 @@ public class Unit {
         unit.setId(result.getInt("unit_id"));
         unit.setUnit(result.getString("unit"));
         return unit;
+    }
+
+    public boolean isValidate() {
+        if (!Validators.isValidUnit(unit)) {
+            throw new IllegalArgumentException("Invalid unit");
+        }
+        return true;
     }
 }

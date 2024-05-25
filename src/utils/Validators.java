@@ -119,7 +119,7 @@ public class Validators {
 
     // Validates a unit name -- must not be null or empty and must be less than 45 characters
     public static boolean isValidUnit(String unit) {
-        return unit != null && unit.length() <= 45;
+        return unit != null && unit.length() <= 45 && unit.length()>0;
     }
 
     

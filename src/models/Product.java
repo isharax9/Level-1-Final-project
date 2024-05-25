@@ -11,6 +11,7 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
+
     private int id;
     private String productName;
     private String productPrintingName;
@@ -19,19 +20,11 @@ public class Product {
     private double stockRefillingQty;
 
     public void setProductName(String productName) {
-        if (Validators.isValidProductName(productName)) {
-            this.productName = productName;
-        } else {
-            throw new IllegalArgumentException("Invalid product name");
-        }
+        this.productName = productName;
     }
 
     public void setProductPrintingName(String productPrintingName) {
-        if (Validators.isValidProductPrintingName(productPrintingName)) {
-            this.productPrintingName = productPrintingName;
-        } else {
-            throw new IllegalArgumentException("Invalid product printing name");
-        }
+        this.productPrintingName = productPrintingName;
     }
 
     public static Product fromResultSet(ResultSet result) throws SQLException {
@@ -43,5 +36,28 @@ public class Product {
         product.setUnit(Unit.fromResultSet(result));
         product.setStockRefillingQty(result.getDouble("stock_refilling_qty"));
         return product;
+    }
+
+    public boolean isValidated() {
+        if (!Validators.isValidProductName(productName)) {
+            throw new IllegalArgumentException("Invalid product name");
+        }
+        if (!Validators.isValidProductPrintingName(productPrintingName)) {
+            throw new IllegalArgumentException("Invalid product printing name");
+        }
+        if (subCategory.getId() <= 0) {
+            throw new IllegalArgumentException("Invalid Sub category ID");
+        }
+        if (!subCategory.isValidate()) {
+            throw new IllegalArgumentException("Invalid Sub category Name");
+        }
+        if (unit.getId() <= 0) {
+            throw new IllegalArgumentException("Invalid unit ID");
+        }
+        if (!unit.isValidate()) {
+            throw new IllegalArgumentException("Invalid unit ");
+        }
+
+        return true;
     }
 }

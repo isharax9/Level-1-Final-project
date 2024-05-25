@@ -11,15 +11,21 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
+
     private int id;
     private String category;
 
     public void setCategory(String category) {
-        if (Validators.isValidCategory(category)) {
-            this.category = category;
-        } else {
+        this.category = category;
+    }
+
+    public boolean isValidate() {
+        if(Validators.isValidCategory(category)){
+             return true;
+        }else{
             throw new IllegalArgumentException("Invalid category");
         }
+        
     }
 
     public static Category fromResultSet(ResultSet result) throws SQLException {
