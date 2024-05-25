@@ -17,36 +17,24 @@ public class BankDetails {
     private String bankAccountNumber;
     private String bankAccountHolderName;
 
-    public void setBankName(String bankName) {
-        if (Validators.isValidBankName(bankName)) {
-            this.bankName = bankName;
-        } else {
-            throw new IllegalArgumentException("Invalid bank name");
-        }
-    }
-
-    public void setBankBranch(String bankBranch) {
-        if (Validators.isValidBankBranch(bankBranch)) {
-            this.bankBranch = bankBranch;
-        } else {
-            throw new IllegalArgumentException("Invalid bank branch");
-        }
-    }
-
-    public void setBankAccountNumber(String bankAccountNumber) {
-        if (Validators.isValidBankAccountNumber(bankAccountNumber)) {
-            this.bankAccountNumber = bankAccountNumber;
-        } else {
-            throw new IllegalArgumentException("Invalid bank account number");
-        }
-    }
-
-    public void setBankAccountHolderName(String bankAccountHolderName) {
-        if (Validators.isValidUserName(bankAccountHolderName)) {
-            this.bankAccountHolderName = bankAccountHolderName;
-        } else {
+    
+    
+    public boolean isValidated(){
+        if(!Validators.isValidUserName(bankAccountHolderName)){
             throw new IllegalArgumentException("Invalid bank account holder name");
         }
+        if (!Validators.isValidBankAccountNumber(bankAccountNumber)){
+             throw new IllegalArgumentException("Invalid bank account number");
+        }
+        if(!Validators.isValidBankBranch(bankBranch)){
+             throw new IllegalArgumentException("Invalid bank branch");
+        }
+        if(!Validators.isValidBankName(bankName)){
+            throw new IllegalArgumentException("Invalid bank name");
+        }
+        
+        return true;
+        
     }
 
     public static BankDetails fromResultSet(ResultSet result) throws SQLException {
