@@ -10,6 +10,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import models.Category;
 import models.SubCategory;
+import models.Unit;
 import services.SubCategoryService;
 
 /**
@@ -21,19 +22,26 @@ public class SubCategoryComboBox extends javax.swing.JPanel {
     /**
      * Creates new form SubCategoryComboBox
      */
-    final SubCategoryService service ;
+    final SubCategoryService service;
     List<SubCategory> subcategories = new ArrayList<>();
     SubCategory selectedSubCategory;
     SubCategoryComboBoxInterface subCatBoxInterface;
+
     public SubCategoryComboBox() {
         initComponents();
         service = new SubCategoryService();
         loadCategory();
     }
-    
-     private void loadCategory() {
+
+    private void loadCategory() {
         try {
             subcategories.addAll(service.getAllSubCategories());
+            if (!subcategories.isEmpty()) {
+                selectedSubCategory = subcategories.get(0);
+                if (subCatBoxInterface != null) {
+                    subCatBoxInterface.onSelectSubCatgory(subcategories.get(0));
+                }
+            }
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
             comboBoxModel.removeAllElements();
             for (SubCategory category : subcategories) {
@@ -46,21 +54,21 @@ public class SubCategoryComboBox extends javax.swing.JPanel {
         }
 
     }
-     
-     public void onSelect(SubCategory subcat){
-         selectedSubCategory = subcat;
-         jComboBox1.setSelectedItem(subcat.getSubCategory());
-     }
-     
-     public void setCategoryComboBoxInterface(SubCategoryComboBoxInterface boxInterface){
+
+    public void onSelect(SubCategory subcat) {
+        selectedSubCategory = subcat;
+        jComboBox1.setSelectedItem(subcat.getSubCategory());
+    }
+
+    public void setInterface(SubCategoryComboBoxInterface boxInterface) {
         this.subCatBoxInterface = boxInterface;
     }
-    
-    public SubCategory getSelectedCategory(){
+
+    public SubCategory getSelectedCategory() {
         return selectedSubCategory;
     }
-    
-    public void refresh(){
+
+    public void refresh() {
         loadCategory();
     }
 
@@ -75,6 +83,17 @@ public class SubCategoryComboBox extends javax.swing.JPanel {
 
         jComboBox1 = new javax.swing.JComboBox<>();
 
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -88,6 +107,34 @@ public class SubCategoryComboBox extends javax.swing.JPanel {
                 .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        // TODO add your handling code here:
+        String selectedSubCatName = (String) jComboBox1.getSelectedItem();
+        for (SubCategory subCat : subcategories) {
+            if (subCat.getCategory().equals(selectedSubCatName)) {
+                selectedSubCategory = subCat;
+                if (subCatBoxInterface != null) {
+                    subCatBoxInterface.onSelectSubCatgory(subCat);
+                }
+                break;
+            }
+        }
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        String selectedSubCatName = (String) jComboBox1.getSelectedItem();
+        for (SubCategory subCat : subcategories) {
+            if (selectedSubCatName.equals(subCat.getSubCategory())) {
+                selectedSubCategory = subCat;
+                if (subCatBoxInterface != null) {
+                    subCatBoxInterface.onSelectSubCatgory(subCat);
+                }
+                break;
+            }
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

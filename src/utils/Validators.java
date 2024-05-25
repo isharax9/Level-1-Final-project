@@ -24,10 +24,16 @@ public class Validators {
     private static final  String POSITIVE_INT_REGEX  = "^[0-9]+$";
     private static final Pattern POSITIVE_INT_PATTERN = Pattern.compile(POSITIVE_INT_REGEX);
     
+    
+    private static final String DOUBLE_REG = "[-+]?(\\d*\\.\\d+|\\d+\\.\\d*)([eE][-+]?\\d+)?";
+     private static final Pattern doublePatten = Pattern.compile(DOUBLE_REG);
     // Regular expression for validating  integers
     private static final  String INT_REGEX  = "^-?[0-9]+$";
     private static final Pattern INT_PATTERN = Pattern.compile(INT_REGEX);
     
+    public static boolean isValidDouble(String dob){
+        return doublePatten.matcher(dob).matches();
+    }
     
     //conditions  : email not null, xxx@xx.xx type , maximum 100 chars 
     //returns : valid return TRUE,  invalid resutn False
@@ -72,6 +78,10 @@ public class Validators {
    
     }
     
+    public static boolean isValidInt(String num){
+         return POSITIVE_INT_PATTERN.matcher(num).matches();
+    }
+    
     //conditions : bank branch name char length between 1 and 44
     //returns : valid return TRUE,  invalid resutn False
     public static boolean isValidBankBranch(String text) {
@@ -91,7 +101,7 @@ public class Validators {
     }
     
     public static boolean isValidProductName(String productName){
-        return productName.length() <= 45;
+        return productName.length() <= 45  && productName.length() > 2;
     }
     
     

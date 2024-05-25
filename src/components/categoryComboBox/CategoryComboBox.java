@@ -23,7 +23,7 @@ public class CategoryComboBox extends javax.swing.JPanel {
     CategoryService service;
     List<Category> categories = new ArrayList<>();
     Category selectedCategory;
-    CategoryComboBoxInterface categoryComboBoxInterface ;
+    CategoryComboBoxInterface categoryComboBoxInterface;
 
     public CategoryComboBox() {
         initComponents();
@@ -34,6 +34,12 @@ public class CategoryComboBox extends javax.swing.JPanel {
     private void loadCategory() {
         try {
             categories.addAll(service.getAllCategories());
+            if (!categories.isEmpty()) {
+                selectedCategory = categories.get(0);
+                if (categoryComboBoxInterface != null) {
+                    categoryComboBoxInterface.onSelectCategory(categories.get(0));
+                }
+            }
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
             comboBoxModel.removeAllElements();
             for (Category category : categories) {
@@ -46,22 +52,22 @@ public class CategoryComboBox extends javax.swing.JPanel {
         }
 
     }
-    
-    public void onSelect(Category cat){
-        selectedCategory= cat;
-        System.out.println("selec CAt"+cat.getCategory());
+
+    public void onSelect(Category cat) {
+        selectedCategory = cat;
+        System.out.println("selec CAt" + cat.getCategory());
         jComboBox1.setSelectedItem(cat.getCategory());
     }
-    
-    public void setCategoryComboBoxInterface(CategoryComboBoxInterface boxInterface){
+
+    public void setInterface(CategoryComboBoxInterface boxInterface) {
         this.categoryComboBoxInterface = boxInterface;
     }
-    
-    public Category getSelectedCategory(){
+
+    public Category getSelectedCategory() {
         return selectedCategory;
     }
-    
-    public void refresh(){
+
+    public void refresh() {
         loadCategory();
     }
 
@@ -82,6 +88,11 @@ public class CategoryComboBox extends javax.swing.JPanel {
                 jComboBox1ItemStateChanged(evt);
             }
         });
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -98,17 +109,31 @@ public class CategoryComboBox extends javax.swing.JPanel {
     private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
         // TODO add your handling code here:
         String selectedCategoryName = (String) jComboBox1.getSelectedItem();
-            for (Category category : categories) {
-                if (category.getCategory().equals(selectedCategoryName)) {
-                    selectedCategory = category;
-                    if (categoryComboBoxInterface != null) {
-                        categoryComboBoxInterface.onSelectCategory(category);
-                    }
-                    break;
+        for (Category category : categories) {
+            if (category.getCategory().equals(selectedCategoryName)) {
+                selectedCategory = category;
+                if (categoryComboBoxInterface != null) {
+                    categoryComboBoxInterface.onSelectCategory(category);
                 }
+                break;
             }
-        
+        }
+
     }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        String selectedCategoryName = (String) jComboBox1.getSelectedItem();
+        for (Category category : categories) {
+            if (category.getCategory().equals(selectedCategoryName)) {
+                selectedCategory = category;
+                if (categoryComboBoxInterface != null) {
+                    categoryComboBoxInterface.onSelectCategory(category);
+                }
+                break;
+            }
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

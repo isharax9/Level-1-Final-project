@@ -4,10 +4,12 @@
  */
 package components.categoryComboBox;
 
+import models.SubCategory;
+
 /**
  *
  * @author vidur
  */
 public interface SubCategoryComboBoxInterface {
-    
+    public void onSelectSubCatgory(SubCategory subCat);
 }

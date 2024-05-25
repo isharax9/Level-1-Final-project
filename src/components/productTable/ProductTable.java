@@ -62,6 +62,9 @@ public class ProductTable extends javax.swing.JPanel {
     private void initData() {
         loadProductsToTable();
     }
+    public void refresh(){
+        loadProductsToTable();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

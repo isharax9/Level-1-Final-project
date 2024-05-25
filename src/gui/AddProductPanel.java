@@ -4,30 +4,48 @@
  */
 package gui;
 
+import components.categoryComboBox.CategoryComboBoxInterface;
+import components.categoryComboBox.SubCategoryComboBoxInterface;
 import components.productTable.ProductTableInterface;
+import components.unitComboBox.UnitComboBoxInterface;
+import javax.swing.JOptionPane;
+import models.Category;
 import models.Product;
+import models.SubCategory;
+import models.Unit;
+import services.ProductService;
+import utils.Validators;
 
 /**
  *
  * @author vidur
  */
-public class AddProductPanel extends javax.swing.JPanel implements ProductTableInterface {
+public class AddProductPanel extends javax.swing.JPanel implements ProductTableInterface, SubCategoryComboBoxInterface, UnitComboBoxInterface, CategoryComboBoxInterface {
 
     /**
      * Creates new form AddProductPanel
      */
     Product selectedProduct = null;
-    
+    SubCategory selectedSubCategory;
+    Category selectedCategory;
+    Unit selectedUnit;
+    ProductService service;
+
     public AddProductPanel() {
+        this.service = new ProductService();
         initComponents();
         initData();
     }
-    private void initData(){
+
+    private void initData() {
         productTable1.setProductTableInterface(this);
-        
+        categoryComboBox1.setInterface(this);
+        subCategoryComboBox1.setInterface(this);
+        unitComboBox1.setInterface(this);
+
     }
-    
-    private void loadProductToFields(Product product){
+
+    private void loadProductToFields(Product product) {
         tf_productName.setText(product.getProductName());
         tf_productPrintName.setText(product.getProductPrintingName());
         tf_productRefilQty.setText(String.valueOf(product.getStockRefillingQty()));
@@ -35,15 +53,44 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
         categoryComboBox1.onSelect(product.getSubCategory().getCategory());
         subCategoryComboBox1.onSelect(product.getSubCategory());
         unitComboBox1.onSelect(product.getUnit());
-        
+
     }
-    
+
+    private Product getProductFromFields() {
+        if (!Validators.isValidDouble(tf_productRefilQty.getText())) {
+            throw new IllegalArgumentException("Invalid Product Stock Refilling Quntity value");
+        }
+        if (!Validators.isValidInt(tf_productID.getText())) {
+            tf_productID.setText("0");
+        }
+        Product p = new Product();
+        p.setId(Integer.parseInt(tf_productID.getText()));
+        p.setProductName(tf_productName.getText());
+        p.setProductPrintingName(tf_productPrintName.getText());
+        p.setStockRefillingQty(Double.parseDouble(tf_productRefilQty.getText()));
+        p.setSubCategory(selectedSubCategory);
+        p.setUnit(selectedUnit);
+        System.out.println("Sub CAT" + selectedSubCategory);
+        System.out.println("CAT" + selectedCategory);
+        System.out.println("UNIT" + selectedUnit);
+        return p;
+
+    }
+
     @Override
     public void selectProduct(Product product) {
-        selectedProduct  = product;
+        selectedProduct = product;
         loadProductToFields(product);
-        System.out.println("SELECTED PRODUCT"+product);
-        
+        System.out.println("SELECTED PRODUCT" + product);
+
+    }
+
+    private void refresh() {
+        tf_productName.setText("");
+        tf_productPrintName.setText("");
+        tf_productRefilQty.setText("10");
+        tf_productID.setText("0");
+        productTable1.refresh();
     }
 
     /**
@@ -69,8 +116,8 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btn_addProduct = new javax.swing.JButton();
+        btn_updateProduct = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         categoryComboBox1 = new components.categoryComboBox.CategoryComboBox();
@@ -78,9 +125,10 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
         unitComboBox1 = new components.unitComboBox.UnitComboBox();
         productTable1 = new components.productTable.ProductTable();
         jPanel3 = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
+        btn_clear = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(968, 567));
 
@@ -106,6 +154,7 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
 
         jLabel1.setText("ID");
 
+        tf_productID.setText("0");
         tf_productID.setEnabled(false);
 
         jLabel3.setText("Name");
@@ -115,6 +164,7 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
         jLabel5.setText("Stock Refiling Quantity");
 
         tf_productRefilQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        tf_productRefilQty.setText("0");
 
         jLabel6.setText("Category");
 
@@ -122,9 +172,19 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
 
         jLabel8.setText("Unit");
 
-        jButton1.setText("ADD Product");
+        btn_addProduct.setText("ADD Product");
+        btn_addProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_addProductActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Update Product");
+        btn_updateProduct.setText("Update Product");
+        btn_updateProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_updateProductActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("ADD New Category");
 
@@ -184,8 +244,8 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
+                                        .addComponent(btn_addProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btn_updateProduct, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
                                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel7))
@@ -233,9 +293,9 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(unitComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btn_addProduct)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(btn_updateProduct)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -243,11 +303,20 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton5.setText("View  Stocks");
+        btn_clear.setBackground(new java.awt.Color(255, 0, 0));
+        btn_clear.setForeground(new java.awt.Color(255, 255, 255));
+        btn_clear.setText("CLEAR");
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("View  GRNs");
 
         jButton7.setText("View Purchase Orders");
+
+        jButton1.setText("View Stock");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -255,11 +324,13 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton5)
+                .addComponent(btn_clear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -267,9 +338,10 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(40, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
+                    .addComponent(btn_clear)
                     .addComponent(jButton6)
-                    .addComponent(jButton7))
+                    .addComponent(jButton7)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -302,14 +374,55 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_addProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addProductActionPerformed
+        // TODO add your handling code here:
+
+        try {
+            var product = getProductFromFields();
+            service.createProduct(product);
+            JOptionPane.showMessageDialog(this, "Successfully Added " + product.getProductName(), "Succes", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+
+        }
+        refresh();
+//        System.out.println(product.getSubCategory().getCategory());
+    }//GEN-LAST:event_btn_addProductActionPerformed
+
+    private void btn_updateProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateProductActionPerformed
+        // TODO add your handling code here:
+        if (selectedProduct != null) {
+            try {
+                var product = getProductFromFields();
+                product.setId(selectedProduct.getId());
+                service.updateProduct(product);
+                JOptionPane.showMessageDialog(this, "Successfully Update " + product.getProductName(), "Succes", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a Product to Update", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        refresh();
+    }//GEN-LAST:event_btn_updateProductActionPerformed
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        // TODO add your handling code here:
+        refresh();
+        
+    }//GEN-LAST:event_btn_clearActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_addProduct;
+    private javax.swing.JButton btn_clear;
+    private javax.swing.JButton btn_updateProduct;
     private components.categoryComboBox.CategoryComboBox categoryComboBox1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
@@ -332,5 +445,25 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
     private components.unitComboBox.UnitComboBox unitComboBox1;
     // End of variables declaration//GEN-END:variables
 
-    
+    @Override
+    public void onSelectSubCatgory(SubCategory subCat) {
+        System.out.println("SELECTED " + subCat.getSubCategory());
+
+        selectedSubCategory = subCat;
+
+    }
+
+    @Override
+    public void onSelectUnit(Unit unit) {
+        System.out.println("SELECTED " + unit.getUnit());
+
+        selectedUnit = unit;
+    }
+
+    @Override
+    public void onSelectCategory(Category category) {
+        System.out.println("SELECTED " + category.getCategory());
+        selectedCategory = category;
+    }
+
 }

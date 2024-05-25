@@ -4,10 +4,12 @@
  */
 package components.unitComboBox;
 
+import models.Unit;
+
 /**
  *
  * @author vidur
  */
 public interface UnitComboBoxInterface {
-    
+    public void onSelectUnit(Unit unit);
 }

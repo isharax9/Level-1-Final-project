@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import models.Category;
 import models.SubCategory;
 import models.Unit;
 import services.UnitService;
@@ -34,6 +35,12 @@ public class UnitComboBox extends javax.swing.JPanel {
     private void loadUnit(){
         try {
             units.addAll(service.getAllUnits());
+            if(!units.isEmpty()){
+                selectedUnit = units.get(0);
+                if (unitBoxInterface != null) {
+                        unitBoxInterface.onSelectUnit(units.get(0));
+                    }
+            }
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
             comboBoxModel.removeAllElements();
             for (Unit unit : units) {
@@ -50,6 +57,13 @@ public class UnitComboBox extends javax.swing.JPanel {
         selectedUnit = unit;
        jComboBox1.setSelectedItem(unit.getUnit());
     }
+    public void setInterface(UnitComboBoxInterface face){
+        this.unitBoxInterface = face;
+    }
+    
+    public Unit getSelectedUnit(){
+        return this.selectedUnit;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -63,6 +77,11 @@ public class UnitComboBox extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox<>();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -75,6 +94,20 @@ public class UnitComboBox extends javax.swing.JPanel {
             .addComponent(jComboBox1)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        // TODO add your handling code here:
+        String selectedUnitName = (String) jComboBox1.getSelectedItem();
+            for (Unit unit : units) {
+                if (unit.getUnit().equals(selectedUnitName)) {
+                    selectedUnit = unit;
+                    if (unitBoxInterface != null) {
+                        unitBoxInterface.onSelectUnit(unit);
+                    }
+                    break;
+                }
+            }
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
