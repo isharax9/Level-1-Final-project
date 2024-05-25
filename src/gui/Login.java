@@ -35,7 +35,6 @@ public class Login extends javax.swing.JFrame {
         passwordFeild = new javax.swing.JPasswordField();
         rb_user_type_cashier = new javax.swing.JRadioButton();
         rb_user_type_admin = new javax.swing.JRadioButton();
-        rb_user_type_supervisor = new javax.swing.JRadioButton();
         LoginBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -88,10 +87,6 @@ public class Login extends javax.swing.JFrame {
         rb_user_type_admin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         rb_user_type_admin.setText("Admin");
 
-        userTypeButtonGroup.add(rb_user_type_supervisor);
-        rb_user_type_supervisor.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        rb_user_type_supervisor.setText("Supervisor");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -111,10 +106,8 @@ public class Login extends javax.swing.JFrame {
                                 .addGap(6, 6, 6)
                                 .addComponent(rb_user_type_cashier)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rb_user_type_admin)
-                                .addGap(18, 18, 18)
-                                .addComponent(rb_user_type_supervisor, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(123, Short.MAX_VALUE))
+                                .addComponent(rb_user_type_admin)))))
+                .addContainerGap(139, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,8 +123,7 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rb_user_type_cashier)
-                    .addComponent(rb_user_type_admin)
-                    .addComponent(rb_user_type_supervisor))
+                    .addComponent(rb_user_type_admin))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -247,7 +239,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordFeild;
     private javax.swing.JRadioButton rb_user_type_admin;
     private javax.swing.JRadioButton rb_user_type_cashier;
-    private javax.swing.JRadioButton rb_user_type_supervisor;
     private javax.swing.ButtonGroup userTypeButtonGroup;
     // End of variables declaration//GEN-END:variables
 }
