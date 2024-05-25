@@ -11,6 +11,7 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Supplier {
+
     private int id;
     private String firstName;
     private String lastName;
@@ -18,36 +19,21 @@ public class Supplier {
     private String address;
     private BankDetails bankDetails;
 
-    public void setFirstName(String firstName) {
-        if (Validators.isValidUserName(firstName)) {
-            this.firstName = firstName;
-        } else {
-            throw new IllegalArgumentException("Invalid first name");
-        }
-    }
-
-    public void setLastName(String lastName) {
-        if (Validators.isValidUserName(lastName)) {
-            this.lastName = lastName;
-        } else {
-            throw new IllegalArgumentException("Invalid last name");
-        }
-    }
-
-    public void setContact(String contact) {
-        if (Validators.isValidContact(contact)) {
-            this.contact = contact;
-        } else {
-            throw new IllegalArgumentException("Invalid contact");
-        }
-    }
-
-    public void setAddress(String address) {
-        if (Validators.isValidAddress(address)) {
-            this.address = address;
-        } else {
+    public boolean isValidated() {
+        if (!Validators.isValidAddress(address)) {
             throw new IllegalArgumentException("Invalid address");
         }
+        if (!Validators.isValidContact(contact)) {
+            throw new IllegalArgumentException("Invalid contact");
+        }
+        if (!Validators.isValidUserName(lastName)) {
+            throw new IllegalArgumentException("Invalid last name");
+        }
+        if (!Validators.isValidUserName(firstName)) {
+            throw new IllegalArgumentException("Invalid first name");
+
+        }
+        return true;
     }
 
     public static Supplier fromResultSet(ResultSet result) throws SQLException {
