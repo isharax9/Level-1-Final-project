@@ -1,6 +1,6 @@
 package dao;
 
-import models.Unit;
+import dto.Unit;
 import utils.Database;
 
 import java.sql.*;

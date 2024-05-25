@@ -1,7 +1,7 @@
 package services;
 
 import dao.UnitDAO;
-import models.Unit;
+import dto.Unit;
 
 import java.sql.SQLException;
 import java.util.List;

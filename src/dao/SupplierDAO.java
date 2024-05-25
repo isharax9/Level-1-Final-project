@@ -14,8 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import models.BankDetails;
-import models.Supplier;
+import dto.BankDetails;
+import dto.Supplier;
 import utils.Database;
 
 public class SupplierDAO {

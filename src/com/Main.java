@@ -4,9 +4,7 @@
  */
 package com;
 
-import gui.AddAddress;
 import gui.Login;
-import models.Employee;
 
 /**
  *
@@ -19,11 +17,8 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
-//                new AddAddress().setVisible(true);
             }
         });
     }
 }
 
-
-//dispose freme, exist code 0 

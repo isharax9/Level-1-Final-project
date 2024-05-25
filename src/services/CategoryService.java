@@ -1,7 +1,7 @@
 package services;
 
 import dao.CategoryDAO;
-import models.Category;
+import dto.Category;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

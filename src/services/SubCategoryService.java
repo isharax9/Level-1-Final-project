@@ -2,12 +2,12 @@ package services;
 
 import dao.CategoryDAO;
 import dao.SubCategoryDAO;
-import models.SubCategory;
+import dto.SubCategory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import models.Category;
+import dto.Category;
 
 public class SubCategoryService {
 

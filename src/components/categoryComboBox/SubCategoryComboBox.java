@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import models.Category;
-import models.SubCategory;
-import models.Unit;
+import dto.Category;
+import dto.SubCategory;
+import dto.Unit;
 import services.SubCategoryService;
 
 /**

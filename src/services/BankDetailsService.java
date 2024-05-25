@@ -6,7 +6,7 @@ package services;
 
 import dao.BankDetailsDAO;
 import java.sql.SQLException;
-import models.BankDetails;
+import dto.BankDetails;
 
 /**
  *

@@ -4,7 +4,7 @@
  */
 package components.unitComboBox;
 
-import models.Unit;
+import dto.Unit;
 
 /**
  *

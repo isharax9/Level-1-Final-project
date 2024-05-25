@@ -4,7 +4,7 @@
  */
 package components.productTable;
 
-import models.Product;
+import dto.Product;
 
 /**
  *

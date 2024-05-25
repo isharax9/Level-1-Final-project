@@ -4,7 +4,7 @@
  */
 package components.categoryComboBox;
 
-import models.Category;
+import dto.Category;
 
 /**
  *
