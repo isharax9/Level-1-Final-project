@@ -85,8 +85,8 @@ public class SupplierService {
         return supplierDAO.getByID(id);
     }
     
-    public static void main(String[] args) {
-        SupplierService service = new SupplierService();
+//    public static void main(String[] args) {
+//        SupplierService service = new SupplierService();
 
 //        try {
 //            var supplier = new Supplier();
@@ -138,6 +138,6 @@ public class SupplierService {
 
 
 
-    }
+//    }
 
 }

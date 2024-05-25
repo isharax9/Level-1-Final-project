@@ -203,6 +203,8 @@ public class Login extends javax.swing.JFrame {
 
                         }
                         case SUPERVISOR -> {
+                            this.dispose();
+                            new SupervisorDashboard().setVisible(true);
                             System.out.println("SUPERVISOR");
                         }
                         default -> {
