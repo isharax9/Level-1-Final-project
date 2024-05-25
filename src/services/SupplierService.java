@@ -62,7 +62,23 @@ public class SupplierService {
         return supplierDAO.searchByName(name);
         
     }
-
+    
+     public List<Supplier> searchByContact(String contact)throws SQLException, IllegalArgumentException{
+        if (!Validators.isValidContact(contact)) {
+            throw new IllegalArgumentException("Invalid contact");
+        }
+        
+        return supplierDAO.searchByContact(contact);
+    }
+    
+     public Supplier getByID(int id)throws SQLException, IllegalArgumentException{
+        if (id<= 0) {
+            throw new IllegalArgumentException("Invalid ID");
+        }
+        
+        return supplierDAO.getByID(id);
+    }
+    
     public static void main(String[] args) {
         SupplierService service = new SupplierService();
 

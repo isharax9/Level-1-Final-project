@@ -80,5 +80,33 @@ public class SupplierDAO {
 
         return suppliers;
     }
+    
+    public Supplier getByID(int id) throws SQLException {
+         String query = baseQuery + " WHERE supplier_id = ?";
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setInt(1, id);
+        var result = statement.executeQuery();
+        if (result.next()) {
+            return Supplier.fromResultSet(result);
+        } else {
+            throw new IllegalArgumentException("Supplier not found in this id");
+        }
+
+    }
+    
+    public List<Supplier> searchByContact(String contact) throws SQLException {
+        List<Supplier> suppliers = new ArrayList<>();
+        String query = baseQuery + " WHERE  supplier_contact LIKE ?";
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+        statement.setString(1, contact+ "%");
+        var result = statement.executeQuery();
+        while (result.next()) {
+            suppliers.add(Supplier.fromResultSet(result));
+        }
+
+        return suppliers;
+    }
 
 }
