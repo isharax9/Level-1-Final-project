@@ -159,7 +159,19 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
 
         jLabel3.setText("Name");
 
+        tf_productName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_productNameKeyReleased(evt);
+            }
+        });
+
         jLabel4.setText("Printing Name");
+
+        tf_productPrintName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_productPrintNameActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Stock Refiling Quantity");
 
@@ -413,6 +425,16 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
         refresh();
         
     }//GEN-LAST:event_btn_clearActionPerformed
+
+    private void tf_productPrintNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_productPrintNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_productPrintNameActionPerformed
+
+    private void tf_productNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_productNameKeyReleased
+        // TODO add your handling code here:
+                productTable1.searchByProductName(tf_productName.getText());
+
+    }//GEN-LAST:event_tf_productNameKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -251,6 +251,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tf_productName">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tf_productNameKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
@@ -258,6 +261,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tf_productPrintName">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_productPrintNameActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>

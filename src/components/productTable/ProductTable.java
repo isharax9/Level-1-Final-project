@@ -38,7 +38,6 @@ public class ProductTable extends javax.swing.JPanel {
         products.clear();
         try {
             products.addAll(productService.getAllProducts());
-            System.out.println(products);
             DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
             tableModel.setRowCount(0); // Clear existing rows
 
@@ -64,6 +63,36 @@ public class ProductTable extends javax.swing.JPanel {
     }
     public void refresh(){
         loadProductsToTable();
+    }
+    public void searchByProductName(String name){
+        try{
+            if(!name.isBlank()){
+            products.clear();
+            products.addAll(productService.searchProductsByName(name));
+            DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
+            tableModel.setRowCount(0); // Clear existing rows
+
+            for (Product product : products) {
+                tableModel.addRow(new Object[]{
+                    product.getId(),
+                    product.getProductName(),
+                    product.getProductPrintingName(),
+                    product.getSubCategory().getSubCategory(),
+                    product.getSubCategory().getCategory().getCategory(), // Assuming this method exists
+                    product.getUnit().getUnit(),
+                    product.getStockRefillingQty()
+                });
+            }
+            
+       }
+            else{
+                loadProductsToTable();
+            }
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(this,ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+        }
+       
     }
 
     /**
