@@ -64,10 +64,10 @@ public class SupplierService {
     }
     
      public List<Supplier> searchByContact(String contact)throws SQLException, IllegalArgumentException{
-        if (!Validators.isValidContact(contact)) {
-            throw new IllegalArgumentException("Invalid contact");
-        }
-        
+//        if (!Validators.isValidContact(contact)) {
+//            throw new IllegalArgumentException("Invalid contact");
+//        }
+//        
         return supplierDAO.searchByContact(contact);
     }
     
@@ -93,6 +93,36 @@ public class SupplierService {
 //        } catch (Exception ex) {
 //            ex.printStackTrace();
 //        }
+
+//try{
+//    var sup = service.getByContact("0759569855");
+//    System.out.println(sup);
+//}catch(Exception ex){
+//    ex.printStackTrace();
+//}
+
+//try{
+//    var sup = service.searchByName("x");
+//    System.out.println(sup);
+//}catch(Exception ex){
+//    ex.printStackTrace();
+//}
+
+//try{
+//    var sup = service.searchByContact("075");
+//    System.out.println(sup);
+//}catch(Exception ex){
+//    ex.printStackTrace();
+//}
+
+//try{
+//    var sup = service.getByID(0);
+//    System.out.println(sup);
+//}catch(Exception ex){
+//    ex.printStackTrace();
+//}
+
+
 
 
     }
