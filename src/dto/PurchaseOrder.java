@@ -1,4 +1,4 @@
-package models;
+package dto;
 
 import java.sql.Date;
 import java.sql.ResultSet;

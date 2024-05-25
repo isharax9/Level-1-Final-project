@@ -1,6 +1,6 @@
 package dao;
 
-import models.Category;
+import dto.Category;
 import utils.Database;
 
 import java.sql.*;

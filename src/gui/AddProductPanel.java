@@ -9,10 +9,10 @@ import components.categoryComboBox.SubCategoryComboBoxInterface;
 import components.productTable.ProductTableInterface;
 import components.unitComboBox.UnitComboBoxInterface;
 import javax.swing.JOptionPane;
-import models.Category;
-import models.Product;
-import models.SubCategory;
-import models.Unit;
+import dto.Category;
+import dto.Product;
+import dto.SubCategory;
+import dto.Unit;
 import services.ProductService;
 import utils.Validators;
 

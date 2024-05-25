@@ -1,8 +1,8 @@
 package gui;
 
 import javax.swing.JOptionPane;
-import models.Auth;
-import models.UserType;
+import dto.Auth;
+import dto.UserType;
 
 public class Login extends javax.swing.JFrame {
 
@@ -185,24 +185,12 @@ public class Login extends javax.swing.JFrame {
                 System.out.println("Successfully login");
                 if (null != auth.getAuthType())//                <TODO>Dashboard viewing logic here </TODO>
                 {
-                    switch (auth.getAuthType()) {
-                        case ADMIN -> {
-                            this.dispose();
-                            new AdminDashBoard().setVisible(true);
-                        }
-                        case CASHIER -> {
-                            System.out.println("CASHIER");
-
-                        }
-                        case SUPERVISOR -> {
-                            this.dispose();
-                            new SupervisorDashboard().setVisible(true);
-                            System.out.println("SUPERVISOR");
-                        }
-                        default -> {
-                            
-                        }
+                    if(auth.getAuthType() == UserType.ADMIN || auth.getAuthType() == UserType.CASHIER){
+                        this.dispose();
+                        new DashboardFrame().setVisible(true);
                     }
+                        
+                    
                 }
 //     <TODO>ADMIN </TODO>
                 //     <TODO>CASHIER </TODO>

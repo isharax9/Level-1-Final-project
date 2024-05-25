@@ -4,7 +4,7 @@ import dao.CategoryDAO;
 import dao.ProductDAO;
 import dao.SubCategoryDAO;
 import dao.UnitDAO;
-import models.Product;
+import dto.Product;
 
 import java.sql.SQLException;
 import java.util.List;

@@ -1,6 +1,6 @@
 package dao;
 
-import models.Product;
+import dto.Product;
 import utils.Database;
 
 import java.sql.Connection;
