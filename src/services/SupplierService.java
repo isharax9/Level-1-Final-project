@@ -84,6 +84,11 @@ public class SupplierService {
         
         return supplierDAO.getByID(id);
     }
+     
+     public void update(Supplier supplier) throws SQLException, IllegalArgumentException {
+     //todo
+     
+     }
     
 //    public static void main(String[] args) {
 //        SupplierService service = new SupplierService();

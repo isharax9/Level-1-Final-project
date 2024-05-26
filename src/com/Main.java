@@ -5,20 +5,22 @@
 package com;
 
 import gui.Login;
+import gui.SuppliersPanel;
 
 /**
  *
  * @author vidur
  */
 public class Main {
+
     public static void main(String args[]) {
-       
+        
         com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
+//                new SuppliersPanel().setVisible(true);
             }
         });
     }
 }
-
