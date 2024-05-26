@@ -134,6 +134,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         purchaseOrder.setPaidAmount(Integer.parseInt(tf_paidAmount.getText()));
         purchaseOrder.setProduct(getSelectedProductFromComboBox());
         purchaseOrder.setSupplier(getSelectedSupplierFromComboBox());
+        purchaseOrder.setWholesaleUnitPrice(Double.parseDouble(tf_whoelSalePrice.getText()));
 
         return purchaseOrder;
     }
