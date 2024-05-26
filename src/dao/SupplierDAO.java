@@ -80,9 +80,9 @@ public class SupplierDAO {
 
         return suppliers;
     }
-    
+
     public Supplier getByID(int id) throws SQLException {
-         String query = baseQuery + " WHERE supplier_id = ?";
+        String query = baseQuery + " WHERE supplier_id = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
@@ -94,13 +94,13 @@ public class SupplierDAO {
         }
 
     }
-    
+
     public List<Supplier> searchByContact(String contact) throws SQLException {
         List<Supplier> suppliers = new ArrayList<>();
         String query = baseQuery + " WHERE  supplier_contact LIKE ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setString(1, contact+ "%");
+        statement.setString(1, contact + "%");
         var result = statement.executeQuery();
         while (result.next()) {
             suppliers.add(Supplier.fromResultSet(result));
@@ -108,10 +108,10 @@ public class SupplierDAO {
 
         return suppliers;
     }
-    
+
     public List<Supplier> getAll() throws SQLException {
         List<Supplier> suppliers = new ArrayList<>();
-        String query = baseQuery ;
+        String query = baseQuery;
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         var result = statement.executeQuery();
@@ -121,7 +121,7 @@ public class SupplierDAO {
 
         return suppliers;
     }
-    
+
     public void update(Supplier supplier) throws SQLException {
         String query = "UPDATE `suppliers` SET `supplier_first_name`=? , `supplier_last_name`=?, `supplier_contact`=?,`supplier_address`=? WHERE  `supplier_id`=?";
         Connection conn = Database.getInstance().getConnection();
@@ -133,9 +133,62 @@ public class SupplierDAO {
         statement.setInt(5, supplier.getId());
         statement.executeUpdate();
         System.out.println("UPDATE SUPPLIER ");
-        
 
     }
 
+    public List<Supplier> search(String id, String firstName, String lastName, String mobile, String bankAccountNumber) throws SQLException {
+        List<Supplier> suppliers = new ArrayList<>();
+        StringBuilder queryBuilder = new StringBuilder(baseQuery);
+        List<Object> parameters = new ArrayList<>();
+        boolean isFirstCondition = true;
+
+        if (id != null && !id.trim().isEmpty()) {
+            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
+            queryBuilder.append(" supplier_id = ?");
+            parameters.add(Integer.parseInt(id));
+            isFirstCondition = false;
+        }
+
+        if (firstName != null && !firstName.trim().isEmpty()) {
+            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
+            queryBuilder.append(" supplier_first_name LIKE ?");
+            parameters.add(firstName.toLowerCase() + "%");
+            isFirstCondition = false;
+        }
+
+        if (lastName != null && !lastName.trim().isEmpty()) {
+            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
+            queryBuilder.append(" supplier_last_name LIKE ?");
+            parameters.add(lastName.toLowerCase() + "%");
+            isFirstCondition = false;
+        }
+
+        if (mobile != null && !mobile.trim().isEmpty()) {
+            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
+            queryBuilder.append(" supplier_contact LIKE ?");
+            parameters.add(mobile + "%");
+            isFirstCondition = false;
+        }
+
+        if (bankAccountNumber != null && !bankAccountNumber.trim().isEmpty()) {
+            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
+            queryBuilder.append(" bank_details.bank_account_number LIKE ?");
+            parameters.add(bankAccountNumber + "%");
+        }
+
+        String query = queryBuilder.toString();
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        for (int i = 0; i < parameters.size(); i++) {
+            statement.setObject(i + 1, parameters.get(i));
+        }
+        var result = statement.executeQuery();
+        while (result.next()) {
+            suppliers.add(Supplier.fromResultSet(result));
+        }
+
+        return suppliers;
+
+    }
 
 }
