@@ -18,6 +18,7 @@ import services.ProductService;
 import services.SupplierService;
 import utils.Validators;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 
 /**
  *
@@ -105,9 +106,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     }
 
     private PurchaseOrder getPurchaseOrderFromFields() throws IllegalArgumentException {
-        if (!Validators.isValidInt(tf_Id.getText())) {
-            throw new IllegalArgumentException("Supplier ID is Invalid");
-        }
+        
         if (!Validators.isValidDouble(tf_qty.getText())) {
             throw new IllegalArgumentException("Quantity is Invalid");
         }
@@ -124,13 +123,11 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         if (cb_supplier.getSelectedItem() == null) {
             throw new IllegalArgumentException("Supplier is Invalid");
         }
-        
-        Supplier supplier = new Supplier();
-        dto.PurchaseOrder purchaseOrder = new PurchaseOrder();
 
-        purchaseOrder.setId(Integer.parseInt(tf_Id.getText()));
+        dto.PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setId(0);
         purchaseOrder.setOrderQty(Integer.parseInt(tf_qty.getText()));
-        purchaseOrder.setOrderedDate(Date.valueOf(ff_orderDate.getText()));
+        purchaseOrder.setOrderedDate(Date.valueOf(LocalDate.now()));
         purchaseOrder.setPaidAmount(Integer.parseInt(tf_paidAmount.getText()));
         purchaseOrder.setProduct(getSelectedProductFromComboBox());
         purchaseOrder.setSupplier(getSelectedSupplierFromComboBox());
@@ -431,14 +428,16 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
         try {
+
             PurchaseOrder s = getPurchaseOrderFromFields();
 //            if (s.isValidated()) {
-//                purchaseOrderSerive.createPurchaseOrder(s); Add purchase Order Service Class
+//                purchaseOrderSerive.createPurchaseOrder(s);
             JOptionPane.showMessageDialog(this, "Success", "Sucessfully Created", JOptionPane.INFORMATION_MESSAGE);
             clear();
             initData();
 //            }
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "User Input Error", JOptionPane.WARNING_MESSAGE);
 //        } catch (SQLException ex) {
 //            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
