@@ -99,6 +99,30 @@ public class SupplierService {
         
 
     }
+    
+    public  List<Supplier> search(String id,String firstName,String LastName,String Mobile, String bankAccountNumber)throws SQLException, IllegalArgumentException{
+        if(id.isBlank()){
+            id = null;
+        }
+        if(firstName.isBlank()){
+            firstName = null;
+        }
+        if(LastName.isBlank()){
+            LastName = null;  
+        }
+        if(Mobile.isBlank()){
+            Mobile = null;
+        }
+        if(bankAccountNumber.isBlank()){
+            bankAccountNumber =null;
+        }
+        
+        if(id == null && firstName == null && LastName == null && Mobile == null && bankAccountNumber == null){
+            return getAll();
+        }else{
+            return supplierDAO.search(id,firstName,LastName,Mobile,bankAccountNumber);
+        }
+    }
 
 //    public static void main(String[] args) {
 //        SupplierService service = new SupplierService();
