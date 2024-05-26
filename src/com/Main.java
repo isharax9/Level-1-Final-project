@@ -5,7 +5,7 @@
 package com;
 
 import gui.Login;
-import gui.SuppliersPanel;
+import gui.PurchuseOrderPanel;
 
 /**
  *
@@ -19,7 +19,6 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
-//                new SuppliersPanel().setVisible(true);
             }
         });
     }
