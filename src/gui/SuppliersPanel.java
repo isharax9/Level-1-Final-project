@@ -222,6 +222,11 @@ public class SuppliersPanel extends javax.swing.JPanel {
 
         btn_clear.setBackground(new java.awt.Color(255, 102, 102));
         btn_clear.setText("CLEAR");
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -463,6 +468,11 @@ public class SuppliersPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "DataBase Error", e.getMessage(), JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btn_UpdateActionPerformed
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_btn_clearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
