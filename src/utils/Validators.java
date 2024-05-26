@@ -25,7 +25,7 @@ public class Validators {
     private static final Pattern POSITIVE_INT_PATTERN = Pattern.compile(POSITIVE_INT_REGEX);
     
     
-    private static final String DOUBLE_REG = "[-+]?(\\d*\\.\\d+|\\d+\\.\\d*)([eE][-+]?\\d+)?";
+    private static final String DOUBLE_REG = "^\\d+$";
      private static final Pattern doublePatten = Pattern.compile(DOUBLE_REG);
     // Regular expression for validating  integers
     private static final  String INT_REGEX  = "^-?[0-9]+$";
