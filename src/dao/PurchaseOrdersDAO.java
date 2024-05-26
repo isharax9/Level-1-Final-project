@@ -5,10 +5,13 @@
 package dao;
 
 import dto.PurchaseOrder;
+import dto.Supplier;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import utils.Database;
 
 /**
@@ -16,7 +19,13 @@ import utils.Database;
  * @author vidur
  */
 public class PurchaseOrdersDAO {
-    
+    String baseQuery = "SELECT * FROM purchase_orders "
+            + "INNER JOIN products ON  products.product_id = purchase_orders.products_product_id "
+            + "INNER JOIN sub_categories ON products.sub_categories_id = sub_categories.sub_cat_id "
+            + "INNER JOIN categories ON sub_categories.categories_id = categories.cat_id "
+            + "INNER JOIN units ON units.unit_id = products.units_unit_id "
+            + "INNER JOIN suppliers ON suppliers.supplier_id = purchase_orders.suppliers_supplier_id "
+            + "INNER JOIN bank_details ON suppliers.bank_details_bank_details_id = bank_details.bank_details_id ";
     public PurchaseOrder create(PurchaseOrder po) throws SQLException {
         String query = "INSERT INTO `purchase_orders` (`ordered_date`, `order_qty`, `products_product_id`, `wholesale_unit_price`, `paid_amount`, `suppliers_supplier_id`) VALUES (?,?,?,?,?,?)";
 
@@ -65,6 +74,21 @@ public class PurchaseOrdersDAO {
         statement.executeUpdate();
 
     }
+    
+    public List<PurchaseOrder> getAll()throws SQLException{
+        List<PurchaseOrder> pos = new ArrayList<>();
+        String query = baseQuery ;
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        var result = statement.executeQuery();
+        while (result.next()) {
+            pos.add(PurchaseOrder.fromResultSet(result));
+        }
+
+        return pos;
+    }
+    
+  
 
     
 }

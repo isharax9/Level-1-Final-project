@@ -12,41 +12,43 @@ import dao.PurchaseOrdersDAO;
 import dto.Product;
 import dto.PurchaseOrder;
 import dto.Supplier;
+import dto.Unit;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import utils.Database;
 
 public class PurchaseOrdersService {
 
-    final PurchaseOrdersDAO poService;
+    final PurchaseOrdersDAO poDAO;
 
     public PurchaseOrdersService() {
-        this.poService = new PurchaseOrdersDAO();
+        this.poDAO = new PurchaseOrdersDAO();
     }
     
     public PurchaseOrder create(PurchaseOrder po) throws SQLException,IllegalArgumentException{
-        
+        if(po.isValidated()){
+            return poDAO.create(po);
+        }
+        return null;
     }
-    public static void main(String[] args) throws Exception {
-        var p = new PurchaseOrder();
-        var pdct = new Product();
-        pdct.setId(10);
-
-        var sp = new Supplier();
-        sp.setId(11);
-        p.setId(5);
-        p.setOrderQty(100);
-        p.setPaidAmount(1000);
-        p.setProduct(pdct);
-        p.setSupplier(sp);
-        p.setWholesaleUnitPrice(1500);
-        p.setOrderedDate(Date.valueOf(LocalDate.now()));
-        new PurchaseOrdersService().update(p);
-
+    public void update(PurchaseOrder po) throws SQLException,IllegalArgumentException{
+        if(po.getId() <= 0){
+            throw new IllegalArgumentException("Invalid Purchase order name ");
+        }
+        if(po.isValidated()){
+            
+             poDAO.update(po);
+        }
     }
+    public List<PurchaseOrder> getAll()throws SQLException,IllegalArgumentException{
+        return poDAO.getAll();
+    }
+   
 
 }
