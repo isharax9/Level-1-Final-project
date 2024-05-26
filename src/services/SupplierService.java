@@ -94,7 +94,7 @@ public class SupplierService {
             supplierDAO.update(supplier);
         }
         if(supplier.getBankDetails().isValidated()){
-            bankDetailsService.update();
+            bankDetailsService.update(supplier.getBankDetails());
         }
         
 
