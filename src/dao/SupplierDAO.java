@@ -125,29 +125,15 @@ public class SupplierDAO {
     public void update(Supplier supplier) throws SQLException {
         String query = "UPDATE `suppliers` SET `supplier_first_name`=? , `supplier_last_name`=?, `supplier_contact`=?,`supplier_address`=? WHERE  `supplier_id`=?";
         Connection conn = Database.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, supplier.getFirstName().toLowerCase());
         statement.setString(2, supplier.getLastName().toLowerCase());
         statement.setString(3, supplier.getContact());
         statement.setString(4, supplier.getAddress());
         statement.setInt(5, supplier.getId());
-        try {
-            int affectedRows = statement.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("Updating Supplier failed, no rows affected.");
-            }
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    supplier.setId(generatedKeys.getInt(1));
-                } else {
-                    throw new SQLException("Updating Supplier failed, no ID obtained.");
-                }
-            }
-        } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
-            throw new SQLException("INVALID BANK DETAILS ID");
-        }
+        statement.executeUpdate();
+        System.out.println("UPDATE SUPPLIER ");
+        
 
     }
 

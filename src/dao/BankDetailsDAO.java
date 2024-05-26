@@ -59,26 +59,16 @@ public class BankDetailsDAO {
     public void update(BankDetails bankDetails) throws SQLException {
         String query = "UPDATE `bank_details` SET `bank_name`=?, `bank_branch`=?, `bank_account_number`=?, `bank_account_holder_name`=? WHERE  `bank_details_id`=?";
         Connection conn = Database.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(query,PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, bankDetails.getBankName());
         statement.setString(2, bankDetails.getBankBranch());
         statement.setString(3, bankDetails.getBankAccountNumber());
         statement.setString(4, bankDetails.getBankAccountHolderName());
         statement.setInt(5,bankDetails.getId());
-
-        int affectedRows = statement.executeUpdate();
-        
-        if (affectedRows == 0) {
-            throw new SQLException("Creating bank details failed, no rows affected.");
-        }
-
-        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                bankDetails.setId(generatedKeys.getInt(1));
-            } else {
-                throw new SQLException("Creating bank details failed, no ID obtained.");
-            }
-        }
+        statement.executeUpdate();
+        System.out.println("DTA"+bankDetails);
+        System.out.println("UPDATE BANK DETAILS");
+       
         
     }
     

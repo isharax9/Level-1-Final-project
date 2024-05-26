@@ -107,15 +107,15 @@ public class SuppliersPanel extends javax.swing.JPanel {
         bankDetails.setBankBranch(tf_Branch.getText());
         bankDetails.setBankAccountNumber(tf_BankNo.getText());
 
-        Supplier supplier = new Supplier();
-        supplier.setId(Integer.parseInt(tf_Id.getText()));
-        supplier.setContact(tf_Mobile.getText());
-        supplier.setFirstName(tf_fname.getText());
-        supplier.setLastName(tf_Lname.getText());
-        supplier.setAddress(tf_Address.getText());
-        supplier.setBankDetails(bankDetails);
+        Supplier s = new Supplier();
+        s.setId(Integer.parseInt(tf_Id.getText()));
+        s.setContact(tf_Mobile.getText());
+        s.setFirstName(tf_fname.getText());
+        s.setLastName(tf_Lname.getText());
+        s.setAddress(tf_Address.getText());
+        s.setBankDetails(bankDetails);
 
-        return supplier;
+        return s;
     }
 
     private void setSupplierToField(Supplier supplier) {
@@ -431,7 +431,7 @@ public class SuppliersPanel extends javax.swing.JPanel {
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "User Input Error", JOptionPane.WARNING_MESSAGE);
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error ", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btn_AddActionPerformed
 
@@ -453,19 +453,22 @@ public class SuppliersPanel extends javax.swing.JPanel {
 
     private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
         // TODO add your handling code here:
-        Supplier s = getSupplierFromTextFields();
-        s.setId(selectedSupplier.getId());
 
         try {
+            Supplier s = getSupplierFromTextFields();
+            s.setId(selectedSupplier.getId());
+            s.getBankDetails().setId(selectedSupplier.getBankDetails().getId());
             if (s.isValidated()) {
+                System.out.println("VIEW :"+s.getBankDetails());
                 supplierService.update(s);
                 JOptionPane.showMessageDialog(this, "Successfully Updated the Supplier Details", "Success", JOptionPane.INFORMATION_MESSAGE);
                 clear();
             }
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, "Input Error", ex.getMessage(), JOptionPane.WARNING_MESSAGE);
-        } catch (SQLException e) {            
-            JOptionPane.showMessageDialog(this, "DataBase Error", e.getMessage(), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,  e.getMessage(),"DataBase Error", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btn_UpdateActionPerformed
 
