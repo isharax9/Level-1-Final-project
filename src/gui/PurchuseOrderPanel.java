@@ -43,7 +43,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         initComponents();
         initData();
     }
-    
+
     private void initData() {
         suppliers.clear();
         try {
@@ -94,7 +94,6 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 //                s.getBankDetails().getBankAccountNumber(),});
 //        }
 //    }
-
     private void clear() {
         tf_Id.setText("");
         ff_orderDate.setText("");
@@ -109,45 +108,50 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         if (!Validators.isValidInt(tf_Id.getText())) {
             throw new IllegalArgumentException("Supplier ID is Invalid");
         }
-        if (!Validators.isValidUserName(tf_qty.getText())) {
-            throw new IllegalArgumentException("First Name is Invalid");
+        if (!Validators.isValidDouble(tf_qty.getText())) {
+            throw new IllegalArgumentException("Quantity is Invalid");
         }
-        if (!Validators.isValidAddress(tf_whoelSalePrice.getText())) {
+        if (!Validators.isValidDouble(tf_whoelSalePrice.getText())) {
             throw new IllegalArgumentException("Whole sale Price is Invalid");
         }
+
         if (cb_product.getSelectedItem() == null) {
             throw new IllegalArgumentException("Product is Invalid");
         }
-        if (!Validators.isValidUserName(tf_paidAmount.getText())) {
+        if (!Validators.isValidDouble(tf_paidAmount.getText())) {
             throw new IllegalArgumentException("Paid Amount is Invalid");
         }
         if (cb_supplier.getSelectedItem() == null) {
             throw new IllegalArgumentException("Supplier is Invalid");
         }
-        Product product = new Product();
-        product.setId(WIDTH);
+        
         Supplier supplier = new Supplier();
         dto.PurchaseOrder purchaseOrder = new PurchaseOrder();
+
         purchaseOrder.setId(Integer.parseInt(tf_Id.getText()));
         purchaseOrder.setOrderQty(Integer.parseInt(tf_qty.getText()));
         purchaseOrder.setOrderedDate(Date.valueOf(ff_orderDate.getText()));
         purchaseOrder.setPaidAmount(Integer.parseInt(tf_paidAmount.getText()));
-        purchaseOrder.setProduct(getSelectedProductFromComboBox(productList));
-        purchaseOrder.setSupplier(getSelectedSupplierFromComboBox((List<Supplier>) supplier)); 
+        purchaseOrder.setProduct(getSelectedProductFromComboBox());
+        purchaseOrder.setSupplier(getSelectedSupplierFromComboBox());
+
         return purchaseOrder;
     }
 
-    private Product getSelectedProductFromComboBox(List<Product> proList) {
+    private Product getSelectedProductFromComboBox() {
+        String pro = "Nothing";
         String selectedProduct = String.valueOf(cb_product.getSelectedItem());
-        for (Product product : proList) {
+        for (Product product : productList) {
             if (product.getProductName().equals(selectedProduct)) {
+                pro = product.getProductName();
                 return product;
             }
         }
+        System.out.println(pro);
         return null;
     }
 
-    private Supplier getSelectedSupplierFromComboBox(List<Supplier> suppliers) {
+    private Supplier getSelectedSupplierFromComboBox() {
         String selectedSupplier = String.valueOf(cb_supplier.getSelectedItem());
         for (Supplier s : suppliers) {
             String name = s.getFirstName() + " " + s.getLastName();
@@ -156,20 +160,6 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
             }
         }
         return null;
-    }
-
-    
-    public static List<PurchaseOrder> listFromResultSet(ResultSet resultSet) throws SQLException {
-        List<PurchaseOrder> purchaseOrders = new ArrayList<>();
-        while (resultSet.next()) {
-            purchaseOrders.add(PurchaseOrder.fromResultSet(resultSet));
-        }
-        return purchaseOrders;
-    }
-    
-    private Supplier getSelectedSupplierFromComboBox() {
-        Supplier s = new Supplier();
-        return s;
     }
 
     /**
@@ -290,6 +280,11 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         jLabel9.setText("Select Product");
 
         cb_product.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_product.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cb_productItemStateChanged(evt);
+            }
+        });
 
         jLabel11.setText("Select Supplier");
 
@@ -439,9 +434,9 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
             PurchaseOrder s = getPurchaseOrderFromFields();
 //            if (s.isValidated()) {
 //                purchaseOrderSerive.createPurchaseOrder(s); Add purchase Order Service Class
-                JOptionPane.showMessageDialog(this, "Success", "Sucessfully Created", JOptionPane.INFORMATION_MESSAGE);
-                clear();
-                initData();
+            JOptionPane.showMessageDialog(this, "Success", "Sucessfully Created", JOptionPane.INFORMATION_MESSAGE);
+            clear();
+            initData();
 //            }
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "User Input Error", JOptionPane.WARNING_MESSAGE);
@@ -450,6 +445,11 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 //        }
         }
     }//GEN-LAST:event_btn_addActionPerformed
+
+    private void cb_productItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_productItemStateChanged
+        // TODO add your handling code here:
+        getSelectedProductFromComboBox();
+    }//GEN-LAST:event_cb_productItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
