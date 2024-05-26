@@ -35,14 +35,18 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     Supplier selectedSupplier;
 
     List<Product> productList;
+    List<PurchaseOrder> purrchaseOrders;
     ProductService productService;
-    
+
     PurchaseOrdersService poService;
+    PurchaseOrder selectedPurchasOrder;
+
     public PurchuseOrderPanel() {
         this.supplierService = new SupplierService();
         this.suppliers = new ArrayList<>();
         this.productService = new ProductService();
         this.productList = new ArrayList<>();
+        this.purrchaseOrders = new ArrayList<>();
         poService = new PurchaseOrdersService();
         initComponents();
         initData();
@@ -50,8 +54,10 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
     private void initData() {
         suppliers.clear();
+        purrchaseOrders.clear();
         try {
             suppliers.addAll(supplierService.getAll());
+            purrchaseOrders.addAll(poService.getAll());
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }
@@ -64,7 +70,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         }
         loadSelectProduct(productList);
         loadSelectSupplier(suppliers);
-//        loadPurchageOrderTable(supplier);
+        loadPurchageOrderTable(purrchaseOrders);
     }
 
     private void loadSelectProduct(List<Product> proList) {
@@ -85,31 +91,38 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         cb_supplier.setModel(cm);
     }
 
-//    private void loadPurchageOrderTable(List<PurchaseOrder> purchaseOrder) {
-//        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-//        tableModel.setRowCount(0);
-//        for (PurchaseOrder s : purchaseOrder) {
-//            tableModel.addRow(new Object[]{
-//                s.getId(),
-//                s.getOrderedDate(),
-//                s.getOrderQty(),
-//                s.getWholesaleUnitPrice().getBankName(),
-//                s.getBankDetails().getBankBranch(),
-//                s.getBankDetails().getBankAccountNumber(),});
-//        }
-//    }
+    private void loadPurchageOrderTable(List<PurchaseOrder> purchaseOrder) {
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0);
+        for (PurchaseOrder s : purchaseOrder) {
+            tableModel.addRow(new Object[]{
+                s.getId(),
+                s.getOrderedDate(),
+                s.getOrderQty(),
+                s.getProduct().getUnit().getUnit(),
+                s.getWholesaleUnitPrice(),
+                s.getProduct().getProductName(),
+                s.getOrderQty() * s.getWholesaleUnitPrice(),
+                s.getPaidAmount(),
+                String.valueOf(s.getOrderQty() * s.getWholesaleUnitPrice() - s.getPaidAmount()),
+                s.getSupplier().getFirstName() + " " + s.getSupplier().getLastName(),});
+        }
+    }
+
     private void clear() {
-        tf_Id.setText("");
+        tf_Id.setText("0");
         ff_orderDate.setText("");
-        tf_paidAmount.setText("");
+        tf_paidAmount.setText("0");
         tf_prodcutName.setText("");
-        tf_qty.setText("");
+        tf_qty.setText("0");
         tf_supplierSearchByContact.setText("");
-        tf_whoelSalePrice.setText("");
+        tf_whoelSalePrice.setText("0");
+        selectedPurchasOrder = null;
+         lbl_dueAmount.setText("");
     }
 
     private PurchaseOrder getPurchaseOrderFromFields() throws IllegalArgumentException {
-        
+
         if (!Validators.isValidDouble(tf_qty.getText())) {
             throw new IllegalArgumentException("Quantity is Invalid");
         }
@@ -138,6 +151,19 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
         return purchaseOrder;
     }
+    private void setPurchaseOrderFromFields(PurchaseOrder po) throws IllegalArgumentException{
+        tf_Id.setText(String.valueOf(po.getId()));
+        ff_orderDate.setText(po.getOrderedDate().toString());
+        tf_qty.setText(String.valueOf(po.getOrderQty()));
+        tf_prodcutName.setText(po.getProduct().getProductName());
+        tf_whoelSalePrice.setText(String.valueOf(po.getWholesaleUnitPrice()));
+        tf_paidAmount.setText(String.valueOf(po.getPaidAmount()));
+        tf_supplierSearchByContact.setText(po.getSupplier().getContact());
+        lbl_dueAmount.setText("Due Amount :" + (po.getOrderQty()*po.getWholesaleUnitPrice()-po.getPaidAmount()));
+        setSelectedProductToComboBox(po.getProduct());
+        setSelectedSupplierToComboBox(po.getSupplier());
+        
+    }
 
     private Product getSelectedProductFromComboBox() {
         String pro = "Nothing";
@@ -151,6 +177,13 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         System.out.println(pro);
         return null;
     }
+    
+    private void setSelectedProductToComboBox(Product product){
+        cb_product.setSelectedItem(product.getProductName());
+    }
+    private void setSelectedSupplierToComboBox(Supplier s){
+        cb_supplier.setSelectedItem( s.getFirstName() + " " + s.getLastName());
+    }
 
     private Supplier getSelectedSupplierFromComboBox() {
         String selectedSupplier = String.valueOf(cb_supplier.getSelectedItem());
@@ -162,6 +195,30 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         }
         return null;
     }
+
+    private void calculateDueAmount() {
+        double paidAmount = 0;
+        if (!Validators.isValidDouble(tf_whoelSalePrice.getText())) {
+            lbl_dueAmount.setText("");
+            return;
+        }
+        if (Validators.isValidDouble(tf_paidAmount.getText())) {
+            paidAmount = Double.parseDouble(tf_paidAmount.getText());
+        }
+        if (!Validators.isValidDouble(tf_qty.getText())) {
+            lbl_dueAmount.setText("");
+            return;
+        }
+
+        double wholesalePrice = Double.parseDouble(tf_whoelSalePrice.getText());
+        double qty = Double.parseDouble(tf_qty.getText());
+
+        double duePayment = (wholesalePrice * qty) - paidAmount;
+        lbl_dueAmount.setText("Due Amount :" + duePayment);
+
+    }
+    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -201,6 +258,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         btn_add = new javax.swing.JButton();
         tf_Id = new javax.swing.JFormattedTextField();
         ff_orderDate = new javax.swing.JFormattedTextField();
+        lbl_dueAmount = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -214,21 +272,27 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Order Date", "Qty", "Unite", "Whole Sale Product", "Product Name", "Value", "Paid Amount", "Suppler Name"
+                "ID", "Order Date", "Qty", "Unit", "WholeSale Price", "Product Name", "Value", "Paid Amount", "due Amount", "Suppler Name"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -268,17 +332,35 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Order Date");
 
+        tf_qty.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_qtyKeyReleased(evt);
+            }
+        });
+
         jLabel4.setText("Qty");
 
         jLabel5.setText("Product Name");
 
         jLabel6.setText("Supplier Search By Contact");
 
+        tf_paidAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_paidAmountKeyReleased(evt);
+            }
+        });
+
         jLabel7.setText("Paid Amount");
 
         jLabel8.setText("Whole Sale Price");
 
         jLabel9.setText("Select Product");
+
+        tf_whoelSalePrice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_whoelSalePriceKeyReleased(evt);
+            }
+        });
 
         cb_product.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cb_product.addItemListener(new java.awt.event.ItemListener() {
@@ -290,8 +372,18 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         jLabel11.setText("Select Supplier");
 
         btn_clear.setText("Clear");
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
         btn_update.setText("Update");
+        btn_update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_updateActionPerformed(evt);
+            }
+        });
 
         btn_makeGRN.setText("Make GRN");
 
@@ -312,46 +404,47 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         ff_orderDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         ff_orderDate.setEnabled(false);
 
+        lbl_dueAmount.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbl_dueAmount.setForeground(new java.awt.Color(255, 0, 0));
+
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
         roundedPanel2Layout.setHorizontalGroup(
             roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tf_qty)
+                    .addComponent(tf_prodcutName)
+                    .addComponent(cb_product, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tf_whoelSalePrice)
+                    .addComponent(tf_paidAmount)
+                    .addComponent(tf_supplierSearchByContact)
+                    .addComponent(cb_supplier, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tf_Id)
+                    .addComponent(ff_orderDate)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
                     .addGroup(roundedPanel2Layout.createSequentialGroup()
-                        .addComponent(btn_clear)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_update))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_add))
-                    .addGroup(roundedPanel2Layout.createSequentialGroup()
-                        .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tf_qty)
-                            .addComponent(jLabel5)
-                            .addComponent(tf_prodcutName)
-                            .addComponent(jLabel9)
-                            .addComponent(cb_product, 0, 196, Short.MAX_VALUE)
-                            .addComponent(jLabel8)
-                            .addComponent(tf_whoelSalePrice)
-                            .addComponent(tf_paidAmount)
-                            .addComponent(jLabel6)
-                            .addComponent(tf_supplierSearchByContact)
-                            .addComponent(jLabel11)
-                            .addComponent(cb_supplier, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btn_clear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_makeGRN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(roundedPanel2Layout.createSequentialGroup()
-                                .addComponent(btn_makeGRN)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_viewSUpplier))
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(tf_Id)
-                            .addComponent(ff_orderDate))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(btn_viewSUpplier)
+                                .addGap(0, 3, Short.MAX_VALUE))
+                            .addComponent(btn_update, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btn_add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_dueAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         roundedPanel2Layout.setVerticalGroup(
             roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,13 +485,15 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cb_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_dueAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_add)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_clear)
                     .addComponent(btn_update))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_add)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_makeGRN)
                     .addComponent(btn_viewSUpplier))
@@ -437,16 +532,16 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
             if (s.isValidated()) {
                 System.out.println(s.getWholesaleUnitPrice());
                 poService.create(s);
-            JOptionPane.showMessageDialog(this, "Success", "Sucessfully Created", JOptionPane.INFORMATION_MESSAGE);
-            clear();
-            initData();
+                JOptionPane.showMessageDialog(this, "Success", "Sucessfully Created", JOptionPane.INFORMATION_MESSAGE);
+                clear();
+                initData();
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "User Input Error", JOptionPane.WARNING_MESSAGE);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
-        
+
         }
     }//GEN-LAST:event_btn_addActionPerformed
 
@@ -454,6 +549,48 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         getSelectedProductFromComboBox();
     }//GEN-LAST:event_cb_productItemStateChanged
+
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_updateActionPerformed
+
+    private void tf_qtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_qtyKeyReleased
+        // TODO add your handling code here:
+        calculateDueAmount();
+    }//GEN-LAST:event_tf_qtyKeyReleased
+
+    private void tf_whoelSalePriceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_whoelSalePriceKeyReleased
+        // TODO add your handling code here:
+        calculateDueAmount();
+    }//GEN-LAST:event_tf_whoelSalePriceKeyReleased
+
+    private void tf_paidAmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_paidAmountKeyReleased
+        // TODO add your handling code here:
+        calculateDueAmount();
+    }//GEN-LAST:event_tf_paidAmountKeyReleased
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            String ID = String.valueOf(jTable1.getValueAt(selectedRow, 0));
+            if (Validators.isValidInt(ID)) {
+                for (PurchaseOrder po : purrchaseOrders) {
+                    if (po.getId() == Integer.parseInt(ID)) {
+                        selectedPurchasOrder = po;
+                        setPurchaseOrderFromFields(selectedPurchasOrder);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_btn_clearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -477,6 +614,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lbl_dueAmount;
     private components.RoundedPanel roundedPanel1;
     private components.RoundedPanel roundedPanel2;
     private components.RoundedPanel roundedPanel3;
