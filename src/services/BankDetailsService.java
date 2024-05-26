@@ -33,6 +33,12 @@ public class BankDetailsService {
         return bankDetailsDAO.getByID(id);
     }
     
+    public void update(BankDetails bankDetails)throws SQLException, IllegalArgumentException {
+        if(bankDetails.isValidated()){
+            bankDetailsDAO.update(bankDetails);
+        }
+    }
+    
     
     
 }

@@ -12,6 +12,7 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseOrder {
+
     private int id;
     private Date orderedDate;
     private double orderQty;
@@ -20,36 +21,22 @@ public class PurchaseOrder {
     private double paidAmount;
     private Supplier supplier;
 
-    public void setOrderedDate(Date orderedDate) {
-        if (Validators.isValidDate(orderedDate)) {
-            this.orderedDate = orderedDate;
-        } else {
+   
+    public boolean isValidated() {
+        if (!Validators.isValidPrice(paidAmount)) {
+            throw new IllegalArgumentException("Inavalid Paid Amount");
+        }
+        if (!Validators.isValidPrice(wholesaleUnitPrice)) {
+            throw new IllegalArgumentException("Invalid Wholesale Price");
+        }
+        if (!Validators.isValidQuantity(orderQty)){
+            throw new IllegalArgumentException(" invalid Quentity ");
+        }
+        if(!Validators.isValidDate(orderedDate)){
             throw new IllegalArgumentException("Invalid ordered date");
         }
-    }
 
-    public void setOrderQty(double orderQty) {
-        if (Validators.isValidQuantity(orderQty)) {
-            this.orderQty = orderQty;
-        } else {
-            throw new IllegalArgumentException("Invalid order quantity");
-        }
-    }
-
-    public void setWholesaleUnitPrice(double wholesaleUnitPrice) {
-        if (Validators.isValidPrice(wholesaleUnitPrice)) {
-            this.wholesaleUnitPrice = wholesaleUnitPrice;
-        } else {
-            throw new IllegalArgumentException("Invalid wholesale unit price");
-        }
-    }
-
-    public void setPaidAmount(double paidAmount) {
-        if (Validators.isValidPrice(paidAmount)) {
-            this.paidAmount = paidAmount;
-        } else {
-            throw new IllegalArgumentException("Invalid paid amount");
-        }
+        return true;
     }
 
     public static PurchaseOrder fromResultSet(ResultSet result) throws SQLException {
