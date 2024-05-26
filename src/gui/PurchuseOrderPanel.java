@@ -19,6 +19,7 @@ import services.SupplierService;
 import utils.Validators;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import services.PurchaseOrdersService;
 
 /**
  *
@@ -35,12 +36,14 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
     List<Product> productList;
     ProductService productService;
-
+    
+    PurchaseOrdersService poService;
     public PurchuseOrderPanel() {
         this.supplierService = new SupplierService();
         this.suppliers = new ArrayList<>();
         this.productService = new ProductService();
         this.productList = new ArrayList<>();
+        poService = new PurchaseOrdersService();
         initComponents();
         initData();
     }
@@ -430,18 +433,19 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         try {
 
             PurchaseOrder s = getPurchaseOrderFromFields();
-//            if (s.isValidated()) {
-//                purchaseOrderSerive.createPurchaseOrder(s);
+            if (s.isValidated()) {
+                System.out.println(s.getWholesaleUnitPrice());
+                poService.create(s);
             JOptionPane.showMessageDialog(this, "Success", "Sucessfully Created", JOptionPane.INFORMATION_MESSAGE);
             clear();
             initData();
-//            }
+            }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "User Input Error", JOptionPane.WARNING_MESSAGE);
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
-//        }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
+        
         }
     }//GEN-LAST:event_btn_addActionPerformed
 
