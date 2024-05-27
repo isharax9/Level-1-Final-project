@@ -44,6 +44,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     PurchaseOrdersService poService;
     PurchaseOrder selectedPurchasOrder;
     GRNService grnService;
+    List<PurchaseOrder> searchedPOs;
 
     public PurchuseOrderPanel() {
         this.supplierService = new SupplierService();
@@ -51,6 +52,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         this.productService = new ProductService();
         this.productList = new ArrayList<>();
         this.purrchaseOrders = new ArrayList<>();
+        this.searchedPOs = new ArrayList<>();
         poService = new PurchaseOrdersService();
         grnService = new GRNService();
         initComponents();
@@ -60,9 +62,11 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     private void initData() {
         suppliers.clear();
         purrchaseOrders.clear();
+        searchedPOs.clear();
         try {
             suppliers.addAll(supplierService.getAll());
             purrchaseOrders.addAll(poService.getAll());
+            searchedPOs.addAll(purrchaseOrders);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }
@@ -81,7 +85,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     private void loadSelectProduct(List<Product> proList) {
         DefaultComboBoxModel cm = new DefaultComboBoxModel();
         cm.removeAllElements();
-        for (Product product : productList) {
+        for (Product product : proList) {
             cm.addElement(product.getProductName());
         }
         cb_product.setModel(cm);
@@ -124,6 +128,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         tf_whoelSalePrice.setText("0");
         selectedPurchasOrder = null;
         lbl_dueAmount.setText("");
+        initData();
     }
 
     private PurchaseOrder getPurchaseOrderFromFields() throws IllegalArgumentException {
@@ -176,7 +181,9 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         String selectedProduct = String.valueOf(cb_product.getSelectedItem());
         for (Product product : productList) {
             if (product.getProductName().equals(selectedProduct)) {
-                pro = product.getProductName();
+//                pro = product.getProductName();
+                System.out.println(product);
+
                 return product;
             }
         }
@@ -225,6 +232,41 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
     }
 
+    private void poSearchByProduct(Product product) {
+        List<PurchaseOrder> pos = new ArrayList<>();
+        for (var ps : purrchaseOrders) {
+            if (ps.getProduct().getId() == product.getId()) {
+                pos.add(ps);
+            }
+        }
+        if (!pos.isEmpty()) {
+            loadPurchageOrderTable(pos);
+        }
+    }
+    
+    private void poSearchBySupplier(Supplier supplier){
+        List<PurchaseOrder> sup = new ArrayList<>();
+        for (var ps : purrchaseOrders) {
+            if (ps.getSupplier().getId() == supplier.getId()) {
+                sup.add(ps);
+            }
+        }
+        if (!sup.isEmpty()) {
+            loadPurchageOrderTable(sup);
+        }
+    }
+    
+    private void loadOnlyNotCompletedPos(){
+        List<PurchaseOrder> sup = new ArrayList<>();
+        for (var ps : purrchaseOrders) {
+            double duoAmount =  (ps.getOrderQty()*ps.getWholesaleUnitPrice())-ps.getPaidAmount();
+            if(duoAmount > 0){
+                sup.add(ps);
+            }
+        }
+         loadPurchageOrderTable(sup);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -264,6 +306,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         tf_Id = new javax.swing.JFormattedTextField();
         ff_orderDate = new javax.swing.JFormattedTextField();
         lbl_dueAmount = new javax.swing.JLabel();
+        jc_notcompletePO = new javax.swing.JCheckBox();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -347,6 +390,12 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Product Name");
 
+        tf_prodcutName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_prodcutNameKeyReleased(evt);
+            }
+        });
+
         jLabel6.setText("Supplier Search By Contact");
 
         tf_paidAmount.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -371,6 +420,11 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         cb_product.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cb_productItemStateChanged(evt);
+            }
+        });
+        cb_product.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_productActionPerformed(evt);
             }
         });
 
@@ -398,8 +452,24 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         });
 
         btn_viewSUpplier.setText("View Supplier");
+        btn_viewSUpplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_viewSUpplierActionPerformed(evt);
+            }
+        });
+
+        tf_supplierSearchByContact.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_supplierSearchByContactKeyReleased(evt);
+            }
+        });
 
         cb_supplier.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_supplier.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cb_supplierItemStateChanged(evt);
+            }
+        });
 
         btn_add.setText("Add");
         btn_add.addActionListener(new java.awt.event.ActionListener() {
@@ -416,6 +486,13 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
         lbl_dueAmount.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbl_dueAmount.setForeground(new java.awt.Color(255, 0, 0));
+
+        jc_notcompletePO.setText("Not Completed POs only");
+        jc_notcompletePO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jc_notcompletePOActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
@@ -453,7 +530,10 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
                                 .addGap(0, 3, Short.MAX_VALUE))
                             .addComponent(btn_update, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(btn_add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_dueAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(roundedPanel2Layout.createSequentialGroup()
+                        .addComponent(lbl_dueAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jc_notcompletePO)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         roundedPanel2Layout.setVerticalGroup(
@@ -494,9 +574,14 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cb_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_dueAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(roundedPanel2Layout.createSequentialGroup()
+                        .addComponent(cb_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_dueAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                    .addGroup(roundedPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jc_notcompletePO)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_add)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -557,7 +642,10 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
     private void cb_productItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_productItemStateChanged
         // TODO add your handling code here:
-        getSelectedProductFromComboBox();
+        if(selectedPurchasOrder != null){
+            return;
+        }
+        poSearchByProduct(getSelectedProductFromComboBox());
     }//GEN-LAST:event_cb_productItemStateChanged
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
@@ -630,6 +718,77 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btn_makeGRNActionPerformed
 
+    private void tf_prodcutNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_prodcutNameKeyReleased
+        // TODO add your handling code here:
+
+        try {
+            if (tf_prodcutName.getText().isEmpty()) {
+                loadSelectProduct(productList);
+                return;
+            }
+            var p = productService.searchProductsByName(tf_prodcutName.getText());
+
+            loadSelectProduct(p);
+
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "user Input Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB ERROR", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_tf_prodcutNameKeyReleased
+
+    private void tf_supplierSearchByContactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_supplierSearchByContactKeyReleased
+        // TODO add your handling code here:
+        try {
+            if (tf_supplierSearchByContact.getText().isEmpty()) {
+                loadSelectSupplier(suppliers);
+                return;
+            }
+            var p = supplierService.searchByContact(tf_supplierSearchByContact.getText());
+            loadSelectSupplier(p);
+
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "user Input Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB ERROR", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_tf_supplierSearchByContactKeyReleased
+
+    private void cb_supplierItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_supplierItemStateChanged
+        // TODO add your handling code here:
+        if(selectedPurchasOrder != null){
+            return;
+        }
+        poSearchBySupplier(getSelectedSupplierFromComboBox());
+        
+    }//GEN-LAST:event_cb_supplierItemStateChanged
+
+    private void jc_notcompletePOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jc_notcompletePOActionPerformed
+        // TODO add your handling code here:
+        if(jc_notcompletePO.isSelected()){
+            loadOnlyNotCompletedPos();
+        }else{
+            loadPurchageOrderTable(purrchaseOrders);
+        }
+    }//GEN-LAST:event_jc_notcompletePOActionPerformed
+
+    private void cb_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_productActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cb_productActionPerformed
+
+    private void btn_viewSUpplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_viewSUpplierActionPerformed
+        // TODO add your handling code here:
+        if(selectedPurchasOrder !=null){
+            new ViewSupplierFrame(selectedPurchasOrder.getSupplier()).setVisible(true);
+        }
+    }//GEN-LAST:event_btn_viewSUpplierActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add;
@@ -652,6 +811,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JCheckBox jc_notcompletePO;
     private javax.swing.JLabel lbl_dueAmount;
     private components.RoundedPanel roundedPanel1;
     private components.RoundedPanel roundedPanel2;
