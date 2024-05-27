@@ -4,7 +4,8 @@
  */
 package gui;
 
-import dto.User;
+import dto.Employee;
+import dto.UserType;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,70 +24,71 @@ public class UserPanel extends javax.swing.JPanel {
      * Creates new form SellProductPanel
      */
     UserService userService;
-    List<User> userList;
-    User selectedUser;
+    List<Employee> employeeList;
+    Employee selectedEmployee;
 
     public UserPanel() {
         this.userService = new UserService();
-        this.userList = new ArrayList<>();
+        this.employeeList = new ArrayList<>();
         initComponents();
         initData();
     }
 
     private void initData() {
-        userList.clear();
+        employeeList.clear();
         try {
-            userList.addAll(userService.getAll());
+            employeeList.addAll(userService.getAll());
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }
-        loadCustomerTable(userList);
+        loadCustomerTable(employeeList);
     }
 
-    private void loadCustomerTable(List<User> users) {
+    private void loadCustomerTable(List<Employee> users) {
         DefaultTableModel tableModel = (DefaultTableModel) tbl_use_manegement.getModel();
         tableModel.setRowCount(0);
-        for (User s : users) {
+        for (Employee s : users) {
             tableModel.addRow(new Object[]{
-                s.getId(),
+                s.getUserId(),
                 s.getFirstName(),
                 s.getLastName(),
                 s.getUserName(),
-                s.getEmail(),
+                s.getUserEmail(),
                 s.getUserType(),
-                s.getBankDetails().getBankName(),
-                s.getBankDetails().getBankAccountNumber(),
-                s.getBankDetails().getBankBranch()}
+                s.getBankaccountDetails().getBankName(),
+                s.getBankaccountDetails().getBankAccountNumber(),
+                s.getBankaccountDetails().getBankBranch()}
             );
         }
     }
     
     
 
-    private void setUserToField(User user) {
-        tf_fn_use.setText(user.getFirstName());
-        tf_ln_use.setText(user.getLastName());
-        tf_address_use.setText(user.getAddress());
-        tf_userName.setText(user.getUserName());
-        tf_password_use.setText(user.getPassword());
-        tf_email_use.setText(user.getEmail());
-        tf_use_type_use.setText(user.getUserType());
+    private void setUserToField(Employee employee) {
+        System.out.println(employee);
+        tf_fn_use.setText(employee.getFirstName());
+        tf_ln_use.setText(employee.getLastName());
+        tf_address_use.setText(employee.getAddress());
+        tf_userName.setText(employee.getUserName());
+        tf_password_use.setText(employee.getPassword());
+        tf_email_use.setText(employee.getUserEmail());
+        tf_use_type_use.setText(employee.getUserType().toString());
 
-        dto.BankDetails b = user.getBankDetails();
+        dto.BankDetails b = employee.getBankaccountDetails();
         tf_bn_use.setText(b.getBankName());
         tf_accoun_number_use.setText(b.getBankAccountNumber());
         tf_branch_use.setText(b.getBankBranch());
         tf_account_name_use.setText(b.getBankAccountHolderName());
     }
     
-    private User getSupplierFromTextFields() throws IllegalArgumentException {
-        if (!Validators.isValidUserName(tf_fn_use.getText())) {
+    private Employee getUserFromFields() throws IllegalArgumentException {
+        if (!Validators.isValidName(tf_fn_use.getText())) {
             throw new IllegalArgumentException("First Name is Invalid");
         }
-        if (!Validators.isValidUserName(tf_ln_use.getText())) {
+        if (!Validators.isValidName(tf_ln_use.getText())) {
             throw new IllegalArgumentException("Last Name is Invalid");
         }
-        if (!Validators.isValidUserName(tf_userName.getText())) {
+        if (!Validators.isValidName(tf_userName.getText())) {
             throw new IllegalArgumentException("User Name is Invalid");
         }
         if (!Validators.isValidEmail(tf_email_use.getText())) {
@@ -121,15 +123,15 @@ public class UserPanel extends javax.swing.JPanel {
         bankDetails.setBankBranch(tf_branch_use.getText());
         bankDetails.setBankAccountNumber(tf_accoun_number_use.getText());
 
-        User s = new User();
+        Employee s = new Employee();
         s.setAddress(tf_address_use.getText());
         s.setFirstName(tf_fn_use.getText());
         s.setLastName(tf_ln_use.getText());
-        s.setEmail(tf_email_use.getText());
+        s.setUserName(tf_userName.getText());
         s.setPassword(tf_password_use.getText());
-        s.setUserType(tf_use_type_use.getText().toUpperCase());
-        s.setEmail(tf_email_use.getText());
-        s.setBankDetails(bankDetails);
+        s.setUserType(UserType.valueOf(tf_use_type_use.getText()));
+        s.setUserEmail(tf_email_use.getText());
+        s.setBankaccountDetails(bankDetails);
         return s;
     }
 
@@ -341,17 +343,17 @@ public class UserPanel extends javax.swing.JPanel {
 
         tbl_use_manegement.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Use Id", "First Name", "Last Name", "Email", "User Type", "Bank Name", "Bank Account Number", "Branch"
+                "Use Id", "First Name", "Last Name", "User Name", "Email", "User Type", "Bank Name", "Bank Account Number", "Branch"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -371,15 +373,15 @@ public class UserPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
@@ -390,8 +392,8 @@ public class UserPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -446,10 +448,10 @@ public class UserPanel extends javax.swing.JPanel {
         if (SelectedRow >= 0) {
             String ID = String.valueOf(tbl_use_manegement.getValueAt(SelectedRow, 0));
             System.out.println(ID);
-            for (User s : userList) {
-                if (s.getId() == Integer.valueOf(ID)) {
-                    selectedUser = s;
-                    setUserToField(selectedUser);
+            for (Employee s : employeeList) {
+                if (s.getUserId()== Integer.parseInt(ID)) {
+                    selectedEmployee = s;
+                    setUserToField(selectedEmployee);
                     break;
                 }
             }
