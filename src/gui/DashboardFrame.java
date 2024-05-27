@@ -84,7 +84,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         jTabbedPane2.addTab("Sell Products", sellProductPanel1);
         jTabbedPane2.addTab("Products", productsPanel1);
         jTabbedPane2.addTab("POs", purchuseOrderPanel1);
-        jTabbedPane2.addTab("Suppliers", stocksPanel1);
+        jTabbedPane2.addTab("Stock", stocksPanel1);
         jTabbedPane2.addTab("Suppliers", suppliersPanel1);
         jTabbedPane2.addTab("GRNs", gRNPanel1);
         jTabbedPane2.addTab("Customers", customerPanel1);
@@ -99,7 +99,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 .addGap(92, 92, 92)
                 .addComponent(roundedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
                 .addGap(91, 91, 91))
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 821, Short.MAX_VALUE)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 821, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +107,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(roundedPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE))
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 529, Short.MAX_VALUE))
         );
 
         pack();
