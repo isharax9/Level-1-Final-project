@@ -620,11 +620,12 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
             new GRNAddToStockFrame(cretedGRN).setVisible(true);
 
         } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex.getMessage(), "user Input Error", JOptionPane.ERROR_MESSAGE);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "DB ERROR", JOptionPane.ERROR_MESSAGE);
-
+            ex.printStackTrace();
         }
 
     }//GEN-LAST:event_btn_makeGRNActionPerformed
