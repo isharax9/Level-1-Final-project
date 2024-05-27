@@ -5,16 +5,17 @@
 package com;
 
 import gui.Login;
-import models.Employee;
+import gui.PurchuseOrderPanel;
 
 /**
  *
  * @author vidur
  */
 public class Main {
+
     public static void main(String args[]) {
-       
-        com.formdev.flatlaf.themes.FlatMacDarkLaf.setup();
+        
+        com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
@@ -22,6 +23,3 @@ public class Main {
         });
     }
 }
-
-
-//dispose freme, exist code 0 

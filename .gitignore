@@ -28,3 +28,7 @@ build/
 
 #private xml file
 nbproject/private/private.xml
+
+nbproject/
+
+src/utils/Database.java
