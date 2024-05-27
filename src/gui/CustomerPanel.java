@@ -4,17 +4,53 @@
  */
 package gui;
 
+import dto.Customer;
+import dto.Supplier;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import services.CustomerService;
+
 /**
  *
  * @author vidur
  */
 public class CustomerPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form SellProductPanel
-     */
+    CustomerService customerService;
+    List<Customer> customerList;
+
     public CustomerPanel() {
+        this.customerService = new CustomerService();
+        this.customerList = new ArrayList<>();
         initComponents();
+        initData();
+    }
+
+    private void initData() {
+        customerList.clear();
+        try {
+            customerList.addAll(customerService.getAll());
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
+        }
+        loadCustomerTable(customerList);
+    }
+
+    private void loadCustomerTable(List<Customer> customers) {
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0);
+        for (Customer s : customers) {
+            tableModel.addRow(new Object[]{
+                s.getCustomerId(),
+                s.getCustomerName(),
+                s.getCustomerAddress(),
+                s.getCustomerContact(),
+                s.getPoint()}
+            );
+        }
     }
 
     /**
