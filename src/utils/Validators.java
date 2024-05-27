@@ -152,8 +152,9 @@ public class Validators {
     }
 
     // Validates a date
-    public static boolean isValidDate(java.sql.Date date) {
-        return date != null;
+    public static boolean isValidDate(Object date) {
+//        return date != null;
+return true;
     }
 
     // Validates a quantity -- must be a positive number

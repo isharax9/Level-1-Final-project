@@ -12,17 +12,25 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GRN {
+
     private int id;
     private Timestamp grnDate;
     private PurchaseOrder purchaseOrder;
 
-    public void setGrnDate(Timestamp grnDate) {
-        if (Validators.isValidTimestamp(grnDate)) {
-            this.grnDate = grnDate;
-        } else {
+    public boolean isValidated() {
+        if (!Validators.isValidTimestamp(grnDate)) {
             throw new IllegalArgumentException("Invalid GRN date");
         }
-    }
+        if (purchaseOrder == null){
+            throw new IllegalArgumentException("Purchase Order is cannot be null ");
+        }
+        if(!purchaseOrder.isValidated()){
+            throw new IllegalArgumentException("Purchase Order is invalid ");
+        }
+        
+        return true;
+  }
+    
 
     public static GRN fromResultSet(ResultSet result) throws SQLException {
         GRN grn = new GRN();
