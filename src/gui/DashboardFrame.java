@@ -81,15 +81,15 @@ public class DashboardFrame extends javax.swing.JFrame {
         roundedPanel2.add(roundedPanel1);
 
         jTabbedPane2.setTabPlacement(javax.swing.JTabbedPane.LEFT);
-        jTabbedPane2.addTab("Sell Products", sellProductPanel1);
-        jTabbedPane2.addTab("Products", productsPanel1);
-        jTabbedPane2.addTab("POs", purchuseOrderPanel1);
-        jTabbedPane2.addTab("Stock", stocksPanel1);
-        jTabbedPane2.addTab("Suppliers", suppliersPanel1);
-        jTabbedPane2.addTab("GRNs", gRNPanel1);
-        jTabbedPane2.addTab("Customers", customerPanel1);
-        jTabbedPane2.addTab("Invoices", invoicePanel1);
-        jTabbedPane2.addTab("Users", userPanel1);
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Sell.png")), sellProductPanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Product.png")), productsPanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Truck.png")), purchuseOrderPanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Sell Stock.png")), stocksPanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Supplier.png")), suppliersPanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Bullet List.png")), gRNPanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Budget2.png")), customerPanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Invoice.png")), invoicePanel1); // NOI18N
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Users.png")), userPanel1); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,6 +109,8 @@ public class DashboardFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 529, Short.MAX_VALUE))
         );
+
+        jTabbedPane2.getAccessibleContext().setAccessibleName("");
 
         pack();
         setLocationRelativeTo(null);
