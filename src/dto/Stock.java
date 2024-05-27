@@ -20,44 +20,25 @@ public class Stock {
     private double discount;
     private GRN grn;
 
-    public void setMnfDate(Date mnfDate) {
-        if (Validators.isValidDate(mnfDate)) {
-            this.mnfDate = mnfDate;
-        } else {
-            throw new IllegalArgumentException("Invalid manufacturing date");
-        }
-    }
+   
 
-    public void setExpDate(Date expDate) {
-        if (Validators.isValidDate(expDate)) {
-            this.expDate = expDate;
-        } else {
-            throw new IllegalArgumentException("Invalid expiry date");
-        }
-    }
-
-    public void setUnitPrice(double unitPrice) {
-        if (Validators.isValidPrice(unitPrice)) {
-            this.unitPrice = unitPrice;
-        } else {
-            throw new IllegalArgumentException("Invalid unit price");
-        }
-    }
-
-    public void setAvailableQty(double availableQty) {
-        if (Validators.isValidQuantity(availableQty)) {
-            this.availableQty = availableQty;
-        } else {
-            throw new IllegalArgumentException("Invalid available quantity");
-        }
-    }
-
-    public void setDiscount(double discount) {
-        if (Validators.isValidDiscount(discount)) {
-            this.discount = discount;
-        } else {
-            throw new IllegalArgumentException("Invalid discount");
-        }
+    
+    public boolean isValidate(){
+         if (!Validators.isValidDiscount(discount)) {
+             throw new IllegalArgumentException("Invalid discount");
+         }
+         if (!Validators.isValidPrice(unitPrice)) {
+              throw new IllegalArgumentException("Invalid unit price");
+         }
+         if (!Validators.isValidDate(expDate)) {
+              throw new IllegalArgumentException("Invalid expiry date");
+         }
+         if (!Validators.isValidDate(mnfDate)) {
+             throw new IllegalArgumentException("Invalid manufacturing date");
+         }
+         return true;
+         
+       
     }
 
     public static Stock fromResultSet(ResultSet result) throws SQLException {
