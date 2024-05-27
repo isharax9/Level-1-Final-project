@@ -97,6 +97,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Hello Vidura !"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lb_adminGreetingMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
