@@ -11,6 +11,7 @@ import utils.Validators;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer {
+
     private int customerId;
     private String customerName;
     private String customerAddress;
@@ -47,6 +48,10 @@ public class Customer {
         } else {
             throw new IllegalArgumentException("Invalid point value");
         }
+    }
+
+    public boolean isValidated() {
+        return true;
     }
 
     public static Customer fromResultSet(ResultSet result) throws SQLException {

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import dto.Customer;
+import dto.Supplier;
 import utils.Database;
 
 public class CustomerDAO {
@@ -47,6 +48,35 @@ public class CustomerDAO {
             throw new SQLException("Customer Adding failed");
         }
         return customer;
+    }
+       
+
+    public List<Customer> searchByContact(String contact) throws SQLException {
+        List<Customer> customers = new ArrayList<>();
+        String query = baseQuery + " WHERE  customer_contact LIKE ?";
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+        statement.setString(1, contact + "%");
+        var result = statement.executeQuery();
+        while (result.next()) {
+            customers.add(Customer.fromResultSet(result));
+        }
+        return customers;
+    }   
+    
+
+    public Customer getByID(int id) throws SQLException {
+        String query = baseQuery + " WHERE customer_id = ?";
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setInt(1, id);
+        var result = statement.executeQuery();
+        if (result.next()) {
+            return Customer.fromResultSet(result);
+        } else {
+            throw new IllegalArgumentException("Supplier not found in this id");
+        }
+
     }
 
     public Customer getByContact(String contact) throws SQLException {
@@ -88,7 +118,7 @@ public class CustomerDAO {
         System.out.println("UPDATE Customer");
     }
 
-    public List<Customer> search(String id, String mobile, String Address) throws SQLException {
+    public List<Customer> search(String id, String mobile, String Address,String points) throws SQLException {
         List<Customer> customerList = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder(baseQuery);
         List<Object> parameters = new ArrayList<>();
@@ -105,6 +135,13 @@ public class CustomerDAO {
             queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
             queryBuilder.append(" supplier_contact LIKE ?");
             parameters.add(mobile + "%");
+            isFirstCondition = false;
+        }
+
+        if (points != null && !points.trim().isEmpty()) {
+            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
+            queryBuilder.append(" point = ?");
+            parameters.add(Integer.valueOf(id));
             isFirstCondition = false;
         }
 
