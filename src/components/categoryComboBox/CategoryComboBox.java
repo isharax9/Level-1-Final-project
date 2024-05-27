@@ -52,6 +52,21 @@ public class CategoryComboBox extends javax.swing.JPanel {
         }
 
     }
+    
+    public Category getSelectedItem(){
+        String selectedCategoryName = (String) jComboBox1.getSelectedItem();
+        for (Category category : categories) {
+            if (category.getCategory().equals(selectedCategoryName)) {
+                selectedCategory = category;
+                return category;
+            }
+        }
+        
+        return null;
+    }
+    public void setSelectedItem(Category cat){
+        jComboBox1.setSelectedItem(cat.getCategory());
+    }
 
     public void onSelect(Category cat) {
         selectedCategory = cat;

@@ -4,24 +4,95 @@
  */
 package gui;
 
+import components.categoryComboBox.CategoryComboBoxInterface;
+import components.categoryComboBox.SubCategoryComboBoxInterface;
 import components.productTable.ProductTableInterface;
+import components.unitComboBox.UnitComboBoxInterface;
+import dto.Category;
 import dto.Product;
+import dto.SubCategory;
+import dto.Unit;
 import static java.time.zone.ZoneRulesProvider.refresh;
 import javax.swing.JOptionPane;
+import services.ProductService;
+import utils.Validators;
 
 /**
  *
  * @author vidur
  */
-public class ProductsPanel extends javax.swing.JPanel implements ProductTableInterface {
+public class ProductsPanel extends javax.swing.JPanel implements ProductTableInterface,CategoryComboBoxInterface,SubCategoryComboBoxInterface,UnitComboBoxInterface {
     
 
     /**
      * Creates new form SellProductPanel
      */
+    
+    Product selectedProduct;
+    ProductService service;
     public ProductsPanel() {
         initComponents();
+        service = new ProductService();
         productTable1.setProductTableInterface(this);
+        categoryComboBox1.setInterface(this);
+        subCategoryComboBox1.setInterface(this);
+        unitComboBox1.setInterface(this);
+    }
+    
+    private Product getProductFromFields(){
+        Unit unit = unitComboBox1.getSelectedItem();
+        Category cat  = categoryComboBox1.getSelectedCategory();
+        SubCategory subCat = subCategoryComboBox1.getSelectedCategory();
+        
+        Product p = new Product();
+        if(Validators.isValidInt(tf_productID.getText())){
+            p.setId(0);
+        }
+        System.out.println(tf_refillingQty.getText());
+        if(Validators.isValidDouble(tf_refillingQty.getText().contains(".")?tf_refillingQty.getText() : tf_refillingQty.getText()+".0" )){
+            throw new IllegalArgumentException("Invalid Stock Refilling Quntity ");
+        }
+        
+        if(unit == null){
+            throw new IllegalArgumentException("Please Select the unit ");
+        }
+        if(cat == null ){
+            throw new IllegalArgumentException("Please Select the category");
+        }
+        if(subCat == null){
+            throw new IllegalArgumentException("Please Select the Sub category");
+        }
+        
+        
+        p.setId(Integer.parseInt(tf_productID.getText()));
+        p.setProductName(tf_productName.getText());
+        p.setProductPrintingName(tf_productPrintName.getText());
+        p.setStockRefillingQty(Double.parseDouble(tf_refillingQty.getText()));
+        p.setUnit(unit);
+        p.setSubCategory(subCat);
+        
+        
+        
+        return p;
+    }
+    private void setProductTofields(Product product){
+        tf_productID.setText(String.valueOf(product.getId()));
+        tf_productName.setText(product.getProductName());
+        tf_productPrintName.setText(product.getProductPrintingName());
+        tf_refillingQty.setText(String.valueOf(product.getStockRefillingQty()));
+        
+        unitComboBox1.setSelectedItem(product.getUnit());
+        subCategoryComboBox1.setSelectedItem(product.getSubCategory());
+        categoryComboBox1.setSelectedItem(product.getSubCategory().getCategory());
+        
+    }
+    
+    private void clear(){
+         tf_productID.setText("");
+        tf_productName.setText("");
+        tf_productPrintName.setText("");
+        tf_refillingQty.setText(String.valueOf(""));
+        productTable1.clear();
     }
 
     /**
@@ -53,7 +124,7 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
         tf_productName = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tf_refillingQty = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         productTable1 = new components.productTable.ProductTable();
 
@@ -116,6 +187,11 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
         });
 
         jButton4.setText("Clear");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Refilling Qty");
 
@@ -152,19 +228,15 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(unitComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel7))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(unitComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(categoryComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(subCategoryComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -172,7 +244,7 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(jTextField1))
+                                .addComponent(tf_refillingQty))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addGap(0, 0, Short.MAX_VALUE))))
@@ -212,7 +284,7 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tf_refillingQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn_addProduct)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -237,8 +309,7 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(productTable1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(productTable1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
@@ -292,6 +363,7 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
 
         try {
             var product = getProductFromFields();
+            
             service.createProduct(product);
             JOptionPane.showMessageDialog(this, "Successfully Added " + product.getProductName(), "Succes", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
@@ -330,6 +402,11 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_addProduct;
@@ -347,17 +424,36 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
     private components.productTable.ProductTable productTable1;
     private components.RoundedPanel roundedPanel1;
     private components.categoryComboBox.SubCategoryComboBox subCategoryComboBox1;
     private javax.swing.JTextField tf_productID;
     private javax.swing.JTextField tf_productName;
     private javax.swing.JTextField tf_productPrintName;
+    private javax.swing.JTextField tf_refillingQty;
     private components.unitComboBox.UnitComboBox unitComboBox1;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void selectProduct(Product product) {
-        System.out.println(product.getProductName());}
+        System.out.println(product.getProductName());
+        selectedProduct = product;
+        setProductTofields(product);
+    }
+
+    @Override
+    public void onSelectCategory(Category category) {
+        System.out.println(category.getCategory());
+        
+    }
+
+    @Override
+    public void onSelectSubCatgory(SubCategory subCat) {
+        System.out.println(subCat.getSubCategory());
+    }
+
+    @Override
+    public void onSelectUnit(Unit unit) {
+        System.out.println(unit.getUnit());
+    }
 }

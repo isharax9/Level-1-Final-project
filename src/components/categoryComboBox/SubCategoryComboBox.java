@@ -32,6 +32,21 @@ public class SubCategoryComboBox extends javax.swing.JPanel {
         service = new SubCategoryService();
         loadCategory();
     }
+    
+    public SubCategory getSelectedItem(){
+         String selectedSubCatName = (String) jComboBox1.getSelectedItem();
+        for (SubCategory subCat : subcategories) {
+            if (subCat.getCategory().equals(selectedSubCatName)) {
+                selectedSubCategory = subCat;
+               return subCat;
+            }
+        }
+        return null;
+    }
+    
+    public void setSelectedItem(SubCategory cat){
+        jComboBox1.setSelectedItem(cat.getSubCategory());
+    }
 
     private void loadCategory() {
         try {
