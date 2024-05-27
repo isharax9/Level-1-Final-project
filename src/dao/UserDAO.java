@@ -8,20 +8,20 @@ package dao;
  *
  * @author vidur
  */
+import dto.Employee;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import dto.User;
 import utils.Database;
 
 public class UserDAO {
 
     private final String baseQuery = "SELECT * FROM users  INNER JOIN bank_details ON  users.bank_details_bank_details_id =  bank_details.bank_details_id ";
 
-    public User create(User user) throws SQLException {
+    public Employee create(Employee user) throws SQLException {
         String query = "INSERT INTO `users` ("
                 + "`username`, "
                 + "`user_email`,"
@@ -34,23 +34,22 @@ public class UserDAO {
                 + ") VALUES (?,?,?,?, ?,?,?,?)";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setString(1, user.getUserName().toLowerCase());
-        statement.setString(2, user.getEmail().toLowerCase());
+        statement.setString(1, user.getUserEmail().toLowerCase());
+        statement.setString(2, user.getUserEmail().toLowerCase());
         statement.setString(3, user.getPassword());
-        statement.setString(4, user.getUserType().toLowerCase());
+        statement.setString(4, user.getUserType().toString());
         statement.setString(5, user.getFirstName().toLowerCase());
         statement.setString(6, user.getLastName().toLowerCase());
         statement.setString(7, user.getAddress().toLowerCase());
-        statement.setInt(8, user.getBankDetails().getId());
+        statement.setInt(8, user.getBankaccountDetails().getId());
         try {
             int affectedRows = statement.executeUpdate();
-
             if (affectedRows == 0) {
                 throw new SQLException("Creating User failed, no rows affected.");
             }
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    user.setId(generatedKeys.getInt(1));
+                    user.setUserId(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating User failed, no ID obtained.");
                 }
@@ -61,36 +60,36 @@ public class UserDAO {
         return user;
     }
 
-    public User getByUserName(String userName) throws SQLException {
+    public Employee getByUserName(String userName) throws SQLException {
         String query = baseQuery + " WHERE username = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, userName);
         var result = statement.executeQuery();
         if (result.next()) {
-            return User.fromResultSet(result);
+            return Employee.fromResultSet(result);
         } else {
             throw new IllegalArgumentException("User not found in this Name");
         }
 
     }
 
-    public User getByEmail(String email) throws SQLException {
+    public Employee getByEmail(String email) throws SQLException {
         String query = baseQuery + " WHERE user_email = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, email);
         var result = statement.executeQuery();
         if (result.next()) {
-            return User.fromResultSet(result);
+            return Employee.fromResultSet(result);
         } else {
             throw new IllegalArgumentException("User not found in this Email");
         }
 
     }
 
-    public List<User> searchByName(String name) throws SQLException {
-        List<User> userList = new ArrayList<>();
+    public List<Employee> searchByName(String name) throws SQLException {
+        List<Employee> userList = new ArrayList<>();
         String query = baseQuery + " WHERE first_name LIKE ? OR last_name LIKE ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -98,52 +97,52 @@ public class UserDAO {
         statement.setString(2, name.toLowerCase() + "%");
         var result = statement.executeQuery();
         while (result.next()) {
-            userList.add(User.fromResultSet(result));
+            userList.add(Employee.fromResultSet(result));
         }
         return userList;
     }
 
-    public List<User> searchByUserName(String UserName) throws SQLException {
-        List<User> userList = new ArrayList<>();
+    public List<Employee> searchByUserName(String UserName) throws SQLException {
+        List<Employee> userList = new ArrayList<>();
         String query = baseQuery + " WHERE username = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
         statement.setString(1, UserName.toLowerCase() + "%");
         var result = statement.executeQuery();
         while (result.next()) {
-            userList.add(User.fromResultSet(result));
+            userList.add(Employee.fromResultSet(result));
         }
         return userList;
     }
 
-    public User getByID(int id) throws SQLException {
+    public Employee getByID(int id) throws SQLException {
         String query = baseQuery + " WHERE user _id = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
         var result = statement.executeQuery();
         if (result.next()) {
-            return User.fromResultSet(result);
+            return Employee.fromResultSet(result);
         } else {
             throw new IllegalArgumentException("User not found in this id");
         }
 
     }
 
-    public List<User> getAll() throws SQLException {
-        List<User> userList = new ArrayList<>();
+    public List<Employee> getAll() throws SQLException {
+        List<Employee> userList = new ArrayList<>();
         String query = baseQuery;
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         var result = statement.executeQuery();
         while (result.next()) {
-            userList.add(User.fromResultSet(result));
+            userList.add(Employee.fromResultSet(result));
         }
 
         return userList;
     }
 
-    public void update(User user) throws SQLException {
+    public void update(Employee employee) throws SQLException {
         String query = "UPDATE `users` SET "
                 + "`first_name`=? ,"
                 + " `last_name`=?, "
@@ -155,20 +154,20 @@ public class UserDAO {
                 + "WHERE  `user_id`=?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, user.getFirstName().toLowerCase());
-        statement.setString(2, user.getLastName().toLowerCase());
-        statement.setString(3, user.getUserName());
-        statement.setString(4, user.getPassword());
-        statement.setString(5, user.getUserType());
-        statement.setInt(5, user.getBankDetails().getId());
-        statement.setString(5, user.getAddress());
+        statement.setString(1, employee.getFirstName().toLowerCase());
+        statement.setString(2, employee.getLastName().toLowerCase());
+        statement.setString(3, employee.getUserName());
+        statement.setString(4, employee.getPassword());
+        statement.setString(5, employee.getUserType().toString());
+        statement.setInt(5, employee.getBankaccountDetails().getId());
+        statement.setString(5, employee.getAddress());
         statement.executeUpdate();
         System.out.println("UPDATE USER ");
 
     }
 
-    public List<User> search(String id, String firstName, String lastName, String userName,String userEmail, String bankAccountNumber) throws SQLException {
-        List<User> userList = new ArrayList<>();
+    public List<Employee> search(String id, String firstName, String lastName, String userName,String userEmail, String bankAccountNumber) throws SQLException {
+        List<Employee> userList = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder(baseQuery);
         List<Object> parameters = new ArrayList<>();
         boolean isFirstCondition = true;
@@ -176,7 +175,7 @@ public class UserDAO {
         if (id != null && !id.trim().isEmpty()) {
             queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
             queryBuilder.append(" user_id = ?");
-            parameters.add(Integer.parseInt(id));
+            parameters.add(Integer.valueOf(id));
             isFirstCondition = false;
         }
 
@@ -222,9 +221,8 @@ public class UserDAO {
         }
         var result = statement.executeQuery();
         while (result.next()) {
-            userList.add(User.fromResultSet(result));
+            userList.add(Employee.fromResultSet(result));
         }
         return userList;
     }
-
 }

@@ -5,6 +5,7 @@
 package services;
 
 import dao.UserDAO;
+import dto.Employee;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,24 +25,24 @@ public class UserService {
         this.bankDetailsService = new BankDetailsService();
     }
 
-    public List<User> getAll() throws SQLException, IllegalArgumentException {
+    public List<Employee> getAll() throws SQLException, IllegalArgumentException {
 
         return userDAO.getAll();
 
     }
 
-    public void create(User user) throws SQLException, IllegalArgumentException {
-        if (user.isValidated()) {
+    public void create(Employee emplyee) throws SQLException, IllegalArgumentException {
+        if (emplyee.isValidated()) {
             boolean doesntExistUser = true;
             try {
-                userDAO.getByUserName(user.getUserName());
+                userDAO.getByUserName(emplyee.getUserName());
                 doesntExistUser = false;
 
             } catch (IllegalArgumentException ex) {
 
             }
             try {
-                userDAO.getByUserName(user.getUserName());
+                userDAO.getByUserName(emplyee.getUserName());
                 doesntExistUser = false;
 
             } catch (IllegalArgumentException ex) {
@@ -49,8 +50,8 @@ public class UserService {
             }
 
             if (doesntExistUser) {
-                user.setBankDetails(bankDetailsService.create(user.getBankDetails()));
-                userDAO.create(user);
+                emplyee.setBankaccountDetails(bankDetailsService.create(emplyee.getBankaccountDetails()));
+                userDAO.create(emplyee);
 
             } else {
                 throw new IllegalArgumentException("User Name Alredy exist ");
@@ -58,7 +59,7 @@ public class UserService {
         }
     }
 
-    public List<User> searchByName(String name) throws SQLException, IllegalArgumentException {
+    public List<Employee> searchByName(String name) throws SQLException, IllegalArgumentException {
         if (name.length() == 0) {
             return new ArrayList<>();
         }
@@ -66,7 +67,7 @@ public class UserService {
 
     }
 
-    public User getByID(int id) throws SQLException, IllegalArgumentException {
+    public Employee getByID(int id) throws SQLException, IllegalArgumentException {
         if (id <= 0) {
             throw new IllegalArgumentException("Invalid ID");
         }
@@ -74,22 +75,22 @@ public class UserService {
         return userDAO.getByID(id);
     }
 
-    public void update(User user) throws SQLException, IllegalArgumentException {
-        if (user.getId() <= 0) {
+    public void update(Employee emplyee) throws SQLException, IllegalArgumentException {
+        if (emplyee.getUserId()<= 0) {
             throw new IllegalArgumentException("Invalid ID");
         }
         
-        if(user.isValidated()){
-            userDAO.update(user);
+        if(emplyee.isValidated()){
+            userDAO.update(emplyee);
         }
-        if(user.getBankDetails().isValidated()){
-            bankDetailsService.update(user.getBankDetails());
+        if(emplyee.getBankaccountDetails().isValidated()){
+            bankDetailsService.update(emplyee.getBankaccountDetails());
         }
         
 
     }
     
-    public List<User> search(String id, String firstName, String lastName, String userName, String userEmail, String bankAccountNumber) throws SQLException, IllegalArgumentException {
+    public List<Employee> search(String id, String firstName, String lastName, String userName, String userEmail, String bankAccountNumber) throws SQLException, IllegalArgumentException {
     if (id.isBlank()) {
         id = null;
     }
