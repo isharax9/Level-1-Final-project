@@ -185,6 +185,7 @@ public class Login extends javax.swing.JFrame {
                 System.out.println("Successfully login");
                 if (null != auth.getAuthType())//                <TODO>Dashboard viewing logic here </TODO>
                 {
+                    System.out.println(auth.getUsername());
                     if(auth.getAuthType() == UserType.ADMIN || auth.getAuthType() == UserType.CASHIER){
                         this.dispose();
                         new DashboardFrame().setVisible(true);

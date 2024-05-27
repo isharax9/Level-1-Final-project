@@ -21,7 +21,7 @@ public class DashboardFrame extends javax.swing.JFrame {
     public DashboardFrame() {
         initComponents();
         lbl_frameTitle.setText(Login.auth.getAuthType().name()+" PANEL");
-        lb_adminGreeting.setText("Hello, "+Login.auth.getEmployee().getFirstName()+" !");
+        lb_adminGreeting.setText("Hello, "+Login.auth.getUsername()+" !");
     }
 
     /**
