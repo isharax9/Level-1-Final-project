@@ -7,6 +7,7 @@ package gui;
 import dto.Auth;
 import dto.UserType;
 import static gui.Login.auth;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -61,6 +62,11 @@ public class DashboardFrame extends javax.swing.JFrame {
         lb_adminGreeting.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lb_adminGreeting.setForeground(new java.awt.Color(255, 255, 255));
         lb_adminGreeting.setText("Hello Vidura !");
+        lb_adminGreeting.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_adminGreetingMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -99,7 +105,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 .addGap(92, 92, 92)
                 .addComponent(roundedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
                 .addGap(91, 91, 91))
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 821, Short.MAX_VALUE)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 821, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,6 +121,23 @@ public class DashboardFrame extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void lb_adminGreetingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_adminGreetingMouseClicked
+        // TODO add your handling code here:
+        int response = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure that you want to logout?",
+                "Logout Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (response == JOptionPane.YES_OPTION) {
+            System.out.println("logout.");
+            this.dispose();
+            Login.auth = null;
+            new Login().setVisible(true);
+        }
+    }//GEN-LAST:event_lb_adminGreetingMouseClicked
 
     /**
      * @param args the command line arguments

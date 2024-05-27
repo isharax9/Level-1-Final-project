@@ -42,6 +42,17 @@ public class StockDAO {
 
         return stocks;
     }
+    public List<Stock> getAllNotExpriedAndInStock() throws SQLException {
+        List<Stock> stocks = new ArrayList<>();
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(baseQuery+" WHERE exp_date > CURDATE() AND available_qty > 0");
+        var result = statement.executeQuery();
+        while (result.next()) {
+            stocks.add(Stock.fromResultSet(result));
+        }
+
+        return stocks;
+    }
 
     public Stock getByGRNID(int id) throws SQLException {
         String query = baseQuery + " WHERE grn.grn_id = ?";
