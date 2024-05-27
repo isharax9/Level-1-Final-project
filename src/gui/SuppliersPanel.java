@@ -89,17 +89,17 @@ public class SuppliersPanel extends javax.swing.JPanel {
         if (!Validators.isValidMobile(tf_Mobile.getText())) {
             throw new IllegalArgumentException("Mobile Number is Invalid");
         }
-        if (!Validators.isValidUserName(tf_BankName.getText())) {
+        if (!Validators.isValidBankName(tf_BankName.getText())) {
             throw new IllegalArgumentException("Bank Name is Invalid");
         }
-        if (!Validators.isValidUserName(tf_Branch.getText())) {
+        if (!Validators.isValidBankBranch(tf_Branch.getText())) {
             throw new IllegalArgumentException("Branch Name is Invalid");
         }
-        if (!Validators.isValidUserName(tf_BankNo.getText())) {
+        if (!Validators.isValidBankAccountNumber(tf_BankNo.getText())) {
             throw new IllegalArgumentException("Bank Account Number is Invalid");
         }
         if (!Validators.isValidUserName(tf_HolderName.getText())) {
-            throw new IllegalArgumentException("Branch Name is Invalid");
+            throw new IllegalArgumentException("Bank Holders' Name is Invalid");
         }
 
         BankDetails bankDetails = new BankDetails();
