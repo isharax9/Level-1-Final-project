@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_2" pageWidth="226" pageHeight="842" columnWidth="198" leftMargin="14" rightMargin="14" topMargin="14" bottomMargin="0" uuid="4bb07039-ea0c-48c6-97a9-bac8e220bc60">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="invoice_no" class="java.lang.String"/>
+	<parameter name="invoice_date" class="java.lang.String"/>
+	<parameter name="total_cost_without_discount" class="java.lang.String"/>
+	<parameter name="total_discount" class="java.lang.String"/>
+	<parameter name="invoice_total" class="java.lang.String"/>
+	<parameter name="cash" class="java.lang.String"/>
+	<parameter name="balance" class="java.lang.String"/>
+	<parameter name="line1" class="java.lang.String"/>
+	<parameter name="total_discount_greeting" class="java.lang.String"/>
+	<parameter name="CashierName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="product_name" class="java.lang.String"/>
+	<field name="qty" class="java.lang.String"/>
+	<field name="unit_price" class="java.lang.String"/>
+	<field name="discount" class="java.lang.String"/>
+	<field name="cost" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="157" splitType="Stretch">
+			<staticText>
+				<reportElement x="-14" y="4" width="226" height="30" uuid="9ddf51b9-6350-4aa8-b198-0028276a866a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Segoe Print" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HELA POS Super Center]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="34" width="198" height="30" uuid="f463613e-c6d1-4aea-9d1c-a5561233137c"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INVOICE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="64" width="70" height="20" uuid="8fddabd7-7fa3-45f1-9c4d-13527dc6ca61"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[INVOICE No :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="84" width="70" height="20" uuid="f4dbaf00-f088-4073-b856-7aac128d7f74"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Date              :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="64" width="128" height="20" uuid="54507574-b3dd-4eea-96ba-3656d14f4b93"/>
+				<textFieldExpression><![CDATA[$P{invoice_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="84" width="128" height="20" uuid="437d2f9d-ad20-417d-a6b6-2f13c06f4070"/>
+				<textFieldExpression><![CDATA[$P{invoice_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="31" y="138" width="55" height="15" uuid="33c23e94-e28d-4ec1-9c4a-9da5c0f2d612">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c04a6e0b-e89b-4da2-b662-c8e0ada393aa"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ඒකක මිල(රු)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="138" width="55" height="15" uuid="fda2ff6d-4d0e-4e5e-943a-a2bee3482368">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bffd550c-58bf-4aa0-9183-b73819ee594d"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<text><![CDATA[වට්ටම (රු)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="138" width="55" height="15" uuid="52ff697f-c2ac-42e3-bf7b-17a87ef56882">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="93a0ebaa-0a64-4aa6-92e3-6107d6c7b572"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<text><![CDATA[වටිනාකම(රු)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="138" width="40" height="15" uuid="07b427df-90d2-44eb-af47-51ac51a9d6b8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1decd25d-20dd-4403-a770-54578125b5d8"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ප්‍රමාණය]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-15" y="144" width="227" height="13" uuid="833dfa72-4b93-401f-9f54-175f61985a2b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[____________________________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="104" width="70" height="20" uuid="0afe026f-58ce-4a88-80a5-2861b190852a"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cashier          :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="104" width="100" height="20" uuid="0b45331e-0de5-4e1f-9686-695e033a5fb1"/>
+				<textFieldExpression><![CDATA[$P{CashierName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="198" height="12" uuid="e43a6c1e-521d-4e89-96f7-e4bb210ab863">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1cbae2d2-28b0-4db1-9652-21b46e13772c"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="14" width="44" height="13" uuid="f87b2c11-5a4d-4e41-8209-cfab01cb801d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1decd25d-20dd-4403-a770-54578125b5d8"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="14" width="52" height="13" uuid="703c98b1-d0c4-49bc-969b-e233ec108005">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c04a6e0b-e89b-4da2-b662-c8e0ada393aa"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{unit_price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="14" width="55" height="13" uuid="499c63ff-4ab4-4e05-8bf4-7d0e61d8e07c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bffd550c-58bf-4aa0-9183-b73819ee594d"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{discount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="14" width="54" height="13" uuid="27c284ad-e3a3-4e1b-bfbb-288708678658">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="93a0ebaa-0a64-4aa6-92e3-6107d6c7b572"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cost}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-14" y="17" width="227" height="13" uuid="f9024614-9d3a-4639-9c91-1a4a500748ba">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[____________________________________________________________]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="139" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="188" height="13" uuid="e30d81b7-75ec-418f-b994-6248e6513330">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{total_cost_without_discount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="13" width="188" height="13" uuid="7ab680fa-d773-435d-8451-b2eb98b4220e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{total_discount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="142" y="15" width="100" height="13" uuid="be051e9a-3301-4ade-a60e-ba0cfaf2d8ec">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[__________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="28" width="188" height="13" uuid="9a8d0fc5-adfe-4119-a3db-2a140963b2de">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoice_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="143" y="30" width="100" height="13" uuid="8f460907-0781-4bda-aee8-950eb093c894">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[__________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="32" width="100" height="13" uuid="e6bf9654-2c73-4b7b-b2ad-a4501df850d3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[__________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="50" width="188" height="13" uuid="92f6d929-25ee-448c-901c-69d5680ae843">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cash}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-10" y="63" width="198" height="13" uuid="a8313e06-22a1-43dc-acb2-cdfc9ad2f48e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{balance}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="110" width="198" height="20" uuid="6e7efa95-cc69-48c5-91da-387b977be068"/>
+				<textElement textAlignment="Center">
+					<font fontName="Iskoola Pota" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ස්තූතියි..! නැවත එන්න..]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="137" y="69" width="100" height="15" uuid="f156a499-9ee9-4c07-9d4c-22fbaa09d863">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="73" width="100" height="15" uuid="3baf72f9-f49c-4935-8351-c44306933d1a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{line1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
