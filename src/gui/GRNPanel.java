@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import services.GRNService;
 import services.ProductService;
 import services.PurchaseOrdersService;
 import services.SupplierService;
@@ -36,7 +37,8 @@ public class GRNPanel extends javax.swing.JPanel {
 
     PurchaseOrdersService poService;
     PurchaseOrder selectedPurchasOrder;
-
+    GRNService grnService;
+    List<GRN> grnsList;
     public GRNPanel() {
         this.supplierService = new SupplierService();
         this.suppliersList = new ArrayList<>();
@@ -45,6 +47,7 @@ public class GRNPanel extends javax.swing.JPanel {
         this.productList = new ArrayList<>();
         this.purrchaseOrders = new ArrayList<>();
         this.poService = new PurchaseOrdersService();
+        this.grnService = new GRNService();
         initComponents();
         initData();
     }
@@ -56,7 +59,7 @@ public class GRNPanel extends javax.swing.JPanel {
         try {
             suppliersList.addAll(supplierService.getAll());
             purrchaseOrders.addAll(poService.getAll());
-//            grnList.addAll(grnList);
+            grnList.addAll(grnService.getAll());
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }
@@ -68,7 +71,24 @@ public class GRNPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }
         loadPurchageOrderTable(purrchaseOrders);
-    }       
+        loadGRNTable(grnList);
+    }    
+    
+    private void setGRNtoFields(GRN grn){
+        tf_Id.setText(""+grn.getId());
+        tf_supplier.setText(grn.getPurchaseOrder().getSupplier().getFirstName()+" "+grn.getPurchaseOrder().getSupplier().getFirstName());
+        dc_OrderDate.setDate(grn.getGrnDate());
+        tf_productName.setText(grn.getPurchaseOrder().getProduct().getProductName());
+    }
+    
+    private void clear(){
+        selectedGRN = null;
+        initData();
+        tf_Id.setText("");
+        tf_supplier.setText("");
+        dc_OrderDate.setDate(null);
+        tf_productName.setText("");
+    }
 
     private void loadPurchageOrderTable(List<PurchaseOrder> purchaseOrder) {
         DefaultTableModel tableModel = (DefaultTableModel) tbl_purchaseOrder.getModel();
@@ -88,23 +108,28 @@ public class GRNPanel extends javax.swing.JPanel {
         }
     }
     
-    private void loadGRNTable(List<PurchaseOrder> purchaseOrder) {
-        DefaultTableModel tableModel = (DefaultTableModel) tbl_purchaseOrder.getModel();
+    private void loadGRNTable(List<GRN> grns) {
+        System.out.println("GRN LOADINF"+grns);
+        DefaultTableModel tableModel = (DefaultTableModel) tbl_grn.getModel();
         tableModel.setRowCount(0);
-        for (PurchaseOrder s : purchaseOrder) {
+        for (GRN s : grns) {
+            double grnvalue = s.getPurchaseOrder().getOrderQty()*s.getPurchaseOrder().getWholesaleUnitPrice();
             tableModel.addRow(new Object[]{
                 s.getId(),
-                s.getOrderedDate(),
-                s.getOrderQty(),
-                s.getProduct().getUnit().getUnit(),
-                s.getWholesaleUnitPrice(),
-                s.getProduct().getProductName(),
-                s.getOrderQty() * s.getWholesaleUnitPrice(),
-                s.getPaidAmount(),
-                String.valueOf(s.getOrderQty() * s.getWholesaleUnitPrice() - s.getPaidAmount()),
-                s.getSupplier().getFirstName() + " " + s.getSupplier().getLastName(),});
+                s.getPurchaseOrder().getOrderedDate(),
+                s.getPurchaseOrder().getProduct().getProductName(),
+                s.getPurchaseOrder().getOrderQty(),
+                s.getPurchaseOrder().getWholesaleUnitPrice(),
+                s.getPurchaseOrder().getSupplier().getFirstName()+s.getPurchaseOrder().getSupplier().getLastName(),
+                grnvalue,
+                s.getPurchaseOrder().getPaidAmount(),
+                grnvalue -  s.getPurchaseOrder().getPaidAmount(),
+                });
+            
         }
     } 
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -126,9 +151,9 @@ public class GRNPanel extends javax.swing.JPanel {
         dc_OrderDate = new com.toedter.calendar.JDateChooser();
         tf_productName = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        btn_makeGRN = new javax.swing.JButton();
         btn_pay = new javax.swing.JButton();
         btn_viewStock = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         roundedPanel3 = new components.RoundedPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_grn = new javax.swing.JTable();
@@ -156,12 +181,17 @@ public class GRNPanel extends javax.swing.JPanel {
 
         jLabel7.setText("Product Name");
 
-        btn_makeGRN.setText("Make GRN");
-
         btn_pay.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btn_pay.setText("Pay");
 
         btn_viewStock.setText("View Stock");
+
+        jButton1.setText("Refresh");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
@@ -169,23 +199,23 @@ public class GRNPanel extends javax.swing.JPanel {
             roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tf_Id)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tf_supplier, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                            .addComponent(jLabel6)
-                            .addComponent(dc_OrderDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(tf_productName, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7))
-                    .addGroup(roundedPanel2Layout.createSequentialGroup()
-                        .addComponent(btn_viewStock)
-                        .addGap(18, 18, 18)
+                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_makeGRN))))
+                            .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tf_Id)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tf_supplier, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                                .addComponent(jLabel6)
+                                .addComponent(dc_OrderDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(tf_productName, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addGroup(roundedPanel2Layout.createSequentialGroup()
+                            .addComponent(btn_viewStock)
+                            .addGap(18, 18, 18)
+                            .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButton1))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         roundedPanel2Layout.setVerticalGroup(
@@ -207,13 +237,13 @@ public class GRNPanel extends javax.swing.JPanel {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tf_productName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(72, 72, 72)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addGap(31, 31, 31)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_makeGRN)
-                    .addComponent(btn_viewStock))
-                .addGap(18, 18, 18)
-                .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(122, Short.MAX_VALUE))
+                    .addComponent(btn_viewStock)
+                    .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tbl_grn.setModel(new javax.swing.table.DefaultTableModel(
@@ -230,6 +260,11 @@ public class GRNPanel extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tbl_grn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_grnMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tbl_grn);
@@ -309,7 +344,7 @@ public class GRNPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -357,12 +392,30 @@ public class GRNPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tbl_grnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_grnMouseClicked
+        // TODO add your handling code here:
+        int row =  tbl_grn.getSelectedRow();
+        if(row >= 0){
+            selectedGRN = grnList.get(row);
+            setGRNtoFields(selectedGRN);
+            var pos = new ArrayList<PurchaseOrder>();
+            pos.add(selectedGRN.getPurchaseOrder());
+            loadPurchageOrderTable(pos);
+        }
+        
+    }//GEN-LAST:event_tbl_grnMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_makeGRN;
     private javax.swing.JButton btn_pay;
     private javax.swing.JButton btn_viewStock;
     private com.toedter.calendar.JDateChooser dc_OrderDate;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

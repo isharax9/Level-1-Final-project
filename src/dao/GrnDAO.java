@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import utils.Database;
 
 /**
@@ -71,6 +73,18 @@ public class GrnDAO {
         }
         
         return null;
+    }
+    
+    public List<GRN> getAll() throws  SQLException {
+        List<GRN> grns = new ArrayList<>();
+        Connection conn = Database.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(baseQuery);
+        var result = statement.executeQuery();
+        while(result.next()) {
+             grns.add(GRN.fromResultSet(result));
+        }
+        
+        return grns;
     }
 
    

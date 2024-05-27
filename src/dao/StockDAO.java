@@ -18,6 +18,7 @@ import utils.Database;
  * @author vidur
  */
 public class StockDAO {
+
     String baseQuery = """
                        SELECT * FROM stock
                        INNER JOIN grn ON grn.grn_id = stock.GRN_grn_id
@@ -29,40 +30,44 @@ public class StockDAO {
                        INNER JOIN suppliers ON suppliers.supplier_id = purchase_orders.suppliers_supplier_id
                        INNER JOIN bank_details ON suppliers.bank_details_bank_details_id = bank_details.bank_details_id
                        """;
-    public List<Stock> getAll()throws SQLException{
+
+    public List<Stock> getAll() throws SQLException {
         List<Stock> stocks = new ArrayList<>();
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(baseQuery);
         var result = statement.executeQuery();
-        while(result.next()){
+        while (result.next()) {
             stocks.add(Stock.fromResultSet(result));
         }
-        
+
         return stocks;
     }
-    public Stock getByGRNID(int id)throws SQLException{
-        String query = baseQuery+" WHERE grn.grn_id = ?";
+
+    public Stock getByGRNID(int id) throws SQLException {
+        String query = baseQuery + " WHERE grn.grn_id = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, id);
         var reuslt = statement.executeQuery();
-        if(reuslt.next()){
+        if (reuslt.next()) {
             return Stock.fromResultSet(reuslt);
         }
         return null;
     }
+
     public Stock create(Stock stock) throws SQLException {
-        String query = "INSERT INTO `stock` (`mnf_date`, `exp_date`, `unit_price`, `available_qty`, `discount`, `GRN_grn_id`) VALUES (?,?,?,?, ?, ?)";
+        String query = "INSERT INTO `stock` (`stock_barcode`,`mnf_date`, `exp_date`, `unit_price`, `available_qty`, `discount`, `GRN_grn_id`) VALUES (?,?,?,?, ?, ?,?)";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setDate(1, stock.getMnfDate());
-        statement.setDate(2, stock.getExpDate());
-        statement.setDouble(3, stock.getUnitPrice());
-        statement.setDouble(4, stock.getAvailableQty());
-        statement.setDouble(5, stock.getDiscount());
-        statement.setInt(6, stock.getGrn().getId());
+        statement.setInt(1, stock.getStockBarcode());
+        statement.setDate(2, stock.getMnfDate());
+        statement.setDate(3, stock.getExpDate());
+        statement.setDouble(4, stock.getUnitPrice());
+        statement.setDouble(5, stock.getAvailableQty());
+        statement.setDouble(6, stock.getDiscount());
+        statement.setInt(7, stock.getGrn().getId());
         var result = statement.executeQuery();
-        
+
         try {
             int affectedRows = statement.executeUpdate();
 
@@ -82,32 +87,32 @@ public class StockDAO {
         }
         return stock;
     }
-    public Stock getByStockBarcode(int barcode)throws SQLException{
-       String query = baseQuery + " stock.stock_barcode = ?";
-       Connection conn = Database.getInstance().getConnection();
+
+    public Stock getByStockBarcode(int barcode) throws SQLException {
+        String query = baseQuery + " stock.stock_barcode = ?";
+        Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, barcode);
         var reuslt = statement.executeQuery();
-        if(reuslt.next()){
+        if (reuslt.next()) {
             return Stock.fromResultSet(reuslt);
         }
         return null;
     }
-    public List<Stock> getByProductName(String productName)throws SQLException{
+
+    public List<Stock> getByProductName(String productName) throws SQLException {
         String query = baseQuery + " WHERE products.product_name LIKE ?";
         List<Stock> stocks = new ArrayList<>();
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1,productName+"%");
+        statement.setString(1, productName + "%");
         var result = statement.executeQuery();
-        while(result.next()){
+        while (result.next()) {
             stocks.add(Stock.fromResultSet(result));
         }
-        
+
         return stocks;
-        
+
     }
-    
-  
 
 }

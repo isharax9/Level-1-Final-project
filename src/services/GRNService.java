@@ -9,6 +9,7 @@ import dto.GRN;
 import dto.PurchaseOrder;
 import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -20,6 +21,12 @@ public class GRNService {
 
     public GRNService() {
         this.grnDao = new GrnDAO();
+    }
+    
+    public List<GRN> getAll() throws IllegalArgumentException, SQLException {
+        var list  = grnDao.getAll();
+        System.out.println("GRN LIST LENGTH"+list.size());
+        return list;
     }
 
     public GRN getByPOID(int id) throws IllegalArgumentException, SQLException {

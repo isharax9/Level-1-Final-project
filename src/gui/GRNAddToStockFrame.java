@@ -5,6 +5,14 @@
 package gui;
 
 import dto.GRN;
+import dto.Stock;
+import services.BarcodeService;
+import java.sql.Date;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import services.GRNService;
+import services.StockService;
+import utils.Validators;
 
 /**
  *
@@ -16,13 +24,20 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
      * Creates new form GRNAddToStockFrame
      */
     final GRN grn;
+    int barcode = BarcodeService.makeBarcodeForStock();
+    final StockService service;
+
     public GRNAddToStockFrame(GRN grn) {
         this.grn = grn;
         initComponents();
+        this.service = new StockService();
+        initData();
     }
-    
-    private void setID(){
-    
+
+    public void initData() {
+        tf_id.setText(grn.getId() + "");
+        tf_barCode.setText(barcode + "");
+        tf_qty.setText(grn.getPurchaseOrder().getOrderQty() + "");
     }
 
     /**
@@ -41,8 +56,6 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
         tf_barCode = new javax.swing.JTextField();
         btn_refresh = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        tf_mfg = new javax.swing.JTextField();
-        tf_exp = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         tf_qty = new javax.swing.JTextField();
@@ -50,9 +63,12 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
         tf_discount = new javax.swing.JTextField();
         btn_stock = new javax.swing.JButton();
         btn_printBarCode = new javax.swing.JButton();
+        dp_mnf = new com.toedter.calendar.JDateChooser();
+        dp_expdate = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         roundedPanel1.setBackground(new java.awt.Color(255, 255, 255));
         roundedPanel1.setRoundBottomLeft(20);
@@ -62,9 +78,18 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
 
         jLabel2.setText("GRN ID");
 
-        jLabel3.setText("Bar Code");
+        tf_id.setEnabled(false);
+
+        jLabel3.setText("Barcode");
+
+        tf_barCode.setEnabled(false);
 
         btn_refresh.setText("Refresh");
+        btn_refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_refreshActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("MFG");
 
@@ -72,9 +97,16 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
 
         jLabel6.setText("Qty");
 
-        jLabel7.setText("Discount");
+        tf_qty.setEnabled(false);
+
+        jLabel7.setText("Defult Discount");
 
         btn_stock.setText("Add Stock");
+        btn_stock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_stockActionPerformed(evt);
+            }
+        });
 
         btn_printBarCode.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btn_printBarCode.setText("Print BarCode");
@@ -105,19 +137,19 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
                             .addGroup(roundedPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tf_mfg, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(dp_mnf, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(roundedPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tf_exp, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(dp_expdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(roundedPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(tf_qty, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(roundedPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tf_discount, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tf_discount, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
         roundedPanel1Layout.setVerticalGroup(
@@ -129,18 +161,17 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tf_barCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_refresh))
+                    .addComponent(btn_refresh)
+                    .addComponent(tf_barCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tf_mfg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(dp_mnf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tf_exp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(dp_expdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tf_qty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -150,10 +181,10 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
                     .addComponent(tf_discount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_stock)
                     .addComponent(btn_printBarCode))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -180,22 +211,51 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(40, 40, 40)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(26, 26, 26))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
+        // TODO add your handling code here:
+        barcode = BarcodeService.makeBarcodeForStock();
+        tf_barCode.setText(barcode + "");
+    }//GEN-LAST:event_btn_refreshActionPerformed
+
+    private void btn_stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stockActionPerformed
+        // TODO add your handling code here:
+        Stock stock = new Stock();
+        stock.setStockBarcode(barcode);
+        
+        stock.setAvailableQty(grn.getPurchaseOrder().getOrderQty());
+        stock.setExpDate(new Date(dp_expdate.getDate().getTime()));
+        stock.setMnfDate(new Date(dp_mnf.getDate().getTime()));
+        stock.setGrn(grn);
+
+        try {
+            service.create(stock);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB ERROR", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "User Input Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+
+
+    }//GEN-LAST:event_btn_stockActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_printBarCode;
     private javax.swing.JButton btn_refresh;
     private javax.swing.JButton btn_stock;
+    private com.toedter.calendar.JDateChooser dp_expdate;
+    private com.toedter.calendar.JDateChooser dp_mnf;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -206,9 +266,7 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
     private components.RoundedPanel roundedPanel1;
     private javax.swing.JTextField tf_barCode;
     private javax.swing.JTextField tf_discount;
-    private javax.swing.JTextField tf_exp;
     private javax.swing.JTextField tf_id;
-    private javax.swing.JTextField tf_mfg;
     private javax.swing.JTextField tf_qty;
     // End of variables declaration//GEN-END:variables
 }

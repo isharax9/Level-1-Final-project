@@ -49,6 +49,7 @@ public class Customer {
             throw new IllegalArgumentException("Invalid point value");
         }
     }
+    
 
     public boolean isValidated() {
         return true;
