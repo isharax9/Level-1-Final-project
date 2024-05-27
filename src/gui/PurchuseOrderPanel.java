@@ -4,10 +4,12 @@
  */
 package gui;
 
+import dto.GRN;
 import dto.PurchaseOrder;
 import dto.Supplier;
 import java.sql.Date;
 import dto.Product;
+import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import services.SupplierService;
 import utils.Validators;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import services.GRNService;
 import services.PurchaseOrdersService;
 
 /**
@@ -40,6 +43,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
     PurchaseOrdersService poService;
     PurchaseOrder selectedPurchasOrder;
+    GRNService grnService;
 
     public PurchuseOrderPanel() {
         this.supplierService = new SupplierService();
@@ -48,6 +52,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         this.productList = new ArrayList<>();
         this.purrchaseOrders = new ArrayList<>();
         poService = new PurchaseOrdersService();
+        grnService = new GRNService();
         initComponents();
         initData();
     }
@@ -118,7 +123,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         tf_supplierSearchByContact.setText("");
         tf_whoelSalePrice.setText("0");
         selectedPurchasOrder = null;
-         lbl_dueAmount.setText("");
+        lbl_dueAmount.setText("");
     }
 
     private PurchaseOrder getPurchaseOrderFromFields() throws IllegalArgumentException {
@@ -151,7 +156,8 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
 
         return purchaseOrder;
     }
-    private void setPurchaseOrderFromFields(PurchaseOrder po) throws IllegalArgumentException{
+
+    private void setPurchaseOrderFromFields(PurchaseOrder po) throws IllegalArgumentException {
         tf_Id.setText(String.valueOf(po.getId()));
         ff_orderDate.setText(po.getOrderedDate().toString());
         tf_qty.setText(String.valueOf(po.getOrderQty()));
@@ -159,10 +165,10 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         tf_whoelSalePrice.setText(String.valueOf(po.getWholesaleUnitPrice()));
         tf_paidAmount.setText(String.valueOf(po.getPaidAmount()));
         tf_supplierSearchByContact.setText(po.getSupplier().getContact());
-        lbl_dueAmount.setText("Due Amount :" + (po.getOrderQty()*po.getWholesaleUnitPrice()-po.getPaidAmount()));
+        lbl_dueAmount.setText("Due Amount :" + (po.getOrderQty() * po.getWholesaleUnitPrice() - po.getPaidAmount()));
         setSelectedProductToComboBox(po.getProduct());
         setSelectedSupplierToComboBox(po.getSupplier());
-        
+
     }
 
     private Product getSelectedProductFromComboBox() {
@@ -177,12 +183,13 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         System.out.println(pro);
         return null;
     }
-    
-    private void setSelectedProductToComboBox(Product product){
+
+    private void setSelectedProductToComboBox(Product product) {
         cb_product.setSelectedItem(product.getProductName());
     }
-    private void setSelectedSupplierToComboBox(Supplier s){
-        cb_supplier.setSelectedItem( s.getFirstName() + " " + s.getLastName());
+
+    private void setSelectedSupplierToComboBox(Supplier s) {
+        cb_supplier.setSelectedItem(s.getFirstName() + " " + s.getLastName());
     }
 
     private Supplier getSelectedSupplierFromComboBox() {
@@ -217,8 +224,6 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         lbl_dueAmount.setText("Due Amount :" + duePayment);
 
     }
-    
-   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -386,6 +391,11 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         });
 
         btn_makeGRN.setText("Make GRN");
+        btn_makeGRN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_makeGRNActionPerformed(evt);
+            }
+        });
 
         btn_viewSUpplier.setText("View Supplier");
 
@@ -591,6 +601,33 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         clear();
     }//GEN-LAST:event_btn_clearActionPerformed
+
+    private void btn_makeGRNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_makeGRNActionPerformed
+        // TODO add your handling code here:
+        if (selectedPurchasOrder == null) {
+            JOptionPane.showMessageDialog(this, "Please Select PO from Table", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            GRN grn = new GRN();
+            grn.setId(0);
+            grn.setPurchaseOrder(selectedPurchasOrder);
+            grn.setGrnDate(new Timestamp(System.currentTimeMillis()));
+
+            GRN cretedGRN = grnService.create(grn);
+            JOptionPane.showMessageDialog(this, "Successfully GRN Created", "Success", JOptionPane.INFORMATION_MESSAGE);
+            new GRNAddToStockFrame(cretedGRN).setVisible(true);
+
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "user Input Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB ERROR", JOptionPane.ERROR_MESSAGE);
+
+        }
+
+    }//GEN-LAST:event_btn_makeGRNActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
