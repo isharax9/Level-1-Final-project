@@ -30,6 +30,10 @@ public class ProductTable extends javax.swing.JPanel {
         initData();
     }
     
+    public void clear(){
+        initData();
+    }
+    
     public void setProductTableInterface(ProductTableInterface productTableInterface){
         this.productTableInterface = productTableInterface;
     }

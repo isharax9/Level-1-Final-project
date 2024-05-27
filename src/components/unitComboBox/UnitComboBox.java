@@ -32,6 +32,21 @@ public class UnitComboBox extends javax.swing.JPanel {
         loadUnit();
     }
     
+    public  Unit getSelectedItem(){
+        String selectedUnitName = (String) jComboBox1.getSelectedItem();
+            for (Unit unit : units) {
+                if (unit.getUnit().equals(selectedUnitName)) {
+                    selectedUnit = unit;
+                    return unit;
+                }
+            }
+        return null;
+    }
+    
+    public void setSelectedItem(Unit unit){
+        jComboBox1.setSelectedItem(unit.getUnit());
+    }
+    
     private void loadUnit(){
         try {
             units.addAll(service.getAllUnits());
