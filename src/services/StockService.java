@@ -48,6 +48,10 @@ public class StockService {
     public List<Stock> getAll() throws SQLException, IllegalArgumentException {
         return stockDTO.getAll();
     }
+    public List<Stock> getAllNotExpriedAndInStock() throws SQLException, IllegalArgumentException {
+        return stockDTO.getAllNotExpriedAndInStock();
+    }
+    
 
     public Stock getByGRNID(int id) throws SQLException, IllegalArgumentException {
         if (id <= 0) {

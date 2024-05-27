@@ -25,14 +25,17 @@ public class Validators {
     private static final Pattern POSITIVE_INT_PATTERN = Pattern.compile(POSITIVE_INT_REGEX);
     
     
-    private static final String DOUBLE_REG = "^\\d+$";
-     private static final Pattern doublePatten = Pattern.compile(DOUBLE_REG);
+//    private static final String DOUBLE_REG ="^-?\\d+(\\.\\d+)?$";
+//     private static final Pattern doublePatten = Pattern.compile(DOUBLE_REG);
+     private static final String DOUBLE_REG = "^-?\\d+(\\.\\d+)?$";
+private static final Pattern doublePattern = Pattern.compile(DOUBLE_REG);
     // Regular expression for validating  integers
     private static final  String INT_REGEX  = "^-?[0-9]+$";
     private static final Pattern INT_PATTERN = Pattern.compile(INT_REGEX);
     
     public static boolean isValidDouble(String dob){
-        return doublePatten.matcher(dob).matches();
+        System.out.println(doublePattern.matcher(dob).matches()+" "+dob);
+        return doublePattern.matcher(dob).matches();
     }
     
     //conditions  : email not null, xxx@xx.xx type , maximum 100 chars 
@@ -178,7 +181,8 @@ return true;
     
     // Validates a name (should not be empty and should only contain letters and spaces)
     public static boolean isValidName(String name) {
-        return name != null && !name.trim().isEmpty() && name.matches("[a-zA-Z\\s]+");
+        return  name.length() < 3 ;
+//        return name != null && !name.trim().isEmpty() && name.matches("[a-zA-Z\\s]+");
     }
     
     // Validates a point value (should be non-negative)
@@ -210,4 +214,6 @@ return true;
     public static boolean isValidDescription(String description) {
         return description != null && description.length() <= 45;
     }
+    
+   
 }
