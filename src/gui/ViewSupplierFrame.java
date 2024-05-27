@@ -6,6 +6,7 @@ package gui;
 
 import dto.GRN;
 import dto.Stock;
+import dto.Supplier;
 import services.BarcodeService;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -24,9 +25,9 @@ public class ViewSupplierFrame extends javax.swing.JFrame {
      * Creates new form GRNAddToStockFrame
      */
    
-    
-    public ViewSupplierFrame(GRN grn) {
-        
+    final Supplier supplier;
+    public ViewSupplierFrame(Supplier supplier) {
+        this.supplier = supplier;
     }
     
     public void initData() {
