@@ -14,151 +14,90 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import dto.BankDetails;
 import dto.Customer;
 import utils.Database;
 
 public class CustomerDAO {
 
-    private final String baseQuery = "SELECT * FROM suppliers  INNER JOIN bank_details ON  suppliers.bank_details_bank_details_id =  bank_details.bank_details_id ";
+    private final String baseQuery = "SELECT * FROM customers";
 
     public Customer create(Customer customer) throws SQLException {
-        String query = "INSERT INTO `suppliers` (`supplier_first_name`, `supplier_last_name`, `supplier_contact`, `supplier_address`, `bank_details_bank_details_id`) VALUES (?,?,?,?, ?)";
+        String query = "INSERT INTO `customers` (`customer_name`,`customer_address`, `customer_contact`,`point`) VALUES (?,?,?,?,?)";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setString(1, customer.getFirstName().toLowerCase());
-        statement.setString(2, customer.getLastName().toLowerCase());
-        statement.setString(3, customer.getContact());
-        statement.setString(4, customer.getAddress());
-        statement.setInt(5, customer.getBankDetails().getId());
+        statement.setString(1, customer.getCustomerName().toLowerCase());
+        statement.setString(2, customer.getCustomerAddress().toLowerCase());
+        statement.setString(3, customer.getCustomerContact());
+        statement.setString(4, String.valueOf(customer.getPoint()));
         try {
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Creating Supplier failed, no rows affected.");
+                throw new SQLException("Creating Customer failed, no rows affected.");
             }
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    customer.setId(generatedKeys.getInt(1));
+                    customer.setCustomerId(generatedKeys.getInt(1));
                 } else {
-                    throw new SQLException("Creating Supplier failed, no ID obtained.");
+                    throw new SQLException("Creating Customer failed, no ID obtained.");
                 }
             }
         } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
-            throw new SQLException("INVALID BANK DETAILS ID");
+            throw new SQLException("Customer Adding failed");
         }
         return customer;
     }
 
-    public Supplier getByContact(String contact) throws SQLException {
-        String query = baseQuery + " WHERE supplier_contact = ?";
+    public Customer getByContact(String contact) throws SQLException {
+        String query = baseQuery + " WHERE customer_contact = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, contact);
         var result = statement.executeQuery();
         if (result.next()) {
-            return Supplier.fromResultSet(result);
+            return Customer.fromResultSet(result);
         } else {
-            throw new IllegalArgumentException("Supplier not found in this Contact number");
+            throw new IllegalArgumentException("Customer not found in this Contact number");
         }
 
     }
 
-    public List<Supplier> searchByName(String name) throws SQLException {
-        List<Supplier> suppliers = new ArrayList<>();
-        String query = baseQuery + " WHERE supplier_first_name LIKE ? OR supplier_last_name LIKE ?";
-        Connection conn = Database.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setString(1, name.toLowerCase() + "%");
-        statement.setString(2, name.toLowerCase() + "%");
-        var result = statement.executeQuery();
-        while (result.next()) {
-            suppliers.add(Supplier.fromResultSet(result));
-        }
-
-        return suppliers;
-    }
-
-    public Supplier getByID(int id) throws SQLException {
-        String query = baseQuery + " WHERE supplier_id = ?";
-        Connection conn = Database.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(query);
-        statement.setInt(1, id);
-        var result = statement.executeQuery();
-        if (result.next()) {
-            return Supplier.fromResultSet(result);
-        } else {
-            throw new IllegalArgumentException("Supplier not found in this id");
-        }
-
-    }
-
-    public List<Supplier> searchByContact(String contact) throws SQLException {
-        List<Supplier> suppliers = new ArrayList<>();
-        String query = baseQuery + " WHERE  supplier_contact LIKE ?";
-        Connection conn = Database.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setString(1, contact + "%");
-        var result = statement.executeQuery();
-        while (result.next()) {
-            suppliers.add(Supplier.fromResultSet(result));
-        }
-
-        return suppliers;
-    }
-
-    public List<Supplier> getAll() throws SQLException {
-        List<Supplier> suppliers = new ArrayList<>();
+    public List<Customer> getAll() throws SQLException {
+        List<Customer> customerList = new ArrayList<>();
         String query = baseQuery;
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         var result = statement.executeQuery();
         while (result.next()) {
-            suppliers.add(Supplier.fromResultSet(result));
+            customerList.add(Customer.fromResultSet(result));
         }
-
-        return suppliers;
+        return customerList;
     }
 
-    public void update(Supplier supplier) throws SQLException {
-        String query = "UPDATE `suppliers` SET `supplier_first_name`=? , `supplier_last_name`=?, `supplier_contact`=?,`supplier_address`=? WHERE  `supplier_id`=?";
+    public void update(Customer customer) throws SQLException {
+        String query = "UPDATE `customers` SET `customer_name`=? , `customer_address`=?, `customer_contact`=?,`point`=? WHERE  `customer_id`=?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, supplier.getFirstName().toLowerCase());
-        statement.setString(2, supplier.getLastName().toLowerCase());
-        statement.setString(3, supplier.getContact());
-        statement.setString(4, supplier.getAddress());
-        statement.setInt(5, supplier.getId());
+        statement.setString(1, customer.getCustomerName().toLowerCase());
+        statement.setString(2, customer.getCustomerAddress().toLowerCase());
+        statement.setString(3, customer.getCustomerContact());
+        statement.setString(4, String.valueOf(customer.getPoint()));
+        statement.setInt(5, customer.getCustomerId());
         statement.executeUpdate();
-        System.out.println("UPDATE SUPPLIER ");
-
+        System.out.println("UPDATE Customer");
     }
 
-    public List<Supplier> search(String id, String firstName, String lastName, String mobile, String bankAccountNumber) throws SQLException {
-        List<Supplier> suppliers = new ArrayList<>();
+    public List<Customer> search(String id, String mobile, String Address) throws SQLException {
+        List<Customer> customerList = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder(baseQuery);
         List<Object> parameters = new ArrayList<>();
         boolean isFirstCondition = true;
 
         if (id != null && !id.trim().isEmpty()) {
             queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
-            queryBuilder.append(" supplier_id = ?");
-            parameters.add(Integer.parseInt(id));
-            isFirstCondition = false;
-        }
-
-        if (firstName != null && !firstName.trim().isEmpty()) {
-            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
-            queryBuilder.append(" supplier_first_name LIKE ?");
-            parameters.add(firstName.toLowerCase() + "%");
-            isFirstCondition = false;
-        }
-
-        if (lastName != null && !lastName.trim().isEmpty()) {
-            queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
-            queryBuilder.append(" supplier_last_name LIKE ?");
-            parameters.add(lastName.toLowerCase() + "%");
+            queryBuilder.append(" customer_id = ?");
+            parameters.add(Integer.valueOf(id));
             isFirstCondition = false;
         }
 
@@ -169,10 +108,10 @@ public class CustomerDAO {
             isFirstCondition = false;
         }
 
-        if (bankAccountNumber != null && !bankAccountNumber.trim().isEmpty()) {
+        if (Address != null && !Address.trim().isEmpty()) {
             queryBuilder.append(isFirstCondition ? " WHERE" : " AND");
-            queryBuilder.append(" bank_details.bank_account_number LIKE ?");
-            parameters.add(bankAccountNumber + "%");
+            queryBuilder.append(" customer_address LIKE ?");
+            parameters.add(Address + "%");
         }
 
         String query = queryBuilder.toString();
@@ -183,11 +122,8 @@ public class CustomerDAO {
         }
         var result = statement.executeQuery();
         while (result.next()) {
-            suppliers.add(Supplier.fromResultSet(result));
+            customerList.add(Customer.fromResultSet(result));
         }
-
-        return suppliers;
-
+        return customerList;
     }
-
 }
