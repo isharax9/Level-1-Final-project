@@ -66,7 +66,6 @@ public class StockDAO {
         statement.setDouble(5, stock.getAvailableQty());
         statement.setDouble(6, stock.getDiscount());
         statement.setInt(7, stock.getGrn().getId());
-        var result = statement.executeQuery();
 
         try {
             int affectedRows = statement.executeUpdate();
@@ -89,7 +88,7 @@ public class StockDAO {
     }
 
     public Stock getByStockBarcode(int barcode) throws SQLException {
-        String query = baseQuery + " stock.stock_barcode = ?";
+        String query = baseQuery + " WHERE stock.stock_barcode = ?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setInt(1, barcode);

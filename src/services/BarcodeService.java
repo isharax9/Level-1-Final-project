@@ -22,5 +22,8 @@ public class BarcodeService {
         
         return barcode;
     }
+    public static void printBarcode(int barcode){
+        
+    }
     
 }

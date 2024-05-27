@@ -26,14 +26,14 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
     final GRN grn;
     int barcode = BarcodeService.makeBarcodeForStock();
     final StockService service;
-
+    
     public GRNAddToStockFrame(GRN grn) {
         this.grn = grn;
         initComponents();
         this.service = new StockService();
         initData();
     }
-
+    
     public void initData() {
         tf_id.setText(grn.getId() + "");
         tf_barCode.setText(barcode + "");
@@ -109,7 +109,14 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
         });
 
         btn_printBarCode.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btn_printBarCode.setForeground(new java.awt.Color(255, 255, 255));
         btn_printBarCode.setText("Print BarCode");
+        btn_printBarCode.setEnabled(false);
+        btn_printBarCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_printBarCodeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -233,18 +240,30 @@ public class GRNAddToStockFrame extends javax.swing.JFrame {
         stock.setExpDate(new Date(dp_expdate.getDate().getTime()));
         stock.setMnfDate(new Date(dp_mnf.getDate().getTime()));
         stock.setGrn(grn);
-
+        
         try {
             service.create(stock);
+            btn_printBarCode.setEnabled(true);
+            btn_refresh.setEnabled(false);
+            btn_stock.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "Successfully Added to Stock", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "DB ERROR", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+            
             JOptionPane.showMessageDialog(this, ex.getMessage(), "User Input Error", JOptionPane.ERROR_MESSAGE);
-
+            
         }
-
+        
 
     }//GEN-LAST:event_btn_stockActionPerformed
+
+    private void btn_printBarCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printBarCodeActionPerformed
+        // TODO add your handling code here:
+        BarcodeService.printBarcode(barcode);
+    }//GEN-LAST:event_btn_printBarCodeActionPerformed
 
     /**
      * @param args the command line arguments
