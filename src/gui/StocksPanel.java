@@ -4,17 +4,73 @@
  */
 package gui;
 
+import dto.Stock;
+import dto.Supplier;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import services.StockService;
+import services.SupplierService;
+
 /**
  *
  * @author vidur
  */
 public class StocksPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form SellProductPanel
-     */
+    StockService stockService;
+    List<Stock> stockList;
+    Stock selectedStock;
+
     public StocksPanel() {
+        this.stockService = new StockService();
+        this.stockList = new ArrayList<>();
         initComponents();
+        initData();
+    }  
+    
+    private void initData() {
+        stockList.clear();
+        try {
+            stockList.addAll(stockService.getAll());
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
+        }
+        loadSuppliertable(stockList);
+    }  
+    
+    private void setSupplierToField(Stock stock) {
+        String supplierName = stock.getGrn().getPurchaseOrder().getSupplier().getFirstName()+" "+stock.getGrn().getPurchaseOrder().getSupplier().getFirstName();
+        tf_barcode_Stocks.setText(String.valueOf(stock.getStockBarcode()));
+        tf_product_name_Stocks.setText(stock.getGrn().getPurchaseOrder().getProduct().getProductName());
+        tf_suppler_Stocks.setText(supplierName);
+        dc_mnf_date_Stocks.setDate(stock.getMnfDate());
+        dc_exp_date_Stocks.setDate(stock.getExpDate());
+    }
+    
+    private void search() {
+        
+    }
+
+    private void loadSuppliertable(List<Stock> stockList) {
+        System.out.println("Cool");
+        DefaultTableModel tableModel = (DefaultTableModel) tbt_stock.getModel();
+        tableModel.setRowCount(0);
+        for (Stock s : stockList) {
+            tableModel.addRow(new Object[]{
+                s.getStockBarcode(),
+                s.getGrn().getPurchaseOrder().getProduct().getProductName(),
+                s.getMnfDate(),
+                s.getExpDate(),
+                s.getAvailableQty(),
+                s.getDiscount(),
+                s.getUnitPrice(),
+                s.getGrn().getPurchaseOrder().getWholesaleUnitPrice()});
+        }
     }
 
     /**
@@ -45,7 +101,7 @@ public class StocksPanel extends javax.swing.JPanel {
         btn_view_grn_Stocks = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbl_stocks = new javax.swing.JTable();
+        tbt_stock = new javax.swing.JTable();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -73,7 +129,7 @@ public class StocksPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel4.setText("suppler");
+        jLabel4.setText("Suppler");
 
         jLabel5.setText("Mnf Date");
 
@@ -152,7 +208,7 @@ public class StocksPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tbl_stocks.setModel(new javax.swing.table.DefaultTableModel(
+        tbt_stock.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -171,7 +227,12 @@ public class StocksPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tbl_stocks);
+        tbt_stock.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbt_stockMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbt_stock);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -232,6 +293,22 @@ public class StocksPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_product_name_StocksActionPerformed
 
+    private void tbt_stockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbt_stockMouseClicked
+        // TODO add your handling code here:
+        int SelectedRow = tbt_stock.getSelectedRow();
+        if (SelectedRow >= 0) {
+            String ID = String.valueOf(tbt_stock.getValueAt(SelectedRow, 0));
+            System.out.println(ID);
+            for (Stock s : stockList) {
+                if (s.getStockBarcode()== Integer.valueOf(ID)) {
+                    selectedStock = s;
+                    setSupplierToField(selectedStock);
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_tbt_stockMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_deactivate_Stocks;
@@ -249,10 +326,8 @@ public class StocksPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private components.RoundedPanel roundedPanel1;
-    private components.RoundedPanel roundedPanel2;
     private components.RoundedPanel roundedPanel3;
-    private javax.swing.JTable tbl_stocks;
+    private javax.swing.JTable tbt_stock;
     private javax.swing.JTextField tf_barcode_Stocks;
     private javax.swing.JTextField tf_product_name_Stocks;
     private javax.swing.JTextField tf_suppler_Stocks;
