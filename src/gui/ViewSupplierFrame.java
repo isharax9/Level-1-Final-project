@@ -24,15 +24,25 @@ public class ViewSupplierFrame extends javax.swing.JFrame {
     /**
      * Creates new form GRNAddToStockFrame
      */
-   
     final Supplier supplier;
+
     public ViewSupplierFrame(Supplier supplier) {
         this.supplier = supplier;
         initComponents();
+        initData();
     }
-    
+
     public void initData() {
-      
+        jTextField1.setText(supplier.getId() + "");
+        jTextField2.setText(supplier.getFirstName());
+        jTextField3.setText(supplier.getLastName());
+        jTextField4.setText(supplier.getContact());
+        jTextField5.setText(supplier.getAddress());
+        jTextField6.setText(supplier.getBankDetails().getBankAccountNumber());
+        jTextField7.setText(supplier.getBankDetails().getBankBranch());
+        jTextField8.setText(supplier.getBankDetails().getBankName());
+        jTextField9.setText(supplier.getBankDetails().getBankAccountHolderName());
+
     }
 
     /**
@@ -76,18 +86,36 @@ public class ViewSupplierFrame extends javax.swing.JFrame {
 
         jLabel8.setText("ID");
 
+        jTextField1.setEnabled(false);
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
         jLabel9.setText("First Name");
+
+        jTextField2.setEnabled(false);
 
         jLabel10.setText("Last Name");
 
+        jTextField3.setEnabled(false);
+
         jLabel11.setText("Contact");
+
+        jTextField4.setEnabled(false);
 
         jLabel12.setText("Address");
 
+        jTextField5.setEnabled(false);
+
         jLabel2.setText("Bank Account Number");
+
+        jTextField6.setEnabled(false);
 
         jLabel3.setText("Bank Branch");
 
+        jTextField7.setEnabled(false);
         jTextField7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField7ActionPerformed(evt);
@@ -96,6 +124,7 @@ public class ViewSupplierFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Bank");
 
+        jTextField8.setEnabled(false);
         jTextField8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField8ActionPerformed(evt);
@@ -104,6 +133,7 @@ public class ViewSupplierFrame extends javax.swing.JFrame {
 
         jLabel5.setText("Bank Holder Name");
 
+        jTextField9.setEnabled(false);
         jTextField9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField9ActionPerformed(evt);
@@ -246,6 +276,10 @@ public class ViewSupplierFrame extends javax.swing.JFrame {
     private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField9ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
