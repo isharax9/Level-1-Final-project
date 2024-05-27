@@ -9,8 +9,6 @@ import dto.BankDetails;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -24,12 +22,12 @@ import utils.Validators;
 public class SuppliersPanel extends javax.swing.JPanel {
 
     SupplierService supplierService;
-    List<Supplier> suppliers;
+    List<Supplier> supplier;
     Supplier selectedSupplier;
 
     public SuppliersPanel() {
         this.supplierService = new SupplierService();
-        this.suppliers = new ArrayList<>();
+        this.supplier = new ArrayList<>();
         initComponents();
         initData();
     }
@@ -50,13 +48,13 @@ public class SuppliersPanel extends javax.swing.JPanel {
     }
 
     private void initData() {
-        suppliers.clear();
+        supplier.clear();
         try {
-            suppliers.addAll(supplierService.getAll());
+            supplier.addAll(supplierService.getAll());
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }
-        loadSuppliertable(suppliers);
+        loadSuppliertable(supplier);
     }
 
     private void loadSuppliertable(List<Supplier> suppliers) {
@@ -109,15 +107,15 @@ public class SuppliersPanel extends javax.swing.JPanel {
         bankDetails.setBankBranch(tf_Branch.getText());
         bankDetails.setBankAccountNumber(tf_BankNo.getText());
 
-        Supplier s = new Supplier();
-        s.setId(Integer.parseInt(tf_Id.getText()));
-        s.setContact(tf_Mobile.getText());
-        s.setFirstName(tf_fname.getText());
-        s.setLastName(tf_Lname.getText());
-        s.setAddress(tf_Address.getText());
-        s.setBankDetails(bankDetails);
+        Supplier supplier = new Supplier();
+        supplier.setId(Integer.parseInt(tf_Id.getText()));
+        supplier.setContact(tf_Mobile.getText());
+        supplier.setFirstName(tf_fname.getText());
+        supplier.setLastName(tf_Lname.getText());
+        supplier.setAddress(tf_Address.getText());
+        supplier.setBankDetails(bankDetails);
 
-        return s;
+        return supplier;
     }
 
     private void setSupplierToField(Supplier supplier) {
@@ -133,19 +131,6 @@ public class SuppliersPanel extends javax.swing.JPanel {
         tf_Branch.setText(b.getBankBranch());
         tf_HolderName.setText(b.getBankAccountHolderName());
     }
-    
-    private void search() {
-        try {
-           suppliers =  supplierService.search(tf_Id.getText(),tf_fname.getText(),tf_Lname.getText(),tf_Mobile.getText(),tf_BankNo.getText());
-           
-        } catch (SQLException ex) {
-            Logger.getLogger(SuppliersPanel.class.getName()).log(Level.SEVERE, null, ex);
-            
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(SuppliersPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         loadSuppliertable(suppliers);
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -158,7 +143,7 @@ public class SuppliersPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         roundedPanel1 = new components.RoundedPanel();
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new components.RoundedPanel();
         jLabel2 = new javax.swing.JLabel();
         tf_Id = new javax.swing.JTextField();
         tf_fname = new javax.swing.JTextField();
@@ -196,42 +181,18 @@ public class SuppliersPanel extends javax.swing.JPanel {
         roundedPanel1.setRoundTopLeft(20);
         roundedPanel1.setRoundTopRight(20);
 
+        // jPanel1.setRoundBottomLeft(20);
+        // jPanel1.setRoundBottomRight(20);
+        // jPanel1.setRoundTopLeft(20);
+        // jPanel1.setRoundTopRight(20);
+
         jLabel2.setText("Supplier ID");
-
-        tf_Id.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tf_IdActionPerformed(evt);
-            }
-        });
-        tf_Id.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tf_IdKeyReleased(evt);
-            }
-        });
-
-        tf_fname.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tf_fnameKeyReleased(evt);
-            }
-        });
 
         jLabel3.setText("First Name");
 
         jLabel4.setText("Last Name");
 
-        tf_Lname.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tf_LnameKeyReleased(evt);
-            }
-        });
-
         jLabel5.setText("Mobile");
-
-        tf_Mobile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tf_MobileActionPerformed(evt);
-            }
-        });
 
         jLabel6.setText("Address");
 
@@ -244,16 +205,6 @@ public class SuppliersPanel extends javax.swing.JPanel {
         jLabel10.setText("Bank Name");
 
         tf_BankNo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        tf_BankNo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tf_BankNoActionPerformed(evt);
-            }
-        });
-        tf_BankNo.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tf_BankNoKeyReleased(evt);
-            }
-        });
 
         btn_Add.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btn_Add.setText("Add");
@@ -276,11 +227,6 @@ public class SuppliersPanel extends javax.swing.JPanel {
 
         btn_clear.setBackground(new java.awt.Color(255, 102, 102));
         btn_clear.setText("CLEAR");
-        btn_clear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_clearActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -485,7 +431,7 @@ public class SuppliersPanel extends javax.swing.JPanel {
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "User Input Error", JOptionPane.WARNING_MESSAGE);
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error ", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btn_AddActionPerformed
 
@@ -495,7 +441,7 @@ public class SuppliersPanel extends javax.swing.JPanel {
         if (SelectedRow >= 0) {
             String ID = String.valueOf(jTable1.getValueAt(SelectedRow, 0));
             System.out.println(ID);
-            for (Supplier s : suppliers) {
+            for (Supplier s : supplier) {
                 if (s.getId() == Integer.valueOf(ID)) {
                     selectedSupplier = s;
                     setSupplierToField(selectedSupplier);
@@ -507,62 +453,21 @@ public class SuppliersPanel extends javax.swing.JPanel {
 
     private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
         // TODO add your handling code here:
+        Supplier s = getSupplierFromTextFields();
+        s.setId(selectedSupplier.getId());
 
         try {
-            Supplier s = getSupplierFromTextFields();
-            s.setId(selectedSupplier.getId());
-            s.getBankDetails().setId(selectedSupplier.getBankDetails().getId());
             if (s.isValidated()) {
-                System.out.println("VIEW :"+s.getBankDetails());
                 supplierService.update(s);
                 JOptionPane.showMessageDialog(this, "Successfully Updated the Supplier Details", "Success", JOptionPane.INFORMATION_MESSAGE);
                 clear();
             }
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,  e.getMessage(),"DataBase Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Input Error", ex.getMessage(), JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException e) {            
+            JOptionPane.showMessageDialog(this, "DataBase Error", e.getMessage(), JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btn_UpdateActionPerformed
-
-    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
-        // TODO add your handling code here:
-        clear();
-    }//GEN-LAST:event_btn_clearActionPerformed
-
-    private void tf_IdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_IdActionPerformed
-        
-        
-    }//GEN-LAST:event_tf_IdActionPerformed
-
-    private void tf_IdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_IdKeyReleased
-        // TODO add your handling code here:
-        search();
-    }//GEN-LAST:event_tf_IdKeyReleased
-
-    private void tf_fnameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_fnameKeyReleased
-        // TODO add your handling code here:
-        search();
-    }//GEN-LAST:event_tf_fnameKeyReleased
-
-    private void tf_LnameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_LnameKeyReleased
-search();        // TODO add your handling code here:
-    }//GEN-LAST:event_tf_LnameKeyReleased
-
-    private void tf_MobileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_MobileActionPerformed
-        // TODO add your handling code here:
-        search();
-    }//GEN-LAST:event_tf_MobileActionPerformed
-
-    private void tf_BankNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_BankNoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tf_BankNoActionPerformed
-
-    private void tf_BankNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_BankNoKeyReleased
-        // TODO add your handling code here:
-        search();
-    }//GEN-LAST:event_tf_BankNoKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
