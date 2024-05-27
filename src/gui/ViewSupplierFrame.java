@@ -28,6 +28,7 @@ public class ViewSupplierFrame extends javax.swing.JFrame {
     final Supplier supplier;
     public ViewSupplierFrame(Supplier supplier) {
         this.supplier = supplier;
+        initComponents();
     }
     
     public void initData() {

@@ -452,6 +452,11 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
         });
 
         btn_viewSUpplier.setText("View Supplier");
+        btn_viewSUpplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_viewSUpplierActionPerformed(evt);
+            }
+        });
 
         tf_supplierSearchByContact.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -776,6 +781,13 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
     private void cb_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_productActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cb_productActionPerformed
+
+    private void btn_viewSUpplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_viewSUpplierActionPerformed
+        // TODO add your handling code here:
+        if(selectedPurchasOrder !=null){
+            new ViewSupplierFrame(selectedPurchasOrder.getSupplier()).setVisible(true);
+        }
+    }//GEN-LAST:event_btn_viewSUpplierActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
