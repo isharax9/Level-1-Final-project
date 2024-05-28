@@ -17,24 +17,32 @@ public class Validators {
 
     // Regular expression for a basic email validation pattern
     private static final String EMAIL_REGEX
-            = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"; 
+            = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-    
+
     // Regular expression for validating positive integers
-    private static final  String POSITIVE_INT_REGEX  = "^[0-9]+$";
+    private static final String POSITIVE_INT_REGEX = "^[0-9]+$";
     private static final Pattern POSITIVE_INT_PATTERN = Pattern.compile(POSITIVE_INT_REGEX);
-    
-    
-    private static final String DOUBLE_REG = "^\\d+$";
-     private static final Pattern doublePatten = Pattern.compile(DOUBLE_REG);
+
+//    private static final String DOUBLE_REG ="^-?\\d+(\\.\\d+)?$";
+//     private static final Pattern doublePatten = Pattern.compile(DOUBLE_REG);
+    private static final String DOUBLE_REG = "^-?\\d+(\\.\\d+)?$";
+    private static final Pattern doublePattern = Pattern.compile(DOUBLE_REG);
     // Regular expression for validating  integers
-    private static final  String INT_REGEX  = "^-?[0-9]+$";
+    private static final String INT_REGEX = "^-?[0-9]+$";
     private static final Pattern INT_PATTERN = Pattern.compile(INT_REGEX);
-    
-    public static boolean isValidDouble(String dob){
-        return doublePatten.matcher(dob).matches();
+
+    public static boolean isValidDouble(String dob) {
+//        System.out.println(doublePattern.matcher(dob).matches()+" "+dob);
+        try {
+            Double.parseDouble(dob);
+            return true;
+
+        } catch (Exception ex) {
+            return false;
+        }
     }
-    
+
     //conditions  : email not null, xxx@xx.xx type , maximum 100 chars 
     //returns : valid return TRUE,  invalid resutn False
     public static boolean isValidEmail(String email) {
@@ -74,38 +82,36 @@ public class Validators {
     //returns : valid return TRUE,  invalid resutn False
     public static boolean isValidBankName(String text) {
         return text.length() < 45 && text.length() > 0;
-        
-   
+
     }
-    
-    public static boolean isValidInt(String num){
-         return POSITIVE_INT_PATTERN.matcher(num).matches();
+
+    public static boolean isValidInt(String num) {
+        return POSITIVE_INT_PATTERN.matcher(num).matches();
     }
-    
+
     //conditions : bank branch name char length between 1 and 44
     //returns : valid return TRUE,  invalid resutn False
     public static boolean isValidBankBranch(String text) {
-         return text.length() < 45 && text.length() > 0;
+        return text.length() < 45 && text.length() > 0;
     }
 
     //conditions : bank number char length between 1 and 44 AND banct account number must to be int
     //returns : valid return TRUE,  invalid resutn False
     public static boolean isValidBankAccountNumber(String text) {
-        if(text.length() >= 45){
+        if (text.length() >= 45) {
             return false;
         }
-        if(text.length() == 0){
+        if (text.length() == 0) {
             return false;
         }
         return POSITIVE_INT_PATTERN.matcher(text).matches();
     }
-    
-    public static boolean isValidProductName(String productName){
-        return productName.length() <= 45  && productName.length() > 2;
+
+    public static boolean isValidProductName(String productName) {
+        return productName.length() <= 45 && productName.length() > 2;
     }
-    
-    
-      public static boolean isValidSubCategoryName(String subCategoryName) {
+
+    public static boolean isValidSubCategoryName(String subCategoryName) {
         return subCategoryName.length() <= 45;
     }
 
@@ -116,7 +122,7 @@ public class Validators {
     public static boolean isValidUnitName(String unitName) {
         return unitName.length() <= 45;
     }
-    
+
     // Validates a category name -- must not be null or empty and must be less than 45 characters
     public static boolean isValidCategory(String category) {
         return category != null && category.length() <= 45;
@@ -129,17 +135,13 @@ public class Validators {
 
     // Validates a unit name -- must not be null or empty and must be less than 45 characters
     public static boolean isValidUnit(String unit) {
-        return unit != null && unit.length() <= 45 && unit.length()>0;
+        return unit != null && unit.length() <= 45 && unit.length() > 0;
     }
-
-    
 
     // Validates a product printing name -- must not be null or empty and must be less than 45 characters
     public static boolean isValidProductPrintingName(String productPrintingName) {
         return productPrintingName != null && productPrintingName.length() <= 45;
     }
-
-   
 
     // Validates a contact number -- must not be null or empty and must be exactly 10 digits
     public static boolean isValidContact(String contact) {
@@ -154,7 +156,7 @@ public class Validators {
     // Validates a date
     public static boolean isValidDate(Object date) {
 //        return date != null;
-return true;
+        return true;
     }
 
     // Validates a quantity -- must be a positive number
@@ -166,31 +168,33 @@ return true;
     public static boolean isValidPrice(double price) {
         return price >= 0;
     }
+
     // Validates a Timestamp
     public static boolean isValidTimestamp(Timestamp timestamp) {
         return timestamp != null;
     }
-    
+
     // Validates a discount (should be between 0 and 100)
     public static boolean isValidDiscount(double discount) {
         return discount >= 0 && discount <= 100;
     }
-    
+
     // Validates a name (should not be empty and should only contain letters and spaces)
     public static boolean isValidName(String name) {
-        return name != null && !name.trim().isEmpty() && name.matches("[a-zA-Z\\s]+");
+        return name.length() < 3;
+//        return name != null && !name.trim().isEmpty() && name.matches("[a-zA-Z\\s]+");
     }
-    
+
     // Validates a point value (should be non-negative)
     public static boolean isValidPoint(int point) {
         return point >= 0;
     }
-    
+
     // Validates a username (should not be empty and should only contain letters, numbers, and underscores)
     public static boolean isValidUsername(String username) {
         return username != null && !username.trim().isEmpty() && username.matches("\\w+");
     }
-    
+
     // Validates a datetime (should not be null)
     public static boolean isValidDatetime(Date datetime) {
         return datetime != null;
@@ -205,9 +209,10 @@ return true;
     public static boolean isValidPaymentMethod(String paymentMethod) {
         return paymentMethod != null && !paymentMethod.trim().isEmpty();
     }
-    
+
     // Validates a description (should not be null and should not be too long)
     public static boolean isValidDescription(String description) {
         return description != null && description.length() <= 45;
     }
+
 }

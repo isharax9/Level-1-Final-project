@@ -17,26 +17,18 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String address;
-    private BankDetails bankaccountDetails;
+    private BankDetails bankaccountDetails;    
+    
+
+    public boolean isValidated() {
+        
+       
+        
+        return true;
+    }
 
     
-    public void setFirstName(String name){
-        if(Validators.isValidName(name)){
-            this.firstName = name;
-        }
-    }
-    public void setLastName(String name){
-        if(Validators.isValidName(name)){
-            this.lastName = name;
-        }
-    }
-    public void setUserEmail(String userEmail) {
-        if (Validators.isValidEmail(userEmail)) {
-            this.userEmail = userEmail;
-        } else {
-            throw new IllegalArgumentException("Invalid email");
-        }
-    }
+    
     
 
 //    public void setUserType(String userType) {
@@ -58,4 +50,6 @@ public class Employee {
         user.setBankaccountDetails(BankDetails.fromResultSet(result));
         return user;
     }
+
+   
 }

@@ -26,7 +26,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="productSaleChart" max="32767" attributes="0"/>
+                          <Component id="chart" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="listItemPanel3" pref="389" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -52,7 +52,7 @@
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               <Component id="combo_SaleOrProfit" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="productSaleChart" pref="288" max="32767" attributes="0"/>
+              <Component id="chart" pref="288" max="32767" attributes="0"/>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="listItemPanel2" min="-2" max="-2" attributes="0"/>
@@ -74,7 +74,7 @@
         <Property name="text" type="java.lang.String" value="All Product All Sales"/>
       </Properties>
     </Component>
-    <Component class="com.raven.chart.Chart" name="productSaleChart">
+    <Component class="com.raven.chart.Chart" name="chart">
     </Component>
     <Component class="javax.swing.JComboBox" name="combo_SaleOrProfit">
       <Properties>

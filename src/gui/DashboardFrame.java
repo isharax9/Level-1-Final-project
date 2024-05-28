@@ -7,6 +7,7 @@ package gui;
 import dto.Auth;
 import dto.UserType;
 import static gui.Login.auth;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,8 +20,28 @@ public class DashboardFrame extends javax.swing.JFrame {
      */
     public DashboardFrame() {
         initComponents();
-        lbl_frameTitle.setText(Login.auth.getAuthType().name()+" PANEL");
-        lb_adminGreeting.setText("Hello, "+Login.auth.getEmployee().getFirstName()+" !");
+        lbl_frameTitle.setText(Login.auth.getAuthType().name() + " PANEL");
+        lb_adminGreeting.setText("Hello, " + Login.auth.getEmployee().getFirstName() + " !");
+        setSuitablePanels();
+    }  
+    
+    public void setSuitablePanels() {
+        UserType userType = Login.auth.getAuthType();
+        try {
+            boolean isAuthenticated = Login.auth.isAuthenticated();
+            if (isAuthenticated) {
+                if (userType == UserType.ADMIN) {
+                    
+                } else if (userType == UserType.CASHIER) {
+                    jTabbedPane2.setEnabledAt(8, false);
+                    jTabbedPane2.setEnabledAt(9, false);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid username or password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -46,6 +67,8 @@ public class DashboardFrame extends javax.swing.JFrame {
         customerPanel1 = new gui.CustomerPanel();
         invoicePanel1 = new gui.InvoicePanel();
         userPanel1 = new gui.UserPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        overviewPanel2 = new gui.OverviewPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,6 +84,11 @@ public class DashboardFrame extends javax.swing.JFrame {
         lb_adminGreeting.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lb_adminGreeting.setForeground(new java.awt.Color(255, 255, 255));
         lb_adminGreeting.setText("Hello Vidura !");
+        lb_adminGreeting.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_adminGreetingMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -91,6 +119,10 @@ public class DashboardFrame extends javax.swing.JFrame {
         jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Invoice.png")), invoicePanel1); // NOI18N
         jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Users.png")), userPanel1); // NOI18N
 
+        jScrollPane1.setViewportView(overviewPanel2);
+
+        jTabbedPane2.addTab("tab11", jScrollPane1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,7 +131,7 @@ public class DashboardFrame extends javax.swing.JFrame {
                 .addGap(92, 92, 92)
                 .addComponent(roundedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
                 .addGap(91, 91, 91))
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 821, Short.MAX_VALUE)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 821, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,6 +147,23 @@ public class DashboardFrame extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void lb_adminGreetingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_adminGreetingMouseClicked
+        // TODO add your handling code here:
+        int response = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure that you want to logout?",
+                "Logout Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (response == JOptionPane.YES_OPTION) {
+            System.out.println("logout.");
+            this.dispose();
+            Login.auth = null;
+            new Login().setVisible(true);
+        }
+    }//GEN-LAST:event_lb_adminGreetingMouseClicked
 
     /**
      * @param args the command line arguments
@@ -147,13 +196,13 @@ public class DashboardFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-         Login.auth = new Auth("admin", "123", UserType.ADMIN);
-         try{
-         auth.isAuthenticated();
-         }catch(Exception ex){
-             
-         }
-         com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
+        Login.auth = new Auth("admin", "123", UserType.ADMIN);
+        try {
+            auth.isAuthenticated();
+        } catch (Exception ex) {
+
+        }
+        com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new DashboardFrame().setVisible(true);
@@ -165,9 +214,11 @@ public class DashboardFrame extends javax.swing.JFrame {
     private gui.CustomerPanel customerPanel1;
     private gui.GRNPanel gRNPanel1;
     private gui.InvoicePanel invoicePanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel lb_adminGreeting;
     private javax.swing.JLabel lbl_frameTitle;
+    private gui.OverviewPanel overviewPanel2;
     private gui.ProductsPanel productsPanel1;
     private gui.PurchuseOrderPanel purchuseOrderPanel1;
     private components.RoundedPanel roundedPanel1;

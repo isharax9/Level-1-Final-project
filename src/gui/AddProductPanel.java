@@ -58,7 +58,7 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
 
     private Product getProductFromFields() {
         if (!Validators.isValidDouble(tf_productRefilQty.getText())) {
-            throw new IllegalArgumentException("Invalid Product Stock Refilling Quntity value");
+            throw new IllegalArgumentException("Invalid Product Stock Refilling Quntity value 2");
         }
         if (!Validators.isValidInt(tf_productID.getText())) {
             tf_productID.setText("0");
@@ -395,7 +395,6 @@ public class AddProductPanel extends javax.swing.JPanel implements ProductTableI
             JOptionPane.showMessageDialog(this, "Successfully Added " + product.getProductName(), "Succes", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-
         }
         refresh();
 //        System.out.println(product.getSubCategory().getCategory());
