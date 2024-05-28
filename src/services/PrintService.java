@@ -7,6 +7,8 @@ package services;
 import dto.Invoice;
 import dto.InvoiceItem;
 import dto.UserType;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +25,20 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  * @author vidur
  */
 public class PrintService {
+    
+    public static String getCurrentTimeFormatted() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/M/dd hh:mm a");
+        return now.format(formatter);
+    }
 
     public static void PrintInvoice(Invoice invoice) {
         System.out.println("INVOICE ");
         try {
             JasperReport jasperReport = JasperCompileManager.compileReport("src/reports/invoice.jrxml");
             List<Map<String, Object>> dataSource = new ArrayList<>();
+            double totalForFooter = 0;
+            double totalDiscount = 0;
             for(InvoiceItem invoiceItem : invoice.getItems()){
                  Map<String, Object> item = new HashMap<>();
                     item.put("product_name",invoiceItem.getStock().getGrn().getPurchaseOrder().getProduct().getProductName());
@@ -38,27 +48,29 @@ public class PrintService {
                     double subtotal = invoiceItem.getInvoiceItemQty()* (invoiceItem.getStock().getUnitPrice()- invoiceItem.getInvoiceItemDiscount());
                     item.put("cost", "රු. " + String.format("%.2f", subtotal));
                     dataSource.add(item);
+                    totalForFooter += invoiceItem.getInvoiceItemQty()* invoiceItem.getStock().getUnitPrice();
+                    totalDiscount += invoiceItem.getInvoiceItemDiscount()*invoiceItem.getInvoiceItemQty();
             }
             
             Map<String, Object> parameters = new HashMap<>();
-                parameters.put("invoice_no", "invoiceno");
-                parameters.put("invoice_date","jij");
-                parameters.put("total_cost_without_discount", "මුළු වටිනාකම (වට්ටම් රහිත) : රු.");
-                parameters.put("total_discount", "මුළු වට්ටම   : රු.");
-                parameters.put("invoice_total", "ගෙවිය යුතු මුළු මුදල : රු.");
-                parameters.put("total_discount_greeting", "ඔබට ලැබූ මුලු ලාභය  : රු.");
+                parameters.put("invoice_no", invoice.getId()+"");
+                parameters.put("invoice_date",getCurrentTimeFormatted());
+                parameters.put("total_cost_without_discount", "Total: LKR."+ String.format("%.2f", totalForFooter));
+                parameters.put("total_discount", "Total Discount : LKR."+String.format("%.2f", totalDiscount));
+                parameters.put("invoice_total", "Grand Total : LKR."+String.format("%.2f",totalForFooter-totalDiscount ));
+                parameters.put("total_discount_greeting", "");
                 
-                int cash = 400;
+                double cash = invoice.getPaidAmount();
                 if (cash > 0) {
-                    parameters.put("cash", "දුන් මුදල : රු." );
-                    parameters.put("balance", "ඉතිරි දුන් මුදල : රු.");
+                    parameters.put("cash", "Cash : LKR."+String.format("%.2f",invoice.getPaidAmount()) );
+                    parameters.put("balance", "Balance : LKR."+String.format("%.2f",invoice.getPaidAmount()-(totalForFooter-totalDiscount)));
                     parameters.put("line1", "___________");
                 } else {
-                    parameters.put("cash", "");
+                    parameters.put("cash", "CARDPAYMENT");
                     parameters.put("balance", "");
-                    parameters.put("line1", "");
+                    parameters.put("line1", "___________");
                 }
-                parameters.put("CashierName","");
+                parameters.put("CashierName",invoice.getEmployee().getFirstName()+" "+invoice.getEmployee().getLastName());
                 
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(dataSource));
 
@@ -69,6 +81,8 @@ public class PrintService {
             ex.printStackTrace();
             
         }
+        
+        
     }
 
 }

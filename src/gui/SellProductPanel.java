@@ -8,6 +8,7 @@ import dto.Invoice;
 import dto.InvoiceItem;
 import dto.Product;
 import dto.Stock;
+import dto.UserType;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -113,7 +114,12 @@ public class SellProductPanel extends javax.swing.JPanel {
     }
 
     private double getCash() {
-        return 10;
+        try {
+            return Double.parseDouble(CashTextField.getText());
+        }catch(Exception ex){
+            throw new IllegalArgumentException(" Cash is not valid");
+        }
+
     }
 
     private Invoice getInvoice() {
@@ -152,7 +158,7 @@ public class SellProductPanel extends javax.swing.JPanel {
         TotalTextField.setText(i.getTotal() + "");
         InvoiceDiscountTextField.setText(i.getTotalDiscount() + "");
         GrandTotalTextField.setText(i.getGrandTotal() + "");
-        CashTextField.setText(i.getPaidAmount() + "");
+//        CashTextField.setText(i.getPaidAmount() + "");
         BalenceTextField.setText(i.getPaidAmount() - i.getGrandTotal() + "");
 
     }
@@ -301,7 +307,18 @@ public class SellProductPanel extends javax.swing.JPanel {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel10.setText("Cash :");
 
-        CashTextField.setEnabled(false);
+        CashTextField.setText("0");
+        CashTextField.setFocusTraversalPolicyProvider(true);
+        CashTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CashTextFieldActionPerformed(evt);
+            }
+        });
+        CashTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                CashTextFieldKeyReleased(evt);
+            }
+        });
 
         BalenceTextField.setEnabled(false);
         BalenceTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -311,7 +328,7 @@ public class SellProductPanel extends javax.swing.JPanel {
         });
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel11.setText("Balence :");
+        jLabel11.setText("Balance :");
 
         jToggleButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         jToggleButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -329,8 +346,8 @@ public class SellProductPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(37, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(37, 37, 37)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jToggleButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -339,12 +356,12 @@ public class SellProductPanel extends javax.swing.JPanel {
                             .addComponent(jLabel4)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(BarcodeTextField)
                             .addComponent(ProductNameTextField)
                             .addComponent(DiscountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(QtyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(QtyTextField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbl_unit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addComponent(jToggleButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -391,7 +408,7 @@ public class SellProductPanel extends javax.swing.JPanel {
                     .addComponent(lbl_unit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
-                        .addComponent(QtyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(QtyTextField)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -680,6 +697,15 @@ public class SellProductPanel extends javax.swing.JPanel {
         loadInvoceTable(invoiceItems);
         loadTF();
     }//GEN-LAST:event_ClearInvoiceButtonActionPerformed
+
+    private void CashTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CashTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CashTextFieldActionPerformed
+
+    private void CashTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CashTextFieldKeyReleased
+        // TODO add your handling code here:
+        loadTF();
+    }//GEN-LAST:event_CashTextFieldKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

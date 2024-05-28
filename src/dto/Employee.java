@@ -52,23 +52,7 @@ public class Employee {
     }
 
     
-    public void setFirstName(String name){
-        if(Validators.isValidName(name)){
-            this.firstName = name;
-        }
-    }
-    public void setLastName(String name){
-        if(Validators.isValidName(name)){
-            this.lastName = name;
-        }
-    }
-    public void setUserEmail(String userEmail) {
-        if (Validators.isValidEmail(userEmail)) {
-            this.userEmail = userEmail;
-        } else {
-            throw new IllegalArgumentException("Invalid email");
-        }
-    }
+    
     
 
 //    public void setUserType(String userType) {
