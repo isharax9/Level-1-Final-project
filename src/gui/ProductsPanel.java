@@ -21,15 +21,14 @@ import utils.Validators;
  *
  * @author vidur
  */
-public class ProductsPanel extends javax.swing.JPanel implements ProductTableInterface,CategoryComboBoxInterface,SubCategoryComboBoxInterface,UnitComboBoxInterface {
-    
+public class ProductsPanel extends javax.swing.JPanel implements ProductTableInterface, CategoryComboBoxInterface, SubCategoryComboBoxInterface, UnitComboBoxInterface {
 
     /**
      * Creates new form SellProductPanel
      */
-    
     Product selectedProduct;
     ProductService service;
+
     public ProductsPanel() {
         initComponents();
         service = new ProductService();
@@ -38,57 +37,55 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
         subCategoryComboBox1.setInterface(this);
         unitComboBox1.setInterface(this);
     }
-    
-    private Product getProductFromFields(){
+
+    private Product getProductFromFields() {
         Unit unit = unitComboBox1.getSelectedItem();
-        Category cat  = categoryComboBox1.getSelectedCategory();
+        Category cat = categoryComboBox1.getSelectedCategory();
         SubCategory subCat = subCategoryComboBox1.getSelectedCategory();
-        
+
         Product p = new Product();
-        if(Validators.isValidInt(tf_productID.getText())){
+        if (Validators.isValidInt(tf_productID.getText())) {
             p.setId(0);
         }
         System.out.println(tf_refillingQty.getText());
-        if(Validators.isValidDouble(tf_refillingQty.getText().contains(".")?tf_refillingQty.getText() : tf_refillingQty.getText()+".0" )){
+        if (!Validators.isValidDouble(tf_refillingQty.getText())) {
             throw new IllegalArgumentException("Invalid Stock Refilling Quntity ");
         }
-        
-        if(unit == null){
+
+        if (unit == null) {
             throw new IllegalArgumentException("Please Select the unit ");
         }
-        if(cat == null ){
+        if (cat == null) {
             throw new IllegalArgumentException("Please Select the category");
         }
-        if(subCat == null){
+        if (subCat == null) {
             throw new IllegalArgumentException("Please Select the Sub category");
         }
-        
-        
+
         p.setId(Integer.parseInt(tf_productID.getText()));
         p.setProductName(tf_productName.getText());
         p.setProductPrintingName(tf_productPrintName.getText());
         p.setStockRefillingQty(Double.parseDouble(tf_refillingQty.getText()));
         p.setUnit(unit);
         p.setSubCategory(subCat);
-        
-        
-        
+
         return p;
     }
-    private void setProductTofields(Product product){
+
+    private void setProductTofields(Product product) {
         tf_productID.setText(String.valueOf(product.getId()));
         tf_productName.setText(product.getProductName());
         tf_productPrintName.setText(product.getProductPrintingName());
         tf_refillingQty.setText(String.valueOf(product.getStockRefillingQty()));
-        
+
         unitComboBox1.setSelectedItem(product.getUnit());
         subCategoryComboBox1.setSelectedItem(product.getSubCategory());
         categoryComboBox1.setSelectedItem(product.getSubCategory().getCategory());
-        
+
     }
-    
-    private void clear(){
-         tf_productID.setText("");
+
+    private void clear() {
+        tf_productID.setText("");
         tf_productName.setText("");
         tf_productPrintName.setText("");
         tf_refillingQty.setText(String.valueOf(""));
@@ -419,15 +416,16 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
         // TODO add your handling code here:
 
         try {
+            System.out.println("WORK HERE");
+
             var product = getProductFromFields();
-            
             service.createProduct(product);
             JOptionPane.showMessageDialog(this, "Successfully Added " + product.getProductName(), "Succes", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 
         }
-        refresh();
+        clear();
         //        System.out.println(product.getSubCategory().getCategory());
     }//GEN-LAST:event_btn_addProductActionPerformed
 
@@ -447,7 +445,7 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
         } else {
             JOptionPane.showMessageDialog(this, "Please select a Product to Update", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        refresh();
+        clear();
     }//GEN-LAST:event_btn_updateProductActionPerformed
 
     private void tf_productNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_productNameKeyReleased
@@ -512,7 +510,7 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
     @Override
     public void onSelectCategory(Category category) {
         System.out.println(category.getCategory());
-        
+
     }
 
     @Override
