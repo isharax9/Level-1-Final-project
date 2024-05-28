@@ -31,18 +31,18 @@ public class UserService {
 
     }
 
-    public void create(Employee emplyee) throws SQLException, IllegalArgumentException {
+    public void create(Employee emplyee,String username,String password) throws SQLException, IllegalArgumentException {
         if (emplyee.isValidated()) {
             boolean doesntExistUser = true;
             try {
-                userDAO.getByUserName(emplyee.getUserName());
+                userDAO.getByUserName(username);
                 doesntExistUser = false;
 
             } catch (IllegalArgumentException ex) {
 
             }
             try {
-                userDAO.getByUserName(emplyee.getUserName());
+                userDAO.getByUserName(username);
                 doesntExistUser = false;
 
             } catch (IllegalArgumentException ex) {
@@ -51,7 +51,7 @@ public class UserService {
 
             if (doesntExistUser) {
                 emplyee.setBankaccountDetails(bankDetailsService.create(emplyee.getBankaccountDetails()));
-                userDAO.create(emplyee);
+                userDAO.create(emplyee, username, password);
 
             } else {
                 throw new IllegalArgumentException("User Name Alredy exist ");

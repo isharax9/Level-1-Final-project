@@ -4,6 +4,7 @@
  */
 package gui;
 
+import dto.BankDetails;
 import dto.Employee;
 import dto.UserType;
 import java.sql.SQLException;
@@ -52,7 +53,7 @@ public class UserPanel extends javax.swing.JPanel {
                 s.getUserId(),
                 s.getFirstName(),
                 s.getLastName(),
-                s.getUserName(),
+                s.getFirstName() + s.getLastName(),
                 s.getUserEmail(),
                 s.getUserType(),
                 s.getBankaccountDetails().getBankName(),
@@ -61,26 +62,23 @@ public class UserPanel extends javax.swing.JPanel {
             );
         }
     }
-    
-    
 
     private void setUserToField(Employee employee) {
         System.out.println(employee);
         tf_fn_use.setText(employee.getFirstName());
         tf_ln_use.setText(employee.getLastName());
         tf_address_use.setText(employee.getAddress());
-        tf_userName.setText(employee.getUserName());
-        tf_password_use.setText(employee.getPassword());
+        tf_userName.setText(employee.getFirstName() + employee.getLastName());
+        tf_password_use.setText("*************");
         tf_email_use.setText(employee.getUserEmail());
-        tf_use_type_use.setText(employee.getUserType().toString());
-
+        jComboBox1.setSelectedItem(employee.getUserType().toString());
         dto.BankDetails b = employee.getBankaccountDetails();
         tf_bn_use.setText(b.getBankName());
         tf_accoun_number_use.setText(b.getBankAccountNumber());
         tf_branch_use.setText(b.getBankBranch());
         tf_account_name_use.setText(b.getBankAccountHolderName());
     }
-    
+
     private Employee getUserFromFields() throws IllegalArgumentException {
         if (!Validators.isValidName(tf_fn_use.getText())) {
             throw new IllegalArgumentException("First Name is Invalid");
@@ -97,9 +95,7 @@ public class UserPanel extends javax.swing.JPanel {
         if (!Validators.isValidPassword(tf_password_use.getText())) {
             throw new IllegalArgumentException("Password is Invalid");
         }
-        if (!Validators.isValidUserName(tf_use_type_use.getText())) {
-            throw new IllegalArgumentException("User Type is Invalid");
-        }
+
         if (!Validators.isValidAddress(tf_address_use.getText())) {
             throw new IllegalArgumentException("Address is Invalid");
         }
@@ -127,9 +123,8 @@ public class UserPanel extends javax.swing.JPanel {
         s.setAddress(tf_address_use.getText());
         s.setFirstName(tf_fn_use.getText());
         s.setLastName(tf_ln_use.getText());
-        s.setUserName(tf_userName.getText());
-        s.setPassword(tf_password_use.getText());
-        s.setUserType(UserType.valueOf(tf_use_type_use.getText()));
+
+        s.setUserType(UserType.valueOf(jComboBox1.getSelectedItem().toString()));
         s.setUserEmail(tf_email_use.getText());
         s.setBankaccountDetails(bankDetails);
         return s;
@@ -157,7 +152,6 @@ public class UserPanel extends javax.swing.JPanel {
         tf_ln_use = new javax.swing.JTextField();
         tf_email_use = new javax.swing.JTextField();
         tf_password_use = new javax.swing.JTextField();
-        tf_use_type_use = new javax.swing.JTextField();
         tf_address_use = new javax.swing.JTextField();
         tf_bn_use = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -172,6 +166,7 @@ public class UserPanel extends javax.swing.JPanel {
         btn_deactivate_use = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         tf_userName = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_use_manegement = new javax.swing.JTable();
@@ -197,6 +192,12 @@ public class UserPanel extends javax.swing.JPanel {
         jLabel6.setText("Use Type");
 
         jLabel7.setText("Address");
+
+        tf_ln_use.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_ln_useActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Bank Name");
 
@@ -236,6 +237,8 @@ public class UserPanel extends javax.swing.JPanel {
         btn_deactivate_use.setText("Deactivate");
 
         jLabel12.setText("User Name");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CASHIER", "ADMIN" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -281,9 +284,9 @@ public class UserPanel extends javax.swing.JPanel {
                                 .addComponent(tf_ln_use)
                                 .addComponent(tf_email_use)
                                 .addComponent(tf_address_use, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                                .addComponent(tf_use_type_use, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(tf_password_use, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(tf_userName, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                                .addComponent(tf_userName, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -312,7 +315,7 @@ public class UserPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(tf_use_type_use, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -427,7 +430,28 @@ public class UserPanel extends javax.swing.JPanel {
 
     private void btn_add_useActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_useActionPerformed
         // TODO add your handling code here:
-        
+        Employee emp = new Employee();
+        emp.setFirstName(tf_fn_use.getText());
+        emp.setLastName(tf_ln_use.getText());
+        emp.setUserEmail(tf_email_use.getText());
+        emp.setUserType(UserType.valueOf(jComboBox1.getSelectedItem().toString()));
+        emp.setAddress(tf_address_use.getText());
+
+        BankDetails bd = new BankDetails();
+        bd.setBankName(tf_bn_use.getText());
+        bd.setBankBranch(tf_branch_use.getText());
+        bd.setBankAccountNumber(tf_accoun_number_use.getText());
+        bd.setBankAccountHolderName(tf_account_name_use.getText());
+
+        emp.setBankaccountDetails(bd);
+        try {
+            userService.create(selectedEmployee, tf_userName.getText(), tf_password_use.getText());
+            initData();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_btn_add_useActionPerformed
 
     private void tf_accoun_number_useActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_accoun_number_useActionPerformed
@@ -449,7 +473,7 @@ public class UserPanel extends javax.swing.JPanel {
             String ID = String.valueOf(tbl_use_manegement.getValueAt(SelectedRow, 0));
             System.out.println(ID);
             for (Employee s : employeeList) {
-                if (s.getUserId()== Integer.parseInt(ID)) {
+                if (s.getUserId() == Integer.parseInt(ID)) {
                     selectedEmployee = s;
                     setUserToField(selectedEmployee);
                     break;
@@ -458,11 +482,16 @@ public class UserPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbl_use_manegementMouseClicked
 
+    private void tf_ln_useActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_ln_useActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_ln_useActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_use;
     private javax.swing.JButton btn_deactivate_use;
     private javax.swing.JButton btn_update_use;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -489,7 +518,6 @@ public class UserPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tf_fn_use;
     private javax.swing.JTextField tf_ln_use;
     private javax.swing.JTextField tf_password_use;
-    private javax.swing.JTextField tf_use_type_use;
     private javax.swing.JTextField tf_userName;
     // End of variables declaration//GEN-END:variables
 }

@@ -14,40 +14,16 @@ public class Employee {
     private int userId;
     private String userEmail;
     private UserType userType;
-    private String userName;
     private String firstName;
     private String lastName;
     private String address;
-    private String password;
     private BankDetails bankaccountDetails;    
     
 
     public boolean isValidated() {
-        if (!Validators.isValidAddress(address)) {
-            throw new IllegalArgumentException("Invalid address");
-        }
-        if (!Validators.isValidName(userName)) {
-            throw new IllegalArgumentException("Invalid User Name");
-        }
-        if (!Validators.isValidUserName(lastName)) {
-            throw new IllegalArgumentException("Invalid last name");
-        }
-        if (!Validators.isValidUserName(firstName)) {
-            throw new IllegalArgumentException("Invalid first name");
-
-        }
-        if (!Validators.isValidEmail(userEmail)) {
-            throw new IllegalArgumentException("Invalid email name");
-
-        }
-        if (!Validators.isValidPassword(password)) {
-            throw new IllegalArgumentException("Invalid password");
-
-        }
-        if (!Validators.isValidName(userType.toString())) {
-            throw new IllegalArgumentException("Invalid user type");
-
-        }
+        
+       
+        
         return true;
     }
 
@@ -74,4 +50,6 @@ public class Employee {
         user.setBankaccountDetails(BankDetails.fromResultSet(result));
         return user;
     }
+
+   
 }
