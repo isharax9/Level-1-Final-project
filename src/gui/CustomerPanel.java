@@ -9,6 +9,8 @@ import dto.Supplier;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import services.CustomerService;
@@ -21,12 +23,21 @@ public class CustomerPanel extends javax.swing.JPanel {
 
     CustomerService customerService;
     List<Customer> customerList;
+    Customer selectedCustomer;
 
     public CustomerPanel() {
         this.customerService = new CustomerService();
         this.customerList = new ArrayList<>();
         initComponents();
         initData();
+    }
+    
+    
+
+    private void setCustomerFilelds(Customer customer) {
+        tf_address.setText(String.valueOf(customer.getCustomerId()));
+        tf_contact.setText(customer.getCustomerContact());
+        tf_name.setText(customer.getCustomerName());
     }
 
     private void initData() {
@@ -52,6 +63,21 @@ public class CustomerPanel extends javax.swing.JPanel {
             );
         }
     }
+    
+    private void addCustomer(){
+        System.out.println("GOOD");
+    Customer customer = new Customer();
+    customer.setCustomerAddress(tf_address.getText());
+    customer.setCustomerContact(tf_contact.getText());
+    customer.setCustomerName(tf_name.getName());
+        try {
+            customerService.create(customer);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex,"DB error", JOptionPane.WARNING_MESSAGE);
+        } catch (IllegalArgumentException ex) {            
+            JOptionPane.showMessageDialog(this, ex,"DB error", JOptionPane.WARNING_MESSAGE);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -66,10 +92,10 @@ public class CustomerPanel extends javax.swing.JPanel {
         roundedPanel1 = new components.RoundedPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tf_name = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        tf_address = new javax.swing.JTextField();
+        tf_contact = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -99,6 +125,11 @@ public class CustomerPanel extends javax.swing.JPanel {
         jButton1.setText("View Invoice");
 
         jButton2.setText("Add");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Update");
 
@@ -117,9 +148,9 @@ public class CustomerPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField3)))
+                            .addComponent(tf_name)
+                            .addComponent(tf_address)
+                            .addComponent(tf_contact)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -138,15 +169,15 @@ public class CustomerPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tf_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tf_address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tf_contact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(71, 71, 71)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -174,6 +205,11 @@ public class CustomerPanel extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -243,6 +279,27 @@ public class CustomerPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        addCustomer();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int SelectedRow = jTable1.getSelectedRow();
+        if (SelectedRow >= 0) {
+            String ID = String.valueOf(jTable1.getValueAt(SelectedRow, 0));
+            System.out.println(ID);
+            for (Customer s : customerList) {
+                if (s.getCustomerId()== Integer.valueOf(ID)) {
+                    selectedCustomer = s;
+                    setCustomerFilelds(selectedCustomer);
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -258,9 +315,9 @@ public class CustomerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private components.RoundedPanel roundedPanel1;
+    private javax.swing.JTextField tf_address;
+    private javax.swing.JTextField tf_contact;
+    private javax.swing.JTextField tf_name;
     // End of variables declaration//GEN-END:variables
 }
