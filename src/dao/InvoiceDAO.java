@@ -21,45 +21,98 @@ import java.time.LocalDateTime;
  */
 public class InvoiceDAO {
     
-    private InvoiceItem addInvoiceItem(int invoiceID , InvoiceItem item) throws SQLException{
-        
-        
-        String invoiceQuery = "INSERT INTO `invoice_item` (`stock_stock_barcode`, `invoices_invoice_id`, `invoice_qty`, `invoice_discount`) VALUES (?, ?, ?, ?);";
+//    private InvoiceItem addInvoiceItem(int invoiceID , InvoiceItem item) throws SQLException{
+//        
+//        
+//        String invoiceQuery = "INSERT INTO `invoice_item` (`stock_stock_barcode`, `invoices_invoice_id`, `invoice_qty`, `invoice_discount`) VALUES (?, ?, ?, ?);";
+//
+//        var con = Database.getInstance().getConnection();
+//        Connection conn = Database.getInstance().getConnection();
+//        PreparedStatement statement = conn.prepareStatement(invoiceQuery);
+//
+//       
+//        statement.setInt(1, item.getStock().getStockBarcode());
+//        statement.setDouble(2,invoiceID);
+//        statement.setDouble(3,item.getInvoiceItemQty());
+//        statement.setDouble(4, item.getInvoiceItemDiscount());
+//        int affectedRows = statement.executeUpdate();
+//        
+//        return item;
+//    }
+//
+//    public Invoice create(Invoice invoice) throws SQLException {
+//        String invoiceQuery = "INSERT INTO `invoices` (`invoice_datetime`, `paid_amount`, `payment_method`, `users_user_id`, `customers_customer_id`) VALUES (?, ?,?, ?,?);";
+//
+//        var con = Database.getInstance().getConnection();
+//        Connection conn = Database.getInstance().getConnection();
+//        PreparedStatement statement = conn.prepareStatement(invoiceQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+//
+//        // Convert LocalDateTime to Timestamp
+//        LocalDateTime invoiceDateTime = invoice.getInvoiceDate();
+//        Timestamp timestamp = Timestamp.valueOf(invoiceDateTime);
+//        statement.setTimestamp(1, timestamp);
+//        statement.setDouble(2,invoice.getPaidAmount());
+//        statement.setString(3, invoice.getPaidAmount() == 0 ? PaymentTypes.card.toString() : PaymentTypes.cash.toString());
+//        statement.setInt(4, Login.auth.getUserID());
+//        statement.setInt(5,1);
+//        
+//        try {
+//            int affectedRows = statement.executeUpdate();
+//            if (affectedRows == 0) {
+//                throw new SQLException("invoice creating failed, no rows affected.");
+//            }
+//            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+//                if (generatedKeys.next()) {
+//                    invoice.setId(generatedKeys.getInt(1));
+//                } else {
+//                    throw new SQLException("Creating invoice failed, no ID obtained.");
+//                }
+//            }
+//        } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
+//            throw new SQLException("Invalid invoice  ID");
+//        }
+//        
+//        for (InvoiceItem i : invoice.getItems()){
+//            addInvoiceItem(invoice.getId(),i);
+//        }
+//
+//        return invoice;
+//    }
+    
+    private InvoiceItem addInvoiceItem(Connection conn, int invoiceID, InvoiceItem item) throws SQLException {
+    String invoiceQuery = "INSERT INTO `invoice_item` (`stock_stock_barcode`, `invoices_invoice_id`, `invoice_qty`, `invoice_discount`) VALUES (?, ?, ?, ?);";
 
-        var con = Database.getInstance().getConnection();
-        Connection conn = Database.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(invoiceQuery);
-
-       
+    try (PreparedStatement statement = conn.prepareStatement(invoiceQuery)) {
         statement.setInt(1, item.getStock().getStockBarcode());
-        statement.setDouble(2,invoiceID);
-        statement.setDouble(3,item.getInvoiceItemQty());
+        statement.setInt(2, invoiceID); // Use setInt for invoiceID
+        statement.setDouble(3, item.getInvoiceItemQty());
         statement.setDouble(4, item.getInvoiceItemDiscount());
-        int affectedRows = statement.executeUpdate();
-        
-        return item;
+        statement.executeUpdate();
     }
 
-    public Invoice create(Invoice invoice) throws SQLException {
-        String invoiceQuery = "INSERT INTO `invoices` (`invoice_datetime`, `paid_amount`, `payment_method`, `users_user_id`, `customers_customer_id`) VALUES (?, ?,?, ?,?);";
+    return item;
+}
 
-        var con = Database.getInstance().getConnection();
-        Connection conn = Database.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(invoiceQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+public Invoice create(Invoice invoice) throws SQLException {
+    String invoiceQuery = "INSERT INTO `invoices` (`invoice_datetime`, `paid_amount`, `payment_method`, `users_user_id`, `customers_customer_id`) VALUES (?, ?,?, ?,?);";
 
-        // Convert LocalDateTime to Timestamp
-        LocalDateTime invoiceDateTime = invoice.getInvoiceDate();
-        Timestamp timestamp = Timestamp.valueOf(invoiceDateTime);
-        statement.setTimestamp(1, timestamp);
-        statement.setDouble(2,invoice.getPaidAmount());
-        statement.setString(3, invoice.getPaidAmount() == 0 ? PaymentTypes.card.toString() : PaymentTypes.cash.toString());
-        statement.setInt(4, Login.auth.getUserID());
-        statement.setInt(5,1);
-        
-        try {
+    Connection conn = Database.getInstance().getConnection();
+    try {
+        conn.setAutoCommit(false); // Start transaction
+
+        try (PreparedStatement statement = conn.prepareStatement(invoiceQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            // Convert LocalDateTime to Timestamp
+            LocalDateTime invoiceDateTime = invoice.getInvoiceDate();
+            Timestamp timestamp = Timestamp.valueOf(invoiceDateTime);
+            statement.setTimestamp(1, timestamp);
+            statement.setDouble(2, invoice.getPaidAmount());
+            statement.setString(3, invoice.getPaidAmount() == 0 ? PaymentTypes.card.toString() : PaymentTypes.cash.toString());
+            statement.setInt(4, Login.getAuth().getUserID());
+            statement.setInt(5, 1);
+
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("invoice creating failed, no rows affected.");
+                throw new SQLException("Invoice creation failed, no rows affected.");
             }
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -68,15 +121,23 @@ public class InvoiceDAO {
                     throw new SQLException("Creating invoice failed, no ID obtained.");
                 }
             }
-        } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
-            throw new SQLException("Invalid invoice  ID");
-        }
-        
-        for (InvoiceItem i : invoice.getItems()){
-            addInvoiceItem(invoice.getId(),i);
         }
 
-        return invoice;
+        for (InvoiceItem i : invoice.getItems()) {
+            addInvoiceItem(conn, invoice.getId(), i);
+        }
+
+        conn.commit(); // Commit transaction
+    } catch (SQLException ex) {
+        conn.rollback(); // Rollback transaction on failure
+        throw ex;
+    } finally {
+        conn.setAutoCommit(true); // Restore default auto-commit behavior
+        conn.close(); // Ensure the connection is closed
     }
+
+    return invoice;
+}
+
 
 }
