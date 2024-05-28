@@ -445,7 +445,7 @@ public class UserPanel extends javax.swing.JPanel {
 
         emp.setBankaccountDetails(bd);
         try {
-            userService.create(selectedEmployee, tf_userName.getText(), tf_password_use.getText());
+            userService.create(emp, tf_userName.getText(), tf_password_use.getText());
             initData();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -464,6 +464,27 @@ public class UserPanel extends javax.swing.JPanel {
 
     private void btn_update_useActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_update_useActionPerformed
         // TODO add your handling code here:
+        Employee emp = new Employee();
+        emp.setFirstName(tf_fn_use.getText());
+        emp.setLastName(tf_ln_use.getText());
+        emp.setUserEmail(tf_email_use.getText());
+        emp.setUserType(UserType.valueOf(jComboBox1.getSelectedItem().toString()));
+        emp.setAddress(tf_address_use.getText());
+
+        BankDetails bd = new BankDetails();
+        bd.setBankName(tf_bn_use.getText());
+        bd.setBankBranch(tf_branch_use.getText());
+        bd.setBankAccountNumber(tf_accoun_number_use.getText());
+        bd.setBankAccountHolderName(tf_account_name_use.getText());
+
+        emp.setBankaccountDetails(bd);
+        emp.setUserId(selectedEmployee.getUserId());
+        try {
+            userService.update(emp, tf_userName.getText(), tf_password_use.getText());
+            initData();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_update_useActionPerformed
 
     private void tbl_use_manegementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_use_manegementMouseClicked

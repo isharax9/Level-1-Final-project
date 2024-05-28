@@ -142,27 +142,27 @@ public class UserDAO {
         return userList;
     }
 
-    public void update(Employee employee) throws SQLException {
+    public void update(Employee employee,String username,String password) throws SQLException {
         String query = "UPDATE `users` SET "
                 + "`first_name`=? ,"
                 + " `last_name`=?, "
                 + "`username`=?, "
                 + "`user_password`=?,"
                 + "`user_type`=?,"
-                + "`bank_details_bank_details_id`=?,"
+               
                 + "`address`=? "
                 + "WHERE  `user_id`=?";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, employee.getFirstName().toLowerCase());
         statement.setString(2, employee.getLastName().toLowerCase());
-        statement.setString(3, "");
-        statement.setString(4, "");
+        statement.setString(3, username);
+        statement.setString(4, password);
         statement.setString(5, employee.getUserType().toString());
-        statement.setInt(5, employee.getBankaccountDetails().getId());
-        statement.setString(5, employee.getAddress());
+        statement.setString(6, employee.getAddress());
+        statement.setInt(7, employee.getUserId());
         statement.executeUpdate();
-        System.out.println("UPDATE USER ");
+        System.out.println("UPDATE USER "+employee.getBankaccountDetails());
 
     }
 
