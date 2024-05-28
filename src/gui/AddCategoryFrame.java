@@ -16,7 +16,7 @@ import services.SubCategoryService;
  *
  * @author ADMIN
  */
-public class AddCategoryFrame extends javax.swing.JFrame {
+public class AddCategoryFrame extends javax.swing.JFrame  {
 
     /**
      * Creates new form AddCategoryFrame
@@ -27,6 +27,8 @@ public class AddCategoryFrame extends javax.swing.JFrame {
         initComponents();
         service = new CategoryService();
     }
+    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -147,4 +149,6 @@ public class AddCategoryFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+  
 }
