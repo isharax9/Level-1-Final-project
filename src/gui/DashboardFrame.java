@@ -121,7 +121,7 @@ public class DashboardFrame extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(overviewPanel2);
 
-        jTabbedPane2.addTab("tab11", jScrollPane1);
+        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Bar Chart.png")), jScrollPane1); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

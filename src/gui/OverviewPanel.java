@@ -6,6 +6,7 @@ package gui;
 
 import com.raven.chart.ModelChart;
 import java.awt.Color;
+import java.util.Random;
 
 /**
  *
@@ -19,7 +20,38 @@ public class OverviewPanel extends javax.swing.JPanel {
     public OverviewPanel() {
         initComponents();
         initData();
+        randomize();
     }
+    
+    private void randomize() {
+        Random random = new Random();
+        
+        // Define the range for the random values
+        int minValue = 50;
+        int maxValue = 100;
+
+        chart.addLegend("Income", new Color(245, 189, 135));
+        chart.addLegend("Expense", new Color(135, 189, 245));
+        chart.addLegend("Profit", new Color(189, 135, 245));
+        chart.addLegend("Cost", new Color(139, 229, 222));
+
+        chart.addData(new ModelChart("January", generateRandomArray(random, minValue, maxValue)));
+        chart.addData(new ModelChart("February", generateRandomArray(random, minValue, maxValue)));
+        chart.addData(new ModelChart("March", generateRandomArray(random, minValue, maxValue)));
+        chart.addData(new ModelChart("April", generateRandomArray(random, minValue, maxValue)));
+        chart.addData(new ModelChart("May", generateRandomArray(random, minValue, maxValue)));
+        chart.addData(new ModelChart("June", generateRandomArray(random, minValue, maxValue)));
+    }
+    
+     private double[] generateRandomArray(Random random, int minValue, int maxValue) {
+         System.out.println("WORKING");
+        double[] randomValues = new double[4];
+        for (int i = 0; i < randomValues.length; i++) {
+            randomValues[i] = minValue + (maxValue - minValue) * random.nextDouble();
+        }
+        return randomValues;
+    }
+    
     
     private void initData(){
         listItemPanel3.setTitle("Most Selling Product");
@@ -32,16 +64,7 @@ public class OverviewPanel extends javax.swing.JPanel {
         
         
         
-        chart.addLegend("Income", new Color(245, 189, 135));
-        chart.addLegend("Expense", new Color(135, 189, 245));
-        chart.addLegend("Profit", new Color(189, 135, 245));
-        chart.addLegend("Cost", new Color(139, 229, 222));
-        chart.addData(new ModelChart("January", new double[]{500, 200, 80,89}));
-        chart.addData(new ModelChart("February", new double[]{600, 750, 90,150}));
-        chart.addData(new ModelChart("March", new double[]{200, 350, 460,900}));
-        chart.addData(new ModelChart("April", new double[]{480, 150, 750,700}));
-        chart.addData(new ModelChart("May", new double[]{350, 540, 300,150}));
-        chart.addData(new ModelChart("June", new double[]{190, 280, 81,200}));
+        
         
     }
 
@@ -65,6 +88,11 @@ public class OverviewPanel extends javax.swing.JPanel {
         productSaleChartLabel.setText("All Product All Sales");
 
         combo_SaleOrProfit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sales", "Profit" }));
+        combo_SaleOrProfit.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                combo_SaleOrProfitItemStateChanged(evt);
+            }
+        });
 
         listItemPanel2.setLeading("2Kg");
         listItemPanel2.setSubTitle("Powder");
@@ -121,6 +149,11 @@ public class OverviewPanel extends javax.swing.JPanel {
                 .addGap(174, 174, 174))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void combo_SaleOrProfitItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_combo_SaleOrProfitItemStateChanged
+        // TODO add your handling code here:
+//        randomize();
+    }//GEN-LAST:event_combo_SaleOrProfitItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

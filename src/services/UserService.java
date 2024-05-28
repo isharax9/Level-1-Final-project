@@ -75,13 +75,13 @@ public class UserService {
         return userDAO.getByID(id);
     }
 
-    public void update(Employee emplyee) throws SQLException, IllegalArgumentException {
+    public void update(Employee emplyee,String username,String password) throws SQLException, IllegalArgumentException {
         if (emplyee.getUserId()<= 0) {
             throw new IllegalArgumentException("Invalid ID");
         }
         
         if(emplyee.isValidated()){
-            userDAO.update(emplyee);
+            userDAO.update(emplyee, username, password);
         }
         if(emplyee.getBankaccountDetails().isValidated()){
             bankDetailsService.update(emplyee.getBankaccountDetails());

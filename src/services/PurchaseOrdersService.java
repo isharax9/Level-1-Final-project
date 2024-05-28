@@ -39,7 +39,7 @@ public class PurchaseOrdersService {
     }
     public void update(PurchaseOrder po) throws SQLException,IllegalArgumentException{
         if(po.getId() <= 0){
-            throw new IllegalArgumentException("Invalid Purchase order name ");
+            throw new IllegalArgumentException("Invalid Purchase order id ");
         }
         if(po.isValidated()){
             
