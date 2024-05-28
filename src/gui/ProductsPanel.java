@@ -15,6 +15,7 @@ import dto.Unit;
 import static java.time.zone.ZoneRulesProvider.refresh;
 import javax.swing.JOptionPane;
 import services.ProductService;
+import services.StockService;
 import utils.Validators;
 
 /**
@@ -28,10 +29,11 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
      */
     Product selectedProduct;
     ProductService service;
-
+    StockService stockService;
     public ProductsPanel() {
         initComponents();
         service = new ProductService();
+        this.stockService = new StockService();
         productTable1.setProductTableInterface(this);
         categoryComboBox1.setInterface(this);
         subCategoryComboBox1.setInterface(this);
@@ -312,8 +314,18 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
 
         jButton5.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         jButton5.setText("Add Catergory");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Add New Sub Category");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Add New Unite");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -467,6 +479,17 @@ public class ProductsPanel extends javax.swing.JPanel implements ProductTableInt
         AddUnitFrame a = new AddUnitFrame();
         a.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        new AddSubCategoryFrame().setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        
+        new AddCategoryFrame().setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

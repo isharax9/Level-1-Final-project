@@ -7,6 +7,7 @@ package gui;
 import dto.GRN;
 import dto.Product;
 import dto.PurchaseOrder;
+import dto.Stock;
 import dto.Supplier;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import services.GRNService;
 import services.ProductService;
 import services.PurchaseOrdersService;
+import services.StockService;
 import services.SupplierService;
 
 /**
@@ -30,7 +32,7 @@ public class GRNPanel extends javax.swing.JPanel {
 
     List<GRN> grnList;
     GRN selectedGRN;
-    
+
     List<Product> productList;
     List<PurchaseOrder> purrchaseOrders;
     ProductService productService;
@@ -39,10 +41,13 @@ public class GRNPanel extends javax.swing.JPanel {
     PurchaseOrder selectedPurchasOrder;
     GRNService grnService;
     List<GRN> grnsList;
+    StockService stockService;
+
     public GRNPanel() {
+        this.stockService = new StockService();
         this.supplierService = new SupplierService();
         this.suppliersList = new ArrayList<>();
-        this.grnList= new ArrayList<>();
+        this.grnList = new ArrayList<>();
         this.productService = new ProductService();
         this.productList = new ArrayList<>();
         this.purrchaseOrders = new ArrayList<>();
@@ -72,16 +77,16 @@ public class GRNPanel extends javax.swing.JPanel {
         }
         loadPurchageOrderTable(purrchaseOrders);
         loadGRNTable(grnList);
-    }    
-    
-    private void setGRNtoFields(GRN grn){
-        tf_Id.setText(""+grn.getId());
-        tf_supplier.setText(grn.getPurchaseOrder().getSupplier().getFirstName()+" "+grn.getPurchaseOrder().getSupplier().getFirstName());
+    }
+
+    private void setGRNtoFields(GRN grn) {
+        tf_Id.setText("" + grn.getId());
+        tf_supplier.setText(grn.getPurchaseOrder().getSupplier().getFirstName() + " " + grn.getPurchaseOrder().getSupplier().getFirstName());
         dc_OrderDate.setDate(grn.getGrnDate());
         tf_productName.setText(grn.getPurchaseOrder().getProduct().getProductName());
     }
-    
-    private void clear(){
+
+    private void clear() {
         selectedGRN = null;
         initData();
         tf_Id.setText("");
@@ -107,29 +112,26 @@ public class GRNPanel extends javax.swing.JPanel {
                 s.getSupplier().getFirstName() + " " + s.getSupplier().getLastName(),});
         }
     }
-    
+
     private void loadGRNTable(List<GRN> grns) {
-        System.out.println("GRN LOADINF"+grns);
+        System.out.println("GRN LOADINF" + grns);
         DefaultTableModel tableModel = (DefaultTableModel) tbl_grn.getModel();
         tableModel.setRowCount(0);
         for (GRN s : grns) {
-            double grnvalue = s.getPurchaseOrder().getOrderQty()*s.getPurchaseOrder().getWholesaleUnitPrice();
+            double grnvalue = s.getPurchaseOrder().getOrderQty() * s.getPurchaseOrder().getWholesaleUnitPrice();
             tableModel.addRow(new Object[]{
                 s.getId(),
                 s.getPurchaseOrder().getOrderedDate(),
                 s.getPurchaseOrder().getProduct().getProductName(),
                 s.getPurchaseOrder().getOrderQty(),
                 s.getPurchaseOrder().getWholesaleUnitPrice(),
-                s.getPurchaseOrder().getSupplier().getFirstName()+s.getPurchaseOrder().getSupplier().getLastName(),
+                s.getPurchaseOrder().getSupplier().getFirstName() + s.getPurchaseOrder().getSupplier().getLastName(),
                 grnvalue,
                 s.getPurchaseOrder().getPaidAmount(),
-                grnvalue -  s.getPurchaseOrder().getPaidAmount(),
-                });
-            
+                grnvalue - s.getPurchaseOrder().getPaidAmount(),});
+
         }
-    } 
-    
-    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -185,6 +187,11 @@ public class GRNPanel extends javax.swing.JPanel {
         btn_pay.setText("Pay");
 
         btn_viewStock.setText("View Stock");
+        btn_viewStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_viewStockActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Refresh");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -394,21 +401,41 @@ public class GRNPanel extends javax.swing.JPanel {
 
     private void tbl_grnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_grnMouseClicked
         // TODO add your handling code here:
-        int row =  tbl_grn.getSelectedRow();
-        if(row >= 0){
+        int row = tbl_grn.getSelectedRow();
+        if (row >= 0) {
             selectedGRN = grnList.get(row);
             setGRNtoFields(selectedGRN);
             var pos = new ArrayList<PurchaseOrder>();
             pos.add(selectedGRN.getPurchaseOrder());
             loadPurchageOrderTable(pos);
         }
-        
+
     }//GEN-LAST:event_tbl_grnMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         clear();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btn_viewStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_viewStockActionPerformed
+        // TODO add your handling code here:
+
+        if (selectedGRN != null) {
+            try {
+                Stock stock = stockService.getByGRNID(selectedGRN.getId());
+                if (stock != null) {
+                    new ViewStockFrame(stock).setVisible(true);
+                } else {
+                    new GRNAddToStockFrame(selectedGRN).setVisible(true);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showConfirmDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } else {
+            System.out.println("Not Selected GRN");
+        }
+    }//GEN-LAST:event_btn_viewStockActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

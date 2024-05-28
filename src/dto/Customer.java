@@ -18,37 +18,8 @@ public class Customer {
     private String customerContact;
     private Integer point;
 
-    public void setCustomerName(String customerName) {
-        if (Validators.isValidName(customerName)) {
-            this.customerName = customerName;
-        } else {
-            throw new IllegalArgumentException("Invalid customer name");
-        }
-    }
+    
 
-    public void setCustomerAddress(String customerAddress) {
-        if (Validators.isValidAddress(customerAddress)) {
-            this.customerAddress = customerAddress;
-        } else {
-            throw new IllegalArgumentException("Invalid customer address");
-        }
-    }
-
-    public void setCustomerContact(String customerContact) {
-        if (Validators.isValidContact(customerContact)) {
-            this.customerContact = customerContact;
-        } else {
-            throw new IllegalArgumentException("Invalid customer contact");
-        }
-    }
-
-    public void setPoint(Integer point) {
-        if (point == null || Validators.isValidPoint(point)) {
-            this.point = point;
-        } else {
-            throw new IllegalArgumentException("Invalid point value");
-        }
-    }
     
 
     public boolean isValidated() {
