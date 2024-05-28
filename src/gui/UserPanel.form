@@ -134,9 +134,9 @@
                                       <Component id="tf_ln_use" alignment="0" max="32767" attributes="0"/>
                                       <Component id="tf_email_use" alignment="0" max="32767" attributes="0"/>
                                       <Component id="tf_address_use" alignment="1" pref="172" max="32767" attributes="0"/>
-                                      <Component id="tf_use_type_use" alignment="1" max="32767" attributes="0"/>
                                       <Component id="tf_password_use" alignment="1" max="32767" attributes="0"/>
                                       <Component id="tf_userName" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -176,7 +176,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tf_use_type_use" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -248,12 +248,13 @@
             <Component class="javax.swing.JTextField" name="tf_fn_use">
             </Component>
             <Component class="javax.swing.JTextField" name="tf_ln_use">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_ln_useActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_email_use">
             </Component>
             <Component class="javax.swing.JTextField" name="tf_password_use">
-            </Component>
-            <Component class="javax.swing.JTextField" name="tf_use_type_use">
             </Component>
             <Component class="javax.swing.JTextField" name="tf_address_use">
             </Component>
@@ -321,6 +322,19 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_userName">
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jComboBox1">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="CASHIER"/>
+                    <StringItem index="1" value="ADMIN"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

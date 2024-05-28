@@ -21,7 +21,7 @@ public class UserDAO {
 
     private final String baseQuery = "SELECT * FROM users  INNER JOIN bank_details ON  users.bank_details_bank_details_id =  bank_details.bank_details_id ";
 
-    public Employee create(Employee user) throws SQLException {
+    public Employee create(Employee user,String username,String password) throws SQLException {
         String query = "INSERT INTO `users` ("
                 + "`username`, "
                 + "`user_email`,"
@@ -34,9 +34,9 @@ public class UserDAO {
                 + ") VALUES (?,?,?,?, ?,?,?,?)";
         Connection conn = Database.getInstance().getConnection();
         PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setString(1, user.getUserEmail().toLowerCase());
-        statement.setString(2, user.getUserEmail().toLowerCase());
-        statement.setString(3, user.getPassword());
+        statement.setString(1, username);
+        statement.setString(2, user.getUserEmail());
+        statement.setString(3, password);
         statement.setString(4, user.getUserType().toString());
         statement.setString(5, user.getFirstName().toLowerCase());
         statement.setString(6, user.getLastName().toLowerCase());
@@ -156,8 +156,8 @@ public class UserDAO {
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, employee.getFirstName().toLowerCase());
         statement.setString(2, employee.getLastName().toLowerCase());
-        statement.setString(3, employee.getUserName());
-        statement.setString(4, employee.getPassword());
+        statement.setString(3, "");
+        statement.setString(4, "");
         statement.setString(5, employee.getUserType().toString());
         statement.setInt(5, employee.getBankaccountDetails().getId());
         statement.setString(5, employee.getAddress());

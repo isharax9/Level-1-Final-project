@@ -67,7 +67,8 @@ public class DashboardFrame extends javax.swing.JFrame {
         customerPanel1 = new gui.CustomerPanel();
         invoicePanel1 = new gui.InvoicePanel();
         userPanel1 = new gui.UserPanel();
-        overviewPanel1 = new gui.OverviewPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        overviewPanel2 = new gui.OverviewPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,7 +118,10 @@ public class DashboardFrame extends javax.swing.JFrame {
         jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Budget2.png")), customerPanel1); // NOI18N
         jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Invoice.png")), invoicePanel1); // NOI18N
         jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Users.png")), userPanel1); // NOI18N
-        jTabbedPane2.addTab("", new javax.swing.ImageIcon(getClass().getResource("/assets/Bar Chart.png")), overviewPanel1); // NOI18N
+
+        jScrollPane1.setViewportView(overviewPanel2);
+
+        jTabbedPane2.addTab("tab11", jScrollPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -210,10 +214,11 @@ public class DashboardFrame extends javax.swing.JFrame {
     private gui.CustomerPanel customerPanel1;
     private gui.GRNPanel gRNPanel1;
     private gui.InvoicePanel invoicePanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel lb_adminGreeting;
     private javax.swing.JLabel lbl_frameTitle;
-    private gui.OverviewPanel overviewPanel1;
+    private gui.OverviewPanel overviewPanel2;
     private gui.ProductsPanel productsPanel1;
     private gui.PurchuseOrderPanel purchuseOrderPanel1;
     private components.RoundedPanel roundedPanel1;

@@ -4,6 +4,9 @@
  */
 package gui;
 
+import com.raven.chart.ModelChart;
+import java.awt.Color;
+
 /**
  *
  * @author vidur
@@ -15,6 +18,31 @@ public class OverviewPanel extends javax.swing.JPanel {
      */
     public OverviewPanel() {
         initComponents();
+        initData();
+    }
+    
+    private void initData(){
+        listItemPanel3.setTitle("Most Selling Product");
+        listItemPanel3.setLeading("25Kg");
+        listItemPanel3.setSubTitle("Suger");
+        
+        listItemPanel2.setTitle("Lowest Selling Product");
+        listItemPanel2.setLeading("200g");
+        listItemPanel2.setSubTitle("Curry Powder");
+        
+        
+        
+        chart.addLegend("Income", new Color(245, 189, 135));
+        chart.addLegend("Expense", new Color(135, 189, 245));
+        chart.addLegend("Profit", new Color(189, 135, 245));
+        chart.addLegend("Cost", new Color(139, 229, 222));
+        chart.addData(new ModelChart("January", new double[]{500, 200, 80,89}));
+        chart.addData(new ModelChart("February", new double[]{600, 750, 90,150}));
+        chart.addData(new ModelChart("March", new double[]{200, 350, 460,900}));
+        chart.addData(new ModelChart("April", new double[]{480, 150, 750,700}));
+        chart.addData(new ModelChart("May", new double[]{350, 540, 300,150}));
+        chart.addData(new ModelChart("June", new double[]{190, 280, 81,200}));
+        
     }
 
     /**
@@ -27,7 +55,7 @@ public class OverviewPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         productSaleChartLabel = new javax.swing.JLabel();
-        productSaleChart = new com.raven.chart.Chart();
+        chart = new com.raven.chart.Chart();
         combo_SaleOrProfit = new javax.swing.JComboBox<>();
         listItemPanel2 = new components.ListItemPanel();
         listItemPanel3 = new components.ListItemPanel();
@@ -64,7 +92,7 @@ public class OverviewPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(productSaleChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(listItemPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -83,7 +111,7 @@ public class OverviewPanel extends javax.swing.JPanel {
                 .addGap(13, 13, 13)
                 .addComponent(combo_SaleOrProfit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(productSaleChart, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(listItemPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -96,11 +124,11 @@ public class OverviewPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.raven.chart.Chart chart;
     private javax.swing.JComboBox<String> combo_SaleOrProfit;
     private javax.swing.JButton jButton1;
     private components.ListItemPanel listItemPanel2;
     private components.ListItemPanel listItemPanel3;
-    private com.raven.chart.Chart productSaleChart;
     private javax.swing.JLabel productSaleChartLabel;
     // End of variables declaration//GEN-END:variables
 }
