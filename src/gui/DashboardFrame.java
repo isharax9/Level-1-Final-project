@@ -20,8 +20,27 @@ public class DashboardFrame extends javax.swing.JFrame {
      */
     public DashboardFrame() {
         initComponents();
-        lbl_frameTitle.setText(Login.auth.getAuthType().name()+" PANEL");
-        lb_adminGreeting.setText("Hello, "+Login.auth.getEmployee().getFirstName()+" !");
+        lbl_frameTitle.setText(Login.auth.getAuthType().name() + " PANEL");
+        lb_adminGreeting.setText("Hello, " + Login.auth.getEmployee().getFirstName() + " !");
+        setSuitablePanels();
+    }  
+    
+    public void setSuitablePanels() {
+        UserType userType = Login.auth.getAuthType();
+        try {
+            boolean isAuthenticated = Login.auth.isAuthenticated();
+            if (isAuthenticated) {
+                if (userType == UserType.ADMIN) {
+                    
+                } else if (userType == UserType.CASHIER) {
+                    jTabbedPane2.setEnabledAt(8, false);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid username or password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -170,13 +189,13 @@ public class DashboardFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-         Login.auth = new Auth("admin", "123", UserType.ADMIN);
-         try{
-         auth.isAuthenticated();
-         }catch(Exception ex){
-             
-         }
-         com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
+        Login.auth = new Auth("admin", "123", UserType.ADMIN);
+        try {
+            auth.isAuthenticated();
+        } catch (Exception ex) {
+
+        }
+        com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new DashboardFrame().setVisible(true);
