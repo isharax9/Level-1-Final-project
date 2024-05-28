@@ -116,7 +116,7 @@ public class SellProductPanel extends javax.swing.JPanel {
     private double getCash() {
         try {
             return Double.parseDouble(CashTextField.getText());
-        }catch(Exception ex){
+        } catch (Exception ex) {
             throw new IllegalArgumentException(" Cash is not valid");
         }
 
@@ -727,12 +727,17 @@ public class SellProductPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRow = InvoiceTable.getSelectedRow();
         if (selectedRow >= 0) {
-            int barcode = (int) InvoiceTable.getModel().getValueAt(selectedRow, 0);
-            for (var i : invoiceItems) {
-                if (i.getStock().getStockBarcode() == barcode) {
-                    selectedInvoiceItem = i;
+            Object barcodeObj = InvoiceTable.getModel().getValueAt(selectedRow, 0);
+            // Check if the barcode is valid (not null and not an empty string)
+            if (barcodeObj != null && !barcodeObj.toString().trim().isEmpty()) {
+                int barcode = Integer.parseInt(barcodeObj.toString());
+                for (var i : invoiceItems) {
+                    if (i.getStock().getStockBarcode() == barcode) {
+                        selectedInvoiceItem = i;
+                        break; // Exit loop early once the item is found
+                    }
                 }
-            }
+            } 
         }
     }//GEN-LAST:event_InvoiceTableMouseClicked
 
