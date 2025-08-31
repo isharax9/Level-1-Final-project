@@ -1,0 +1,50 @@
+MIT License
+
+Copyright (c) 2024 helaPOS Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Libraries
+
+This project uses the following third-party libraries:
+
+### Lombok
+- **License**: MIT License
+- **Website**: https://projectlombok.org/
+- **Purpose**: Annotation-based code generation for reducing boilerplate code
+
+### MySQL Connector/J
+- **License**: GPL v2 with FOSS License Exception
+- **Website**: https://dev.mysql.com/downloads/connector/j/
+- **Purpose**: JDBC driver for MySQL database connectivity
+
+### Java Standard Library
+- **License**: Oracle No-Fee Terms and Conditions (NFTC)
+- **Website**: https://www.oracle.com/java/
+- **Purpose**: Core Java functionality and Swing GUI framework
+
+---
+
+## Contact
+
+For licensing questions or commercial use inquiries, please contact:
+- **Email**: isharax9@gmail.com
+- **Project Repository**: https://github.com/isharax9/Level-1-Final-project
