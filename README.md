@@ -102,23 +102,99 @@
 
 ## 🏗 System Architecture
 
+### Layered Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "Presentation Layer"
+        A[GUI Components<br/>Swing Panels & Frames]
+        B[Login Interface]
+        C[Dashboard]
+        D[Invoice Panel]
+        E[Product Management]
+    end
+    
+    subgraph "Service Layer"
+        F[Business Logic]
+        G[Validation Services]
+        H[ProductService]
+        I[InvoiceService]
+        J[UserService]
+    end
+    
+    subgraph "Data Access Layer"
+        K[DAO Objects]
+        L[CategoryDAO]
+        M[InvoiceDAO]
+        N[UserDAO]
+        O[ProductDAO]
+    end
+    
+    subgraph "Data Layer"
+        P[DTO Objects]
+        Q[Employee]
+        R[Product]
+        S[Invoice]
+        T[Stock]
+    end
+    
+    subgraph "Database Layer"
+        U[(MySQL Database<br/>HelaPos)]
+    end
+    
+    A --> F
+    B --> F
+    C --> F
+    D --> I
+    E --> H
+    
+    F --> K
+    G --> K
+    H --> K
+    I --> M
+    J --> N
+    
+    K --> P
+    L --> P
+    M --> P
+    N --> P
+    O --> P
+    
+    P --> U
+    Q --> U
+    R --> U
+    S --> U
+    T --> U
+    
+    style A fill:#e1f5ff
+    style F fill:#fff4e1
+    style K fill:#ffe1e1
+    style P fill:#f0e1ff
+    style U fill:#e1ffe1
 ```
-┌─────────────────────────────────────────────┐
-│                 GUI Layer                   │
-│  (Swing Panels, Frames, Components)        │
-├─────────────────────────────────────────────┤
-│               Service Layer                 │
-│     (Business Logic & Validation)          │
-├─────────────────────────────────────────────┤
-│                DAO Layer                    │
-│         (Data Access Objects)              │
-├─────────────────────────────────────────────┤
-│               DTO Layer                     │
-│        (Data Transfer Objects)             │
-├─────────────────────────────────────────────┤
-│               Database                      │
-│              (MySQL)                       │
-└─────────────────────────────────────────────┘
+
+### Architecture Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant GUI as GUI Layer
+    participant Service as Service Layer
+    participant DAO as DAO Layer
+    participant DTO as DTO Layer
+    participant DB as Database
+    
+    User->>GUI: Interaction
+    GUI->>Service: Request with Data
+    Service->>Service: Validate & Process
+    Service->>DAO: Data Operation Request
+    DAO->>DTO: Create/Map Objects
+    DTO->>DB: Execute Query
+    DB-->>DTO: Return Results
+    DTO-->>DAO: Mapped Objects
+    DAO-->>Service: Data Objects
+    Service-->>GUI: Processed Response
+    GUI-->>User: Display Result
 ```
 
 ### Design Patterns Used
@@ -127,6 +203,102 @@
 - **DTO Pattern**: Data transfer between layers
 - **Singleton Pattern**: Database connection management
 - **Observer Pattern**: GUI component updates
+
+### System Workflows
+
+#### Sales Process Flow
+
+```mermaid
+flowchart TD
+    Start([Start Sales Process]) --> Login[Cashier Login]
+    Login --> Dashboard[Access Dashboard]
+    Dashboard --> SelectCustomer{Select/Add<br/>Customer}
+    SelectCustomer -->|New| AddCustomer[Add New Customer]
+    SelectCustomer -->|Existing| LoadCustomer[Load Customer Info]
+    AddCustomer --> ScanProducts
+    LoadCustomer --> ScanProducts[Scan/Add Products]
+    
+    ScanProducts --> CheckStock{Stock<br/>Available?}
+    CheckStock -->|No| StockAlert[Low Stock Alert]
+    StockAlert --> ScanProducts
+    CheckStock -->|Yes| AddToCart[Add to Cart]
+    
+    AddToCart --> MoreItems{Add More<br/>Items?}
+    MoreItems -->|Yes| ScanProducts
+    MoreItems -->|No| ApplyDiscount[Apply Discounts]
+    
+    ApplyDiscount --> Calculate[Calculate Total]
+    Calculate --> Payment[Process Payment]
+    Payment --> PrintInvoice[Generate & Print Invoice]
+    PrintInvoice --> UpdateStock[Update Stock Levels]
+    UpdateStock --> End([Complete Transaction])
+    
+    style Login fill:#e1f5ff
+    style ScanProducts fill:#fff4e1
+    style Payment fill:#ffe1e1
+    style UpdateStock fill:#e1ffe1
+```
+
+#### Inventory Management Flow
+
+```mermaid
+flowchart TD
+    Start([Start Inventory Process]) --> CreatePO[Create Purchase Order]
+    CreatePO --> SelectSupplier[Select Supplier]
+    SelectSupplier --> SelectProduct[Select Product]
+    SelectProduct --> EnterQty[Enter Quantity & Price]
+    EnterQty --> SubmitPO[Submit Purchase Order]
+    
+    SubmitPO --> ReceiveGoods{Goods<br/>Received?}
+    ReceiveGoods -->|No| Wait[Wait for Delivery]
+    Wait --> ReceiveGoods
+    ReceiveGoods -->|Yes| CreateGRN[Create GRN]
+    
+    CreateGRN --> InspectGoods[Inspect Goods]
+    InspectGoods --> EnterDetails[Enter Stock Details]
+    EnterDetails --> AddStock[Add to Stock]
+    AddStock --> UpdateInventory[Update Inventory Levels]
+    UpdateInventory --> End([Complete Process])
+    
+    style CreatePO fill:#e1f5ff
+    style CreateGRN fill:#fff4e1
+    style AddStock fill:#e1ffe1
+```
+
+#### User Access Control
+
+```mermaid
+flowchart LR
+    subgraph Admin[Administrator Access]
+        A1[User Management]
+        A2[System Configuration]
+        A3[Financial Reports]
+        A4[All Operations]
+    end
+    
+    subgraph Supervisor[Supervisor Access]
+        S1[Inventory Management]
+        S2[Sales Monitoring]
+        S3[Customer Management]
+        S4[Reports]
+    end
+    
+    subgraph Cashier[Cashier Access]
+        C1[POS Operations]
+        C2[Invoice Generation]
+        C3[Customer Service]
+        C4[Basic Reports]
+    end
+    
+    Login([User Login]) --> CheckRole{User Role?}
+    CheckRole -->|Admin| Admin
+    CheckRole -->|Supervisor| Supervisor
+    CheckRole -->|Cashier| Cashier
+    
+    style Admin fill:#ff6b6b
+    style Supervisor fill:#ffd93d
+    style Cashier fill:#6bcf7f
+```
 
 ## 🚀 Installation & Setup
 
@@ -160,8 +332,8 @@ Download and install NetBeans 21 IDE from the following link:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/isharax9/Level-1-Final-project.git
-   cd Level-1-Final-project
+   git clone https://github.com/isharax9/HelaPos.git
+   cd HelaPos
    ```
 
 2. **Open in NetBeans**
@@ -211,9 +383,188 @@ The project includes a complete database schema with the following main entities
    - Configure initial system settings
 
 ### ER Diagram
+
 The complete Entity-Relationship diagram is available in the `ER/` directory:
 - **er.mwb**: MySQL Workbench file
 - **er.svg**: Visual diagram
+
+#### Database Schema Visualization
+
+```mermaid
+erDiagram
+    User ||--o{ Employee : "has profile"
+    User ||--|| BankDetails : "has"
+    Employee ||--o{ Invoice : "creates"
+    Employee ||--o{ Salleries : "receives"
+    
+    Category ||--o{ SubCategory : "contains"
+    SubCategory ||--o{ Product : "has"
+    Product ||--|| Unit : "measured in"
+    Product ||--o{ Stock : "has inventory"
+    Product ||--o{ PurchaseOrder : "ordered as"
+    
+    Supplier ||--|| BankDetails : "has"
+    Supplier ||--o{ PurchaseOrder : "supplies"
+    
+    PurchaseOrder ||--o{ GRN : "receives via"
+    GRN ||--o{ Stock : "adds to"
+    
+    Invoice ||--|| Customer : "billed to"
+    Invoice ||--|| PaymentTypes : "paid via"
+    Invoice ||--o{ InvoiceItem : "contains"
+    InvoiceItem ||--|| Stock : "references"
+    
+    OtherExpences ||--|| Employee : "recorded by"
+    
+    User {
+        int user_id PK
+        string first_name
+        string last_name
+        string username
+        string user_email
+        string user_password
+        string address
+        string user_type
+        int bank_details_id FK
+    }
+    
+    Employee {
+        int user_id PK
+        string user_email
+        string user_type
+        string first_name
+        string last_name
+        string address
+        int bank_details_id FK
+    }
+    
+    BankDetails {
+        int bank_details_id PK
+        string bank_name
+        string branch
+        string account_number
+        string account_holder_name
+    }
+    
+    Category {
+        int cat_id PK
+        string category
+    }
+    
+    SubCategory {
+        int sub_cat_id PK
+        string sub_category
+        int cat_id FK
+    }
+    
+    Product {
+        int product_id PK
+        string product_name
+        string product_printing_name
+        int sub_cat_id FK
+        int unit_id FK
+        double stock_refilling_qty
+    }
+    
+    Unit {
+        int unit_id PK
+        string unit_name
+    }
+    
+    Stock {
+        int stock_barcode PK
+        date mnf_date
+        date exp_date
+        double unit_price
+        double available_qty
+        double discount
+        int grn_id FK
+    }
+    
+    Supplier {
+        int supplier_id PK
+        string supplier_first_name
+        string supplier_last_name
+        string supplier_contact
+        string supplier_address
+        int bank_details_id FK
+    }
+    
+    PurchaseOrder {
+        int po_id PK
+        date ordered_date
+        double order_qty
+        int product_id FK
+        double wholesale_unit_price
+        double paid_amount
+        int supplier_id FK
+        string po_status
+    }
+    
+    GRN {
+        int grn_id PK
+        timestamp grn_date
+        int po_id FK
+    }
+    
+    Invoice {
+        int invoice_id PK
+        int employee_id FK
+        int customer_id FK
+        double total
+        double total_discount
+        double grand_total
+        double paid_amount
+        double balance
+        datetime invoice_date
+        int payment_type_id FK
+    }
+    
+    Customer {
+        int customer_id PK
+        string customer_name
+        string customer_address
+        string customer_contact
+        int point
+    }
+    
+    InvoiceItem {
+        int invoice_item_id PK
+        int invoice_id FK
+        int stock_barcode FK
+        double qty
+        double discount
+    }
+    
+    PaymentTypes {
+        int payment_type_id PK
+        string payment_type
+    }
+    
+    Salleries {
+        int idsalleries PK
+        int employee_id FK
+        double amount
+        date paid_date
+        string description
+    }
+    
+    OtherExpences {
+        int expences_id PK
+        string discription
+        double pay_amount
+        date date
+        int employee_id FK
+    }
+```
+
+### Key Database Relationships
+
+- **Users & Employees**: One-to-one relationship with extended employee profile
+- **Product Hierarchy**: Categories → SubCategories → Products
+- **Inventory Flow**: Purchase Orders → GRN → Stock
+- **Sales Flow**: Stock → Invoice Items → Invoices
+- **Financial Tracking**: Employees → Salaries & Expenses
 
 ## 📖 Usage Guide
 
@@ -353,7 +704,7 @@ We welcome contributions to helaPOS! Please follow these guidelines:
 
 1. **Fork the Repository**
    ```bash
-   git fork https://github.com/isharax9/Level-1-Final-project.git
+   git fork https://github.com/isharax9/HelaPos.git
    ```
 
 2. **Create Feature Branch**
@@ -411,11 +762,11 @@ The MIT License allows you to:
 
 ### Support
 For technical support or questions:
-- **Create an Issue**: [GitHub Issues](https://github.com/isharax9/Level-1-Final-project/issues)
+- **Create an Issue**: [GitHub Issues](https://github.com/isharax9/HelaPos/issues)
 - **Email Support**: [isharax9@gmail.com](mailto:isharax9@gmail.com)
 
 ### Project Links
-- **Repository**: [GitHub](https://github.com/isharax9/Level-1-Final-project)
+- **Repository**: [GitHub](https://github.com/isharax9/HelaPos)
 - **Documentation**: [Project Docs](https://helasoft.atlassian.net/wiki/external/YjNjNjQzZGUwNDc2NDBiOWJjZDlkNzk2ZjJlNDViYTM)
 - **Presentations**: [Canva](https://www.canva.com/design/DAGGY9mt1TY/5zMGxbLnhhpzgx6d20J-dw/edit)
 
