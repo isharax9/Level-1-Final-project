@@ -542,7 +542,7 @@ erDiagram
     }
     
     Salleries {
-        int sallery_id PK
+        int idsalleries PK
         int employee_id FK
         double amount
         date paid_date
@@ -550,10 +550,10 @@ erDiagram
     }
     
     OtherExpences {
-        int expense_id PK
-        string description
-        double amount
-        date expense_date
+        int expences_id PK
+        string discription
+        double pay_amount
+        date date
         int employee_id FK
     }
 ```
