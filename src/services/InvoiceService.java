@@ -4,6 +4,7 @@
  */
 package services;
 
+import dao.InvoiceDAO;
 import dto.Invoice;
 import java.sql.SQLException;
 
@@ -12,9 +13,20 @@ import java.sql.SQLException;
  * @author vidur
  */
 public class InvoiceService {
+    InvoiceDAO invoiceDao;
+
+    public InvoiceService() {
+        this.invoiceDao  = new InvoiceDAO();
+    }
     
     public Invoice create(Invoice invoice)throws   SQLException, IllegalArgumentException{
-        invoice.setId(232);
+        if(invoice.getItems().isEmpty()){
+            throw new IllegalArgumentException("Please  add invoice item to make invoice");
+        }
+        
+        System.out.println(invoice);
+        invoice.setId(0);
+        invoiceDao.create(invoice);
         return invoice;
     }
     

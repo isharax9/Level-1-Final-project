@@ -67,6 +67,7 @@ public class PurchuseOrderPanel extends javax.swing.JPanel {
             suppliers.addAll(supplierService.getAll());
             purrchaseOrders.addAll(poService.getAll());
             searchedPOs.addAll(purrchaseOrders);
+            
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "DB Error Title", JOptionPane.WARNING_MESSAGE);
         }

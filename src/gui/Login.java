@@ -9,7 +9,11 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    static Auth auth;
+    public static Auth auth;
+    
+    public static Auth getAuth(){
+        return auth;
+    }
 
     public Login() {
         initComponents();

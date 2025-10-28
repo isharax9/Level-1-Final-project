@@ -15,6 +15,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import services.GRNService;
+import services.PrintService;
 import services.ProductService;
 import services.PurchaseOrdersService;
 import services.StockService;
@@ -42,7 +43,8 @@ public class GRNPanel extends javax.swing.JPanel {
     GRNService grnService;
     List<GRN> grnsList;
     StockService stockService;
-
+    
+    PrintService printService;
     public GRNPanel() {
         this.stockService = new StockService();
         this.supplierService = new SupplierService();
@@ -55,6 +57,7 @@ public class GRNPanel extends javax.swing.JPanel {
         this.grnService = new GRNService();
         initComponents();
         initData();
+        printService = new PrintService();
     }
 
     private void initData() {
@@ -156,6 +159,7 @@ public class GRNPanel extends javax.swing.JPanel {
         btn_pay = new javax.swing.JButton();
         btn_viewStock = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         roundedPanel3 = new components.RoundedPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_grn = new javax.swing.JTable();
@@ -200,6 +204,13 @@ public class GRNPanel extends javax.swing.JPanel {
             }
         });
 
+        jButton2.setText("Print GRN");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
         roundedPanel2Layout.setHorizontalGroup(
@@ -222,7 +233,8 @@ public class GRNPanel extends javax.swing.JPanel {
                             .addComponent(btn_viewStock)
                             .addGap(18, 18, 18)
                             .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         roundedPanel2Layout.setVerticalGroup(
@@ -250,6 +262,8 @@ public class GRNPanel extends javax.swing.JPanel {
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_viewStock)
                     .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -437,12 +451,21 @@ public class GRNPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btn_viewStockActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if(selectedGRN != null){
+            printService.PrintGrn(selectedGRN);
+        }
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_pay;
     private javax.swing.JButton btn_viewStock;
     private com.toedter.calendar.JDateChooser dc_OrderDate;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
